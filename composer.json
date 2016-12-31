@@ -14,7 +14,8 @@
         "intervention/image": "^2.3",
         "spekkionu/assetcachebuster": "^2.1",
         "intervention/imagecache": "^2.3",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "laravel/socialite": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
