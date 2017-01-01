@@ -48,7 +48,6 @@ class OAuthController extends Controller
                     return redirect('/');
                 } else {
                     $user           = new User;
-                    $user->name     = $social_user->name;
                     $user->email    = $social_user->email;
                     $user->password = Hash::make(str_random(60));
 
