@@ -166,7 +166,12 @@ return [
         /*
          * Package Service Providers...
          */
+        Cviebrock\EloquentSluggable\ServiceProvider::class,
+        GrahamCampbell\Throttle\ThrottleServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Spekkionu\Assetcachebuster\AssetcachebusterServiceProvider::class,
+        Vinkla\Hashids\HashidsServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -225,8 +230,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Asset' => Spekkionu\Assetcachebuster\Facades\Cachebuster::class,
+        'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
+        'Image' => Intervention\Image\Facades\Image::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-
+        'Throttle' => GrahamCampbell\Throttle\Facades\Throttle::class,
     ],
 
 ];
