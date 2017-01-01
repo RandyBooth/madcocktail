@@ -17,10 +17,12 @@ class CreateOauthTable extends Migration
         {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('provider');
+            $table->string('provider', 20);
             $table->string('provider_uid');
-            $table->string('token');
+//            $table->string('token');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

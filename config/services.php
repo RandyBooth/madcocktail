@@ -14,25 +14,37 @@ return [
     |
     */
 
-    'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
-    ],
+//    'mailgun' => [
+//        'domain' => env('MAILGUN_DOMAIN'),
+//        'secret' => env('MAILGUN_SECRET'),
+//    ],
+//
+//    'ses' => [
+//        'key' => env('SES_KEY'),
+//        'secret' => env('SES_SECRET'),
+//        'region' => 'us-east-1',
+//    ],
+//
+//    'sparkpost' => [
+//        'secret' => env('SPARKPOST_SECRET'),
+//    ],
+//
+//    'stripe' => [
+//        'model' => App\User::class,
+//        'key' => env('STRIPE_KEY'),
+//        'secret' => env('STRIPE_SECRET'),
+//    ],
 
-    'ses' => [
-        'key' => env('SES_KEY'),
-        'secret' => env('SES_SECRET'),
-        'region' => 'us-east-1',
-    ],
+    'facebook' => array(
+        'client_id'     => '632169013530721',
+        'client_secret' => 'e62c8d0de3f4fd9285b81f045d621846',
+        'redirect'      => 'https://drink.com:8890/oauth/facebook/callback',
+    ),
 
-    'sparkpost' => [
-        'secret' => env('SPARKPOST_SECRET'),
-    ],
-
-    'stripe' => [
-        'model' => App\User::class,
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
-    ],
+    'twitter' => array(
+        'client_id'     => 'pu3xY9j7k5tfzYhgVjkQFNqYV',
+        'client_secret' => 'vMrsvDyAxHhBGbGQeVlqJTAFbohosuSkkuID9StJuwQNazhPgE',
+        'redirect'      => 'https://drink.com:8890/oauth/twitter/callback',
+    ),
 
 ];
