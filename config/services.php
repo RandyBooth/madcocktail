@@ -1,5 +1,7 @@
 <?php
 
+$service_redirect = env('APP_URL', 'http://localhost').'/login';
+
 return [
 
     /*
@@ -38,13 +40,19 @@ return [
     'facebook' => array(
         'client_id'     => '632169013530721',
         'client_secret' => 'e62c8d0de3f4fd9285b81f045d621846',
-        'redirect'      => 'https://drink.com:8890/oauth/facebook/callback',
+        'redirect'      => $service_redirect.'/facebook/callback',
+    ),
+
+    'google' => array(
+        'client_id'     => '754238603270-jjfnqn8e0e01dfvq74k4b38vt59l53sh.apps.googleusercontent.com',
+        'client_secret' => 'q63tyPD_alxhNkIz_WpwTYGH',
+        'redirect'      => $service_redirect.'/google/callback',
     ),
 
     'twitter' => array(
         'client_id'     => 'pu3xY9j7k5tfzYhgVjkQFNqYV',
         'client_secret' => 'vMrsvDyAxHhBGbGQeVlqJTAFbohosuSkkuID9StJuwQNazhPgE',
-        'redirect'      => 'https://drink.com:8890/oauth/twitter/callback',
+        'redirect'      => $service_redirect.'/twitter/callback',
     ),
 
 ];

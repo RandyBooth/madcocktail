@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'oauth'], function() {
+Route::group(['prefix' => 'login'], function() {
     Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function($provider) {
         Route::get('/', ['as' => 'oauth.redirect', 'uses' => 'OAuthController@redirect']);
 //        Route::get('login', ['as' => 'oauth.login', 'uses' => 'OAuthController@redirect']);
