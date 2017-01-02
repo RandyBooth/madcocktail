@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Auth::routes();
 
 Route::group(['prefix' => 'login'], function() {
     Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function($provider) {
@@ -23,6 +21,8 @@ Route::group(['prefix' => 'login'], function() {
     });
 });
 
-Auth::routes();
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/home', 'HomeController@index');
+Route::resource('ingredients', 'IngredientController');
