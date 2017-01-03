@@ -18,10 +18,10 @@ class AddColumnsToIngredientsTable extends Migration
                 $table->increments('id');
                 $table->string('title');
                 $table->string('slug');
-                $table->integer('depth')->nullable();
-                $table->tinyInteger('is_top')->unsigned()->default(0);
+//                $table->tinyInteger('depth')->unsigned()->default(0);
+                $table->tinyInteger('is_alcoholic')->unsigned()->default(0);
+                $table->tinyInteger('is_active')->unsigned()->default(0);
                 $table->integer('user_id')->unsigned()->default(0);
-                $table->tinyInteger('approved')->unsigned()->default(0);
                 $table->timestamps();
                 $table->softDeletes();
             });
@@ -40,10 +40,10 @@ class AddColumnsToIngredientsTable extends Migration
                 $table->dropColumn('id');
                 $table->dropColumn('title');
                 $table->dropColumn('slug');
-                $table->dropColumn('depth');
-                $table->dropColumn('is_top');
+//                $table->dropColumn('depth');
+                $table->dropColumn('is_alcoholic');
+                $table->dropColumn('is_active');
                 $table->dropColumn('user_id');
-                $table->dropColumn('approved');
                 $table->dropTimestamps();
                 $table->dropSoftDeletes();
             });
