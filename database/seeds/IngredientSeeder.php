@@ -15,6 +15,7 @@ class IngredientSeeder extends Seeder
         $ingredients = [
             ['title' => 'Beer', 'is_active' => 1, 'is_alcoholic' => 1],
             ['title' => 'Liqueur', 'is_active' => 1, 'is_alcoholic' => 1, 'children' => [
+                ['title' => 'Whiskey', 'is_active' => 1],
                 ['title' => 'Curaçao', 'is_active' => 1, 'children' => [
                     ['title' => 'Triple sec', 'is_active' => 1],
                 ]],

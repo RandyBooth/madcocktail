@@ -17,7 +17,10 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $ingredients = Ingredient::whereIsRoot()->isAlcoholic()->get();
+        $ingredients = Cache::tags('ingredients')->remember('', 60, function() {
+            return Ingredient::whereIsRoot()->isAlcoholic()->get();
+        });
+
         return view('ingredients.index')->with('ingredients', $ingredients);
     }
 
@@ -56,45 +59,19 @@ class IngredientController extends Controller
         $parent_id = null;
         $ingredient = null;
 
-//        $test = Ingredient::withDepth()->where('slug', '=', 'rum')->having('depth', '=', 1)->get('id');
-  //        dd($test);
         foreach($parameters_explode as $parameter) {
-//            $test = Ingredient::withDepth()->where('slug', '=', $parameter)->where('parent_id', '=', $parent_id)->having('depth', '=', $count++)->firstOrFail();
-
             $ingredient = Cache::tags('ingredient_depth')->remember($count.'_'.$parameter, 60, function() use ($parameter, $parent_id, $count) {
                 return Ingredient::withDepth()->where('slug', '=', $parameter)->where('parent_id', '=', $parent_id)->having('depth', '=', $count)->firstOrFail();
             });
+
             $parent_id = $ingredient->id;
             $count++;
-//            print_r($test); echo '<br><br>';
-
-//            $where = function($query) use ($parameter, $count) {
-//                return $query
-////                    ->select()
-//                    ->where('slug', '=', $parameter)
-////                    ->withDepth()->where('depth', '=', $count)
-//                    ;
-//            };
-//
-//            if ($count++) {
-//                $ingredients->orWhere($where);
-//            } else {
-//                $ingredients = Ingredient::where($where);
-//            }
         }
 
-        dd($ingredient);
-
         if ($count > 0 && !empty($ingredient)) {
-            $ingredients = Cache::tags('ingredients')->remember($parameters, 60, function() use ($ingredients) {
-                return $ingredients->get();
-            });
-
-            if ($ingredients->count() == count($parameters_explode)) {
-                $ingredient = $ingredients->last();
-
+            if ($count == count($parameters_explode)) {
                 $ingredient_children = Cache::tags('ingredient_children')->remember($parameters, 60, function() use ($ingredient) {
-                    return $ingredient->children()->get();
+                    return $ingredient->children()->orderBy('title')->get();
                 });
 
                 $ingredient_descendants_id = Cache::tags('ingredient_descendants_id')->remember($parameters, 60, function() use ($ingredient) {
