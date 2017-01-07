@@ -15,7 +15,16 @@ class CreateNestedSetIngredientsTable extends Migration
     public function up()
     {
         Schema::create('ingredients', function (Blueprint $table) {
+            $table->increments('id');
             NestedSet::columns($table);
+            $table->string('title');
+            $table->string('slug');
+            $table->tinyInteger('_depth')->unsigned()->default(0);
+            $table->tinyInteger('is_alcoholic')->unsigned()->default(0);
+            $table->tinyInteger('is_active')->unsigned()->default(0);
+            $table->integer('user_id')->unsigned()->default(0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,8 +35,6 @@ class CreateNestedSetIngredientsTable extends Migration
      */
     public function down()
     {
-        Schema::table('ingredients', function (Blueprint $table) {
-            $table->drop($table);
-        });
+        Schema::drop('ingredients');
     }
 }

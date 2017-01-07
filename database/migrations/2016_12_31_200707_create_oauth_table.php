@@ -21,6 +21,7 @@ class CreateOauthTable extends Migration
             $table->string('provider_uid');
 //            $table->string('token');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
