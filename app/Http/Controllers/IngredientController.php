@@ -53,7 +53,7 @@ class IngredientController extends Controller
      */
     public function show($parameters = null)
     {
-        Cache::flush();
+//        Cache::flush();
         $parameters_explode = explode('/', $parameters);
         $count = 0;
         $parent_id = null;
@@ -61,7 +61,12 @@ class IngredientController extends Controller
 
         foreach($parameters_explode as $parameter) {
             $ingredient = Cache::tags('ingredient_depth')->remember($count.'_'.$parameter, 60, function() use ($parameter, $parent_id, $count) {
-                return Ingredient::withDepth()->where('slug', '=', $parameter)->where('parent_id', '=', $parent_id)->having('depth', '=', $count)->firstOrFail();
+                return Ingredient::
+                    withDepth()->
+                    where('slug', '=', $parameter)->
+                    where('parent_id', '=', $parent_id)->
+                    having('depth', '=', $count)->
+                    firstOrFail();
             });
 
             $parent_id = $ingredient->id;
@@ -71,22 +76,30 @@ class IngredientController extends Controller
         if ($count > 0 && !empty($ingredient)) {
             if ($count == count($parameters_explode)) {
                 $ingredient_children = Cache::tags('ingredient_children')->remember($parameters, 60, function() use ($ingredient) {
-                    return $ingredient->children()->orderBy('title')->get();
+                    return $ingredient->
+                        children()->
+                        orderBy('title')->
+                        get();
                 });
 
                 $ingredient_descendants_id = Cache::tags('ingredient_descendants_id')->remember($parameters, 60, function() use ($ingredient) {
-                    return $ingredient->descendants()->pluck('id')->push($ingredient->id)->toArray();
+                    return $ingredient->
+                        descendants()->
+                        pluck('id')->
+                        push($ingredient->id)->
+                        toArray();
                 });
 
                 $recipes = Cache::tags('ingredient_show_recipes_top')->remember($parameters, 60, function() use ($ingredient_descendants_id) {
                     return Recipe::
-                    whereHas('ingredients', function($query) use($ingredient_descendants_id) {
-                        $query->whereIn('ingredient_recipe.ingredient_id', $ingredient_descendants_id);
-                    })
-                     ->orderBy('view_count', 'desc')
-                     ->orderBy('title')
-                     ->take(10)
-                     ->get();
+                        whereHas('ingredients', function($query) use($ingredient_descendants_id) {
+                            $query->
+                                whereIn('ingredient_recipe.ingredient_id', $ingredient_descendants_id);
+                        })->
+                        orderBy('view_count', 'desc')->
+                        orderBy('title')->
+                        take(10)->
+                        get();
                 });
 
                 return view('ingredients.show', compact('ingredient', 'ingredient_children', 'recipes', 'parameters'));
