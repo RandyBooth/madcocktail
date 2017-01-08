@@ -82,6 +82,5 @@ class OAuthController extends Controller
         }
 
         abort(404);
-        return false;
     }
 }
