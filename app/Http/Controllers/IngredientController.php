@@ -53,28 +53,31 @@ class IngredientController extends Controller
      */
     public function show($parameters = null)
     {
-//        Cache::flush();
+        Cache::flush();
         $parameters_explode = explode('/', $parameters);
         $count = 0;
-        $parent_id = null;
-        $ingredient = null;
 
         foreach($parameters_explode as $parameter) {
-            $ingredient = Cache::tags('ingredient_depth')->remember($count.'_'.$parameter, 60, function() use ($parameter, $parent_id, $count) {
-                return Ingredient::
-                    withDepth()->
-                    where('slug', '=', $parameter)->
-                    where('parent_id', '=', $parent_id)->
-                    having('depth', '=', $count)->
-                    firstOrFail();
-            });
+            $where = function($query) use ($parameter, $count) {
+                return $query->where('slug', '=', $parameter)->where('level', '=', $count)
+                ;
+            };
 
-            $parent_id = $ingredient->id;
-            $count++;
+            if ($count++) {
+                $ingredients->orWhere($where);
+            } else {
+                $ingredients = Ingredient::where($where);
+            }
         }
 
-        if ($count > 0 && !empty($ingredient)) {
-            if ($count == count($parameters_explode)) {
+        if ($count > 0) {
+            $ingredients = Cache::tags('ingredients')->remember($parameters, 60, function() use ($ingredients) {
+                return $ingredients->get();
+            });
+
+            if ($ingredients->count() == count($parameters_explode)) {
+                $ingredient = $ingredients->last();
+
                 $ingredient_children = Cache::tags('ingredient_children')->remember($parameters, 60, function() use ($ingredient) {
                     return $ingredient->
                         children()->

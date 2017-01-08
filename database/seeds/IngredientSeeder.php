@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Ingredient;
+use App\Events\IngredientSaved;
 
 class IngredientSeeder extends Seeder
 {
@@ -63,5 +64,10 @@ class IngredientSeeder extends Seeder
         ];
 
         Ingredient::rebuildTree($ingredients);
+        $ingredients_all = Ingredient::all();
+
+        foreach($ingredients_all as $ingredient) {
+            event(new IngredientSaved($ingredient));
+        }
     }
 }
