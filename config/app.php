@@ -172,6 +172,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Spekkionu\Assetcachebuster\AssetcachebusterServiceProvider::class,
+        TCG\Voyager\VoyagerServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
 
         /*

@@ -37,3 +37,8 @@ Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@sho
 Route::resource('recipes', 'RecipeController');
 
 Route::resource('occasions', 'OccasionController');
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
