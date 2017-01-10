@@ -11,29 +11,32 @@
 |
 */
 
+Route::get('/', function () {
+    return view('home');
+});
+
 Auth::routes();
 
 Route::group(['prefix' => 'login'], function() {
-    Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function($provider) {
+    Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function() {
         Route::get('/', ['as' => 'oauth.redirect', 'uses' => 'OAuthController@redirect']);
-//        Route::get('login', ['as' => 'oauth.login', 'uses' => 'OAuthController@redirect']);
         Route::get('callback', ['as' => 'oauth.callback', 'uses' => 'OAuthController@callback']);
     });
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('ingredients', 'IngredientController', [
+    'except' => [
+        'show'
+    ],
+    'parameters' => [
+        'ingredients' => 'token'
+    ]
+]);
 
-Route::resource('ingredients', 'IngredientController');
-//Route::get('ingredients/{one}/{two?}/{three?}/{four?}/{five?}', ['as' => 'ingredients.show', 'uses' => 'IngredientController@show']);
 Route::get('ingredients/{parameters?}', ['as' => 'ingredients.show', 'uses' => 'IngredientController@show'])->where('parameters', '(.*)');
 
+Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@show', function($token) {}])->where(['token' => '[A-Za-z0-9]+']);
 
-
-Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@show', function($token) {
-
-}])->where(['token' => '[A-Za-z0-9]+']);
 Route::resource('recipes', 'RecipeController');
 
 Route::resource('occasions', 'OccasionController');
