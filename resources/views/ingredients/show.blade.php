@@ -2,12 +2,14 @@
 
 @section('content')
 
+    @include('ingredients.subheader')
+
     <h1>{!! $ingredient->title !!}</h1>
 
-    @if (!empty($ingredient_children))
+    @if (!empty($ingredients))
     <ul>
-    @foreach($ingredient_children as $child)
-        <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $child->slug }}">{{ $child->title }}</a></li>
+    @foreach($ingredients as $ingredient)
+        <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $ingredient->slug }}">{{ $ingredient->title }}</a></li>
     @endforeach
     </ul>
     @endif
