@@ -13,31 +13,34 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/skeleton.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
     @yield('style')
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
     @yield('script-top')
-    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>
+{{--    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>--}}
 </head>
 <body>
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    @include('layouts._header')
+    <div class="container">
+        @include('layouts.header')
 
-    @include('layouts._flash')
+        @include('layouts.flash')
 
-    @yield('content')
+        @include('layouts.content')
 
-    @include('layouts._footer')
+        @include('layouts.footer')
+    </div>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-1.11.1.min.js') }}"><\/script>')</script>
-    <script src="{{ asset('js/plugins.js') }}"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    {{--<script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-1.11.1.min.js') }}"><\/script>')</script>--}}
+    {{--<script src="{{ asset('js/plugins.js') }}"></script>--}}
     @yield('script-bottom')
-    <script src="{{ asset('js/main.js') }}"></script>
+    {{--<script src="{{ asset('js/main.js') }}"></script>--}}
 
     {{-- <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
