@@ -169,6 +169,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         GrahamCampbell\Throttle\ThrottleServiceProvider::class,
+        HobbIoT\Auth\CacheableAuthUserServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Spekkionu\Assetcachebuster\AssetcachebusterServiceProvider::class,
