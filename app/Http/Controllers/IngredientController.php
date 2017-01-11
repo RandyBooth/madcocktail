@@ -145,4 +145,36 @@ class IngredientController extends Controller
     {
         //
     }
+
+    public function tree() {
+        $nodes = Ingredient::get()->toTree();
+        $tree = '';
+        $this->buildTree($tree, $nodes, 'title', 'children', true);
+        return view('ingredients.tree', compact('tree'));
+    }
+
+    private function buildTree(&$tree_return = '', $tree_array, $display_field, $children_field, $link = false, $slug = '', $recursionDepth = 0, $maxDepth = false)
+    {
+        if ($maxDepth && ($recursionDepth == $maxDepth)) return;
+
+        if (!empty($tree_array)) {
+            $tree_return .= "<ul>\n";
+
+            foreach ($tree_array as $row)
+            {
+                $tree_return .= "<li>\n";
+                $tree_return .= ($link) ? "<a href=\"".route('ingredients.show', $slug.$row['slug'].'/')."\">" . $row[$display_field] . "</a>\n" : $row[$display_field] . "\n";
+
+                if (isset($row[$children_field])) {
+                    if (!empty($row[$children_field])) {
+                        $this->buildTree($tree_return, $row[$children_field], $display_field, $children_field, $link, $slug.$row['slug'].'/', $recursionDepth + 1, $maxDepth);
+                    }
+                }
+
+                $tree_return .= "</li>\n";
+            }
+
+            $tree_return .= "</ul>\n";
+        }
+    }
 }

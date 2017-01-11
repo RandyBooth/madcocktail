@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
+    Route::group(['prefix' => 'ingredients'], function () {
+        Route::get('tree', 'IngredientController@tree');
+    });
+});
+
 Auth::routes();
 
 Route::group(['prefix' => 'login'], function() {
