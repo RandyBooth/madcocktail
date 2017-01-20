@@ -41,8 +41,8 @@ Route::resource('ingredients', 'IngredientController', [
 
 Route::get('ingredients/{parameters?}', ['as' => 'ingredients.show', 'uses' => 'IngredientController@show'])->where('parameters', '(.*)');
 
-Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@show', function($token) {}])->where(['token' => '[A-Za-z0-9]+']);
-
 Route::resource('recipes', 'RecipeController');
+
+Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@show', function($token) {}])->where(['token' => '[A-Za-z0-9]+']);
 
 Route::resource('occasions', 'OccasionController');
