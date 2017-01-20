@@ -20,11 +20,10 @@ class CreateRecipesTable extends Migration
             $table->string('title_first_letter', 1);
             $table->string('slug');
             $table->string('description');
-            $table->text('direction');
+            $table->text('directions');
             $table->tinyInteger('glass_id')->unsigned()->default(0);
             $table->tinyInteger('rate_avg')->unsigned()->default(0);
             $table->smallInteger('liked')->unsigned()->default(0);
-            $table->integer('view_count')->unsigned()->default(0);
             $table->integer('user_id')->unsigned()->default(0);
 //            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->tinyInteger('is_active')->unsigned()->default(0);

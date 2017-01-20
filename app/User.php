@@ -20,4 +20,17 @@ class User extends Authenticatable
         parent::boot();
         static::addGlobalScope(new ActiveScope);
     }
+
+    public function getRoleTypeAttribute() {
+        switch($this->role) {
+            case 1:
+                $type = 'Admin';
+                break;
+            default:
+                $type = 'User';
+                break;
+        }
+
+        return $type;
+    }
 }

@@ -32,9 +32,9 @@ class RecipeSeeder extends Seeder
                 'recipe'      => [
                     'title'       => 'Long Island Iced Tea',
                     'description' => 'Yummy!',
+                    'directions'   => ['Mix ingredients together over ice in a glass.', 'Pour into a shaker and give one brisk shake.', 'Pour back into the glass and make sure there is a touch of fizz at the top.', 'Garnish with lemon.'],
                     'glass_id'    => $glasses['collins'],
                     'user_id'     => 1,
-                    'view_count'  => 99,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
@@ -51,9 +51,9 @@ class RecipeSeeder extends Seeder
                 'recipe'      => [
                     'title'       => 'Caribou Lou',
                     'description' => 'woo!',
+                    'directions'   => ['Shake or serve up with ice in a highball glass.'],
                     'glass_id'    => $glasses['highball'],
                     'user_id'     => 1,
-                    'view_count'  => 11,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
@@ -66,9 +66,9 @@ class RecipeSeeder extends Seeder
                 'recipe'      => [
                     'title'       => 'Jager Bomb',
                     'description' => 'Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing!',
+                    'directions'   => ['hi', 'woo that\'s amazing!'],
                     'glass_id'    => $glasses['old-fashioned'],
                     'user_id'     => 1,
-                    'view_count'  => 55,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
@@ -83,21 +83,25 @@ class RecipeSeeder extends Seeder
             $count            = 0;
             $ingredients_data = [ ];
             $recipe           = Recipe::create( $list['recipe'] );
-            $ingredients      = $list['ingredients'];
 
-            foreach ($ingredients as $ingredient) {
-                $data = Ingredient::where( 'slug', '=', $ingredient['slug'] )->first();
+            if (!empty($recipe)) {
+                $recipe->counts()->create([]);
+                $ingredients      = $list['ingredients'];
 
-                if ( ! empty( $data )) {
-                    $ingredients_data[$data->id] = [
-                        'measure_id'     => $measures[$ingredient['measure_id']],
-                        'measure_amount' => $ingredient['measure_amount'],
-                        'order_by'       => $count++
-                    ];
+                foreach ($ingredients as $ingredient) {
+                    $data = Ingredient::where( 'slug', '=', $ingredient['slug'] )->first();
+
+                    if ( ! empty( $data )) {
+                        $ingredients_data[$data->id] = [
+                            'measure_id'     => $measures[$ingredient['measure_id']],
+                            'measure_amount' => $ingredient['measure_amount'],
+                            'order_by'       => $count++
+                        ];
+                    }
                 }
-            }
 
-            $recipe->ingredients()->sync( $ingredients_data );
+                $recipe->ingredients()->sync( $ingredients_data );
+            }
         }
     }
 }

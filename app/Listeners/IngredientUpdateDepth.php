@@ -3,9 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\IngredientSaved;
+use App\Ingredient;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Ingredient;
 
 class IngredientUpdateDepth
 {
@@ -29,11 +29,14 @@ class IngredientUpdateDepth
     {
         if (!empty($event->ingredient)) {
             $ingredient = $event->ingredient;
+//            dd($ingredient);
 
             if ($ingredient->id && $ingredient->_lft) {
-                $ingredient_depth = $ingredient->withDepth()->find($ingredient->id);
-                $ingredient_depth->level = $ingredient_depth->depth;
-                $ingredient_depth->save();
+                $ingredient_depth = Ingredient::withDepth()->find($ingredient->id);
+                if (!empty($ingredient_depth)) {
+                    $ingredient_depth->level = $ingredient_depth->depth;
+                    $ingredient_depth->save();
+                }
             }
         }
     }

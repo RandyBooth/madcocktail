@@ -16,6 +16,7 @@ class CreateNestedSetIngredientsTable extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('token', 6);
             NestedSet::columns($table);
             $table->string('title');
             $table->string('slug');

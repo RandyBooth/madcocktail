@@ -2,11 +2,11 @@
 
 namespace App;
 
+use App\RecipeCount;
 use App\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cache;
 use Kalnoy\Nestedset\NodeTrait;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -16,9 +16,10 @@ class Ingredient extends Model
     use SoftDeletes;
     use Sluggable;
 
-    protected $appends = ['token'];
+    protected $appends = ['title_sup'];
+//    protected $casts = ['id' => 'integer'];
     protected $dates = ['deleted_at'];
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'parent_id', 'level', 'is_alcoholic', 'is_active', 'user_id'];
     protected $hidden = ['id'];
     protected $table = 'ingredients';
 
@@ -26,6 +27,28 @@ class Ingredient extends Model
     {
         parent::boot();
         static::addGlobalScope(new ActiveScope);
+        static::created(function ($model) {
+            if ($model->id && empty($model->token)) {
+                $ingredent_id = $model->id;
+                $token_valid = false;
+
+                do {
+                    $token = Hashids::encode(mt_rand(100000,999999).$ingredent_id);
+
+                    if (!empty($token)) {
+                        $ingredent = Ingredient::where('token', $token)->first();
+
+                        if (!$ingredent) {
+                            $model->token = $token;
+
+                            if ($model->save()) {
+                                $token_valid = true;
+                            }
+                        }
+                    }
+                } while(!$token_valid);
+            }
+        });
     }
 
     public function sluggable()
@@ -33,25 +56,38 @@ class Ingredient extends Model
         return [
             'slug' => [
                 'source' => 'title',
-                'unique' => false,
+                'unique' => true,
             ]
         ];
     }
 
-    public function getTokenAttribute()
+    public function getTitleSupAttribute()
     {
-        return Hashids::encode($this->id);
+        if (!empty($this->title)) {
+            return preg_replace("/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/", "<sup>$1</sup>", $this->title);
+        }
+    }
+
+    public function scopeToken($query, $type)
+    {
+        return $query->where('token', $type);
     }
 
     public function scopeIsAlcoholic($query)
     {
-        return $query->where('is_alcoholic', '=', 1);
+        return $query->where('is_alcoholic', 1);
     }
 
     public function recipes()
     {
-        return $this->belongsToMany('App\Recipe')->orderBy('view_count', 'DESC')->orderBy('title');
+//        return $this->belongsToMany('App\Recipe')->orderBy('view_count', 'DESC')->orderBy('title');
     }
+
+    /*public function recipes()
+    {
+        $table_recipe_count = with(new RecipeCount)->getTable();
+        return $this->belongsToMany('App\Recipe')->join($table_recipe_count, $table_recipe_count.'.id', '=', 'recipes.id')->orderBy('title');
+    }*/
 
     public function newPivot(Model $parent, array $attributes, $table, $exists) {
         if ($parent instanceof Recipe) {

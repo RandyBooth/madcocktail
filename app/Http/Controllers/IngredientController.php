@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\IngredientSaved;
+use App\Http\Requests\IngredientRequest;
 use App\Ingredient;
 use App\Recipe;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Cache;
+use Vinkla\Hashids\Facades\Hashids;
 
 class IngredientController extends Controller
 {
+
+    public function __construct()
+    {
+        Cache::flush();
+        $this->middleware('auth', ['only' => 'create', 'edit']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +27,8 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $ingredients = Cache::tags('ingredients')->remember('', 60, function() {
-            return Ingredient::whereIsRoot()->isAlcoholic()->get();
+        $ingredients = Cache::tags('index.ingredient')->remember('', 60, function() {
+            return Ingredient::whereIsRoot()->isAlcoholic()->defaultOrder()->get();
         });
 
         return view('ingredients.index')->with('ingredients', $ingredients);
@@ -31,7 +41,7 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        //
+        return view('ingredients.create');
     }
 
     /**
@@ -40,9 +50,19 @@ class IngredientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(IngredientRequest $request)
     {
-        //
+        if (Auth::check()) {
+            $data = $request->all();
+            $data['parent_id'] = 3;
+            $data['is_active'] = 1;
+            $data['user_id'] = Auth::id();
+            $ingredient = Ingredient::create($data);
+            if (!empty($ingredient)) {
+                event(new IngredientSaved($ingredient));
+                return redirect()->route('ingredients.index')->with('success', 'Item created successfully');
+            }
+        }
     }
 
     /**
@@ -53,32 +73,31 @@ class IngredientController extends Controller
      */
     public function show($parameters = null)
     {
-        Cache::flush();
+        $ingredients_parameter = '';
         $parameters_explode = explode('/', $parameters);
         $count = 0;
 
         foreach($parameters_explode as $parameter) {
             $where = function($query) use ($parameter, $count) {
-                return $query->where('slug', '=', $parameter)->where('level', '=', $count)
-                ;
+                return $query->where('slug', $parameter)->where('level', $count);
             };
 
             if ($count++) {
-                $ingredients->orWhere($where);
+                $ingredients_parameter->orWhere($where);
             } else {
-                $ingredients = Ingredient::where($where);
+                $ingredients_parameter = Ingredient::where($where);
             }
         }
 
         if ($count > 0) {
-            $ingredients = Cache::tags('ingredients')->remember($parameters, 60, function() use ($ingredients) {
-                return $ingredients->get();
+            $ingredients_parameter = Cache::tags('ingredients')->remember($parameters, 60, function() use ($ingredients_parameter) {
+                return $ingredients_parameter->orderBy('level')->get();
             });
 
-            if ($ingredients->count() == count($parameters_explode)) {
-                $ingredient = $ingredients->last();
+            if ($ingredients_parameter->count() == count($parameters_explode)) {
+                $ingredient = $ingredients_parameter->last();
 
-                $ingredient_children = Cache::tags('ingredient_children')->remember($parameters, 60, function() use ($ingredient) {
+                $ingredients = Cache::tags('ingredient_children')->remember($parameters, 60, function() use ($ingredient) {
                     return $ingredient->
                         children()->
                         orderBy('title')->
@@ -93,19 +112,35 @@ class IngredientController extends Controller
                         toArray();
                 });
 
-                $recipes = Cache::tags('ingredient_show_recipes_top')->remember($parameters, 60, function() use ($ingredient_descendants_id) {
+                $recipes = Cache::tags('ingredient_show_recipes_top_month')->remember($parameters, 60, function() use ($ingredient_descendants_id) {
+                    return Recipe::
+                        whereHas('ingredients', function($query) use($ingredient_descendants_id) {
+                            $query->whereIn('ingredient_recipe.ingredient_id', $ingredient_descendants_id);
+                        })
+                        ->with('counts')
+                        ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                        ->select(['title', 'slug'])
+                        ->orderBy('recipe_counts.count_month', 'DESC')
+                        ->orderby('title')
+                        ->take(10)
+                        ->get();
+                });
+
+                /*$recipes = Cache::tags('ingredient_show_recipes_top_day')->remember($parameters, 60, function() use ($ingredient_descendants_id) {
                     return Recipe::
                         whereHas('ingredients', function($query) use($ingredient_descendants_id) {
                             $query->
                                 whereIn('ingredient_recipe.ingredient_id', $ingredient_descendants_id);
-                        })->
-                        orderBy('view_count', 'desc')->
-                        orderBy('title')->
-                        take(10)->
-                        get();
-                });
+                        })
+                        ->with('counts')
+                        ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                        ->orderBy('recipe_counts.count_day', 'DESC')
+                        ->orderby('title')
+                        ->take(10)
+                        ->get();
+                });*/
 
-                return view('ingredients.show', compact('ingredient', 'ingredient_children', 'recipes', 'parameters'));
+                return view('ingredients.show', compact('ingredient', 'ingredients', 'recipes', 'parameters'));
             }
         }
 
@@ -120,7 +155,8 @@ class IngredientController extends Controller
      */
     public function edit($id)
     {
-        //
+        $ingredient = Ingredient::token($id)->firstOrFail();
+        dd($ingredient);
     }
 
     /**
@@ -143,15 +179,34 @@ class IngredientController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Ingredient::token($id)->firstOrFail()->delete();
+        return redirect()->route('ingredients.index')->with('success', 'Ingredient deleted successfully');
     }
 
     public function tree() {
-        $nodes = Ingredient::get()->toTree();
+        $nodes = Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         $tree = '';
         $this->buildTree($tree, $nodes, 'title', 'children', true);
         return view('ingredients.tree', compact('tree'));
     }
+
+//    private function hashId($id, $type = 'encode') {
+//        switch($type) {
+//            case 'decode':
+//                $id = Hashids::decode($id);
+//                break;
+//            case 'encode':
+//            default:
+//                $id = Hashids::encode($id);
+//                break;
+//        }
+//
+//        if (!empty($id)) {
+//            return is_array($id) ? head($id) : $id;
+//        }
+//
+//        abort(404);
+//    }
 
     private function buildTree(&$tree_return = '', $tree_array, $display_field, $children_field, $link = false, $slug = '', $recursionDepth = 0, $maxDepth = false)
     {
