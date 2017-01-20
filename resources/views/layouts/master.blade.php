@@ -40,7 +40,7 @@
     {{--<script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-1.11.1.min.js') }}"><\/script>')</script>--}}
     {{--<script src="{{ asset('js/plugins.js') }}"></script>--}}
     @yield('script-bottom')
-    {{--<script src="{{ asset('js/main.js') }}"></script>--}}
+    <script src="{{ asset('js/script.js') }}"></script>
 
     {{-- <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
