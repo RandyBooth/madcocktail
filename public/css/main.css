@@ -1,0 +1,8 @@
+a {
+    text-decoration: none;
+}
+
+a:focus,
+a:hover {
+    border-bottom: 1px solid;
+}
