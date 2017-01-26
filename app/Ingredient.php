@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Helper;
 use App\RecipeCount;
 use App\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -64,7 +65,7 @@ class Ingredient extends Model
     public function getTitleSupAttribute()
     {
         if (!empty($this->title)) {
-            return preg_replace("/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/", "<sup>$1</sup>", $this->title);
+            return Helper::html_sup($this->title);
         }
     }
 

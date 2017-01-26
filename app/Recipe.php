@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Helper;
 use App\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +42,7 @@ class Recipe extends Model
     public function getTitleSupAttribute()
     {
         if (!empty($this->title)) {
-            return preg_replace("/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/", "<sup>$1</sup>", $this->title);
+            return Helper::html_sup($this->title);
         }
     }
 

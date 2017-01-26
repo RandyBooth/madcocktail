@@ -235,6 +235,7 @@ return [
         'Asset' => Spekkionu\Assetcachebuster\Facades\Cachebuster::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
+        'Helper' => App\Helpers\Helper::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Throttle' => GrahamCampbell\Throttle\Facades\Throttle::class,

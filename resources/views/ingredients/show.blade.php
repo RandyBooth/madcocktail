@@ -2,6 +2,8 @@
 
 @section('content')
 
+    {!! Helper::breadcrumbs($ingredient_breadcrumbs, 'ingredients.show') !!}
+
     @include('ingredients.subheader')
 
     <h1>{!! $ingredient->title_sup !!}</h1>
