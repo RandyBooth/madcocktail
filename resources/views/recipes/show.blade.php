@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', $recipe->title. ' | Recipes')
+
 @section('content')
     @if (!empty($recipe->title))
     <div><strong>Title:</strong> {{ $recipe->title_sup }}</div>

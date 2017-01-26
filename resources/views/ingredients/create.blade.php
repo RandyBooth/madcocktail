@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Create New Ingredient')
+
 @section('content')
     <form method="POST" action="{{ route('ingredients.store') }}">
         {{ csrf_field() }}

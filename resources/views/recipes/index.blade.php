@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Recipes')
+
 @section('content')
     {{--@if(!empty($ingredients))
         <ul>

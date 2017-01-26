@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Ingredients')
+
 @section('content')
     @include('ingredients.subheader')
 
