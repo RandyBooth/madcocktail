@@ -23,6 +23,9 @@ class Recipe extends Model
     {
         parent::boot();
         static::addGlobalScope(new ActiveScope);
+        static::saving(function ($model) {
+            dd($model);
+        });
     }
 
     protected $casts = [

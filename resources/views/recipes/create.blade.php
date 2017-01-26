@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.master')
 
 @section('style')
 <?php /*<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />*/ ?>
@@ -9,33 +9,37 @@
 @stop
 
 @section('content')
+    @if (!empty($glasses))
+    <div class="form-group">
+        <label for="glasses" class="">Glasses</label>
 
-    @foreach ($errors->all() as $error)
-    <p class="error">{{ $error }}</p>
-    @endforeach
-
-    {!! $glasses !!}
-    <?php
-        $select_glasses = [];
-        foreach($glasses as $glass) {
-            $select_glasses[$glass['token']] = $glass['title'];
-        }
-    ?>
-
-    @if (isset($recipe))
-        {!! Form::model($recipe, array('route' => array('r.update', $recipe->token), 'method' => 'PUT')) !!}
-    @else
-        {!! Form::open(array('route' => 'r.store')) !!}
+        <div class="col-md-6">
+            <select name="glasses" id="glasses">
+                @foreach($glasses as $key => $val)
+                    <option value="{{ $key }}">{{ $val }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     @endif
 
-        <div>{!! Form::text('title') !!}</div>
-        <div>{!! Form::textarea('description') !!}</div>
-        <div>{!! Form::text('instruction', null, array('id' => 'instruction')) !!}</div>
-        <div>Category: {!! Form::text('category', null, array('id' => 'category')) !!}</div>
-        <div>{!! Form::select('glasses', $select_glasses) !!}</div>
-        {!! Form::honeypot('drink_type', 'drink_date') !!}
-        <div>{!! Form::submit('Submit') !!}</div>
+    <form method="POST" action="{{ route('recipes.store') }}">
+        {{ csrf_field() }}
 
-    {!! Form::close() !!}
+        <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+            <label for="title" class="">Title</label>
 
+            <div class="col-md-6">
+                <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" {{-- required --}} autofocus>
+
+                @if ($errors->has('title'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('title') }}</strong>
+                    </span>
+                @endif
+            </div>
+        </div>
+
+        <div><button type="submit">Submit</button></div>
+    </form>
 @stop

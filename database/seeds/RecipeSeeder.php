@@ -66,7 +66,7 @@ class RecipeSeeder extends Seeder
                 'recipe'      => [
                     'title'       => 'Jager Bomb',
                     'description' => 'Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing!',
-                    'directions'   => ['hi', 'woo that\'s amazing!'],
+                    'directions'   => ['Pour red bull into a medium sized glass.', 'Add a shot glass of jagermeister, and chug.'],
                     'glass_id'    => $glasses['old-fashioned'],
                     'user_id'     => 1,
                     'is_active'   => 1,

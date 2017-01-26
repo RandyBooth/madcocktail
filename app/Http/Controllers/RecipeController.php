@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RecipeRequest;
+use App\Glass;
 use App\Recipe;
 use App\RecipeCount;
 use Carbon\Carbon;
@@ -14,6 +16,8 @@ class RecipeController extends Controller
     public function __construct()
     {
         Cache::flush();
+        $this->middleware('auth', ['only' => ['create', 'edit']]);
+        $this->middleware('xss', ['only' => ['store', 'update']]);
     }
 
     /**
@@ -23,7 +27,26 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        //
+        $recipes_latest = Cache::tags('recipe_index_latest')->remember('', 5, function () {
+            return Recipe
+                ::orderby('created_at', 'DESC')
+                ->orderby('title')
+                ->take(10)
+                ->get();
+        });
+
+        $recipes_top = Cache::tags('recipe_index_popular')->remember('', (60*25), function () {
+            return Recipe
+                ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+//                ->select(['title', 'slug'])
+                ->orderBy('recipe_counts.count_total', 'DESC')
+                ->orderby('title')
+                ->take(10)
+                ->get();
+        });
+
+        return view('recipes.index', compact('recipes_latest', 'recipes_top'));
+
     }
 
     /**
@@ -33,7 +56,9 @@ class RecipeController extends Controller
      */
     public function create()
     {
-        //
+//        $categories = Ingredient::orderBy('title')->get();
+        $glasses = array_pluck(Glass::select('title', 'slug')->orderBy('title')->get(), 'title', 'slug');
+        return view('recipes.create', compact('glasses'));
     }
 
     /**
@@ -42,7 +67,7 @@ class RecipeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RecipeRequest $request)
     {
         //
     }
@@ -50,12 +75,12 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param $parameter
      * @return \Illuminate\Http\Response
      */
-    public function show($parameter = null)
+    public function show($parameter = null, Request $request)
     {
-        $recipe = Cache::tags('recipe')->remember($parameter, 60, function() use ($parameter) {
+        $recipe = Cache::tags('recipe')->remember($parameter, 60, function () use ($parameter) {
             return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
         });
 
@@ -67,56 +92,65 @@ class RecipeController extends Controller
 
             if ($recipe->counts) {
                 $counts = $recipe->counts;
-                $table_recipe_count = with(new RecipeCount)->getTable();
+                $ip_id = $request->ip().'_'.$counts->id;
 
-                if (!empty($table_recipe_count)) {
-                    $counts_arr = [];
-                    $count_updated = $counts->updated_at;
-                    $count_now = Carbon::now();
+                if (is_null(Cache::tags('recipe_counter')->get($ip_id))) {
 
-                    if (isset($counts->count_total)) {
-                        $counts_arr['count_total'] = DB::raw('count_total + 1');
-                    }
+                    $table_recipe_count = with(new RecipeCount)->getTable();
 
-                    if (isset($counts->count_year)) {
-                        $count_updated_start_year = $count_updated->copy()->startOfYear();
-                        $count_now_start_year = $count_now->copy()->startOfYear();
+                    if (!empty($table_recipe_count)) {
+                        $counts_arr = [];
+                        $count_updated = $counts->updated_at;
+                        $count_now = Carbon::now();
 
-                        if ($count_updated_start_year->diffInYears($count_now_start_year, false) > 0) {
-                            $counts_arr['count_year'] = 1;
-                        } else {
-                            $counts_arr['count_year'] = DB::raw('count_year + 1');
+                        if (isset($counts->count_total)) {
+                            $counts_arr['count_total'] = DB::raw('count_total + 1');
                         }
-                    }
 
-                    if (isset($counts->count_month)) {
-                        $count_updated_start_month = $count_updated->copy()->startOfMonth();
-                        $count_now_start_month = $count_now->copy()->startOfMonth();
+                        if (isset($counts->count_year)) {
+                            $count_updated_start_year = $count_updated->copy()->startOfYear();
+                            $count_now_start_year = $count_now->copy()->startOfYear();
 
-                        if ($count_updated_start_month->diffInMonths($count_now_start_month, false) > 0) {
-                            $counts_arr['count_month'] = 1;
-                        } else {
-                            $counts_arr['count_month'] = DB::raw('count_month + 1');
+                            if ($count_updated_start_year->diffInYears($count_now_start_year, false) > 0) {
+                                $counts_arr['count_year'] = 1;
+                            } else {
+                                $counts_arr['count_year'] = DB::raw('count_year + 1');
+                            }
                         }
-                    }
 
-                    if (isset($counts->count_day)) {
-                        $count_updated_start_day = $count_updated->copy()->startOfDay();
-                        $count_now_start_day = $count_now->copy()->startOfDay();
+                        if (isset($counts->count_month)) {
+                            $count_updated_start_month = $count_updated->copy()->startOfMonth();
+                            $count_now_start_month = $count_now->copy()->startOfMonth();
 
-                        if ($count_updated_start_day->diffInDays($count_now_start_day, false) > 0) {
-                            $counts_arr['count_day'] = 1;
-                        } else {
-                            $counts_arr['count_day'] = DB::raw('count_day + 1');
+                            if ($count_updated_start_month->diffInMonths($count_now_start_month, false) > 0) {
+                                $counts_arr['count_month'] = 1;
+                            } else {
+                                $counts_arr['count_month'] = DB::raw('count_month + 1');
+                            }
                         }
-                    }
 
-                    if (!empty($counts_arr)) {
-                        $counts_arr['updated_at'] = $count_now;
+                        if (isset($counts->count_day)) {
+                            $count_updated_start_day = $count_updated->copy()->startOfDay();
+                            $count_now_start_day = $count_now->copy()->startOfDay();
 
-                        DB::table($table_recipe_count)
-                           ->whereId($counts->id)
-                           ->update($counts_arr);
+                            if ($count_updated_start_day->diffInDays($count_now_start_day, false) > 0) {
+                                $counts_arr['count_day'] = 1;
+                            } else {
+                                $counts_arr['count_day'] = DB::raw('count_day + 1');
+                            }
+                        }
+
+                        if (!empty($counts_arr)) {
+                            $counts_arr['updated_at'] = $count_now;
+
+                            $insert_count = DB::table($table_recipe_count)
+                               ->whereId($counts->id)
+                               ->update($counts_arr);
+
+                            if ($insert_count) {
+                                Cache::tags('recipe_counter')->put($ip_id, '1', (60*12));
+                            }
+                        }
                     }
                 }
             }
@@ -124,8 +158,8 @@ class RecipeController extends Controller
             $ingredients = $recipe->ingredients;
             $ingredient_slug = [];
 
-            foreach($ingredients as $ingredient) {
-                $ingredient_ancestors = Cache::tags('ingredient_ancestor')->remember($ingredient->id, 60, function() use ($ingredient) {
+            foreach ($ingredients as $ingredient) {
+                $ingredient_ancestors = Cache::tags('ingredient_ancestor')->remember($ingredient->id, 60, function () use ($ingredient) {
                     return $ingredient->getAncestors();
                 });
 
@@ -160,7 +194,7 @@ class RecipeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RecipeRequest $request, $id)
     {
         //
     }
