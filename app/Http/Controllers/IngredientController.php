@@ -71,18 +71,19 @@ class IngredientController extends Controller
             $user = Auth::user();
             $data = $request->all();
 
-            if ($user->role == 1) {
-                $data['is_active'] = 1;
-            }
+            $data['parent_id'] = null;
+            $data['is_alcoholic'] = 0;
+            $data['is_active'] = ($user->role == 1) ? 1 : 0;
+            $data['user_id'] = Auth::id();
 
             if (!empty($data['ingredients'])) {
                 $ingredient_id = Ingredient::token($data['ingredients'])->pluck('id')->first();
+
                 if ($ingredient_id) {
                     $data['parent_id'] = $ingredient_id;
                 }
             }
 
-            $data['user_id'] = Auth::id();
             $ingredient = Ingredient::create($data);
 
             if (!empty($ingredient)) {
@@ -90,6 +91,8 @@ class IngredientController extends Controller
                 return redirect()->route('ingredients.index')->with('success', 'Ingredient created successfully');
             }
         }
+
+        return redirect()->back()->withInput()->with('warning', 'Ingredient create fail');
     }
 
     /**
