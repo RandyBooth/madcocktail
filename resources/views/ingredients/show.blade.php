@@ -3,7 +3,6 @@
 @section('title', $ingredient->title. ' | Ingredients')
 
 @section('content')
-
     {!! Helper::breadcrumbs($ingredient_breadcrumbs, 'ingredients.show') !!}
 
     @include('ingredients.subheader')

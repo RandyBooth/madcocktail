@@ -27,7 +27,9 @@ class Ingredient extends Model
     protected static function boot()
     {
         parent::boot();
+
         static::addGlobalScope(new ActiveScope);
+
         static::created(function ($model) {
             if ($model->id && empty($model->token)) {
                 $ingredent_id = $model->id;
