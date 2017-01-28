@@ -3,6 +3,8 @@
 @section('title', 'Recipes')
 
 @section('content')
+    @include('recipes.subheader')
+
     {{--@if(!empty($ingredients))
         <ul>
         @foreach($ingredients as $ingredient)

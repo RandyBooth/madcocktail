@@ -3,6 +3,8 @@
 @section('title', $recipe->title. ' | Recipes')
 
 @section('content')
+    @include('recipes.subheader')
+
     @if (!empty($recipe->title))
     <div><strong>Title:</strong> {{ $recipe->title_sup }}</div>
     @endif

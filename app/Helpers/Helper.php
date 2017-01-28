@@ -8,6 +8,11 @@ class Helper
         return preg_replace("/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/", "<sup>$1</sup>", $string);
     }
 
+    public static function textarea_to_array($text)
+    {
+        return preg_split("/\r\n|\n|\r/", preg_replace("/[\r\n]+/", "\n", $text));
+    }
+
     public static function breadcrumbs($array, $route = '')
     {
         $str = '';

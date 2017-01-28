@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RecipeRequest;
 use App\Glass;
+use App\Helpers\Helper;
 use App\Recipe;
 use App\RecipeCount;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -57,7 +59,11 @@ class RecipeController extends Controller
     public function create()
     {
 //        $categories = Ingredient::orderBy('title')->get();
-        $glasses = array_pluck(Glass::select('title', 'slug')->orderBy('title')->get(), 'title', 'slug');
+        $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+            return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
+        });
+
+        $glasses = $glasses_data->pluck('title', 'slug')->all();
         return view('recipes.create', compact('glasses'));
     }
 
@@ -69,7 +75,32 @@ class RecipeController extends Controller
      */
     public function store(RecipeRequest $request)
     {
-        //
+        if (Auth::check()) {
+            $user = Auth::user();
+            $data = $request->all();
+
+            $data['is_active'] = ($user->role == 1) ? 1 : 0;
+            $data['user_id'] = Auth::id();
+
+            $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+                return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
+            });
+
+            $glasses = $glasses_data->pluck('id', 'slug')->all();
+
+            if (array_key_exists($data['glasses'], $glasses)) {
+                $data['glass_id'] = $glasses[$data['glasses']];
+                $data['directions'] = Helper::textarea_to_array($data['directions']);
+
+                $recipe = Recipe::create($data);
+
+                if (!empty($recipe)) {
+                    return redirect()->route('recipes.index')->with('success', 'Recipe created successfully');
+                }
+            }
+        }
+
+        return redirect()->back()->withInput()->with('warning', 'Recipe create fail');
     }
 
     /**
@@ -80,7 +111,7 @@ class RecipeController extends Controller
      */
     public function show($parameter = null, Request $request)
     {
-        $recipe = Cache::tags('recipe')->remember($parameter, 60, function () use ($parameter) {
+        $recipe = Cache::tags('recipe')->remember(strtolower($parameter), 60, function () use ($parameter) {
             return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
         });
 

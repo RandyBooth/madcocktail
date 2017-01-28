@@ -1,7 +1,13 @@
+@if(Session::has('success') || Session::has('warning'))
+<?php $message = ''; $message_type = ''; ?>
 <div style="margin: 20px 0;" class="row">
     @if(Session::has('success'))
-        <div style="background-color: green; color: white; padding: 5px 20px;">{{ Session::get('success') }}</div>
+        <?php $message = Session::get('success'); ?>
+        <?php $message_type = 'success'; ?>
     @elseif(Session::has('warning'))
-        <div style="background-color: red; color: white; padding: 5px 20px;">{{ Session::get('warning') }}</div>
+        <?php $message = Session::get('warning'); ?>
+        <?php $message_type = 'warning'; ?>
     @endif
+    <div style="" class="flash flash-{{ $message_type }}">{{ $message }}</div>
 </div>
+@endif

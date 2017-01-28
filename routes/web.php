@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-
 Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
     Route::group(['prefix' => 'ingredients'], function () {
         Route::get('tree', 'IngredientController@tree');
@@ -29,6 +25,14 @@ Route::group(['prefix' => 'login'], function() {
         Route::get('callback', ['as' => 'oauth.callback', 'uses' => 'OAuthController@callback']);
     });
 });
+
+Route::get('/', function () {
+    return view('home');
+});
+
+Route::get('autocomplete', ['before' => 'csrf', 'as' => 'autocomplete', 'uses' => 'AutocompleteController@search']);
+Route::post('autocomplete', ['before' => 'csrf', 'middleware' => 'throttle:50,5', 'as' => 'autocomplete', 'uses' => 'AutocompleteController@search']);
+
 
 Route::resource('ingredients', 'IngredientController', [
     'except' => [

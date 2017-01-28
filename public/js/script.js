@@ -11,3 +11,26 @@ if (window.location.hash && window.location.hash == '#_=_') {
         document.body.scrollLeft = scroll.left;
     }
 }
+
+$(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('#search').autocomplete({
+        autoSelectFirst: true,
+        dataType: 'json',
+        deferRequestBy: 250,
+        groupBy: 'category',
+        minChars: 3,
+        serviceUrl: '/autocomplete',
+        showNoSuggestionNotice: true,
+        triggerSelectOnValidInput: false,
+        type: 'POST',
+        onSelect: function (suggestion) {
+            console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+        }
+    });
+})
