@@ -7,6 +7,7 @@ use App\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Recipe extends Model
 {
@@ -15,16 +16,41 @@ class Recipe extends Model
 
     protected $appends = ['title_sup'];
     protected $dates = ['deleted_at'];
-    protected $fillable = ['title', 'description', 'direction', 'glass_id', 'view_count', 'user_id', 'is_active'];
+    protected $fillable = ['title', 'description', 'directions', 'glass_id', 'user_id', 'is_active'];
     protected $hidden = ['id'];
     protected $table = 'recipes';
 
     protected static function boot()
     {
         parent::boot();
+
         static::addGlobalScope(new ActiveScope);
+
         static::saving(function ($model) {
-            dd($model);
+            $model->title_first_letter = strtolower(substr($model->title, 0, 1));
+        });
+
+        static::created(function ($model) {
+            if ($model->id && empty($model->token)) {
+                $recipe_id = $model->id;
+                $token_valid = false;
+
+                do {
+                    $token = Hashids::encode(mt_rand(100000,999999).$recipe_id);
+
+                    if (!empty($token)) {
+                        $recipe = Recipe::where('token', $token)->first();
+
+                        if (!$recipe) {
+                            $model->token = $token;
+
+                            if ($model->save()) {
+                                $token_valid = true;
+                            }
+                        }
+                    }
+                } while(!$token_valid);
+            }
         });
     }
 
