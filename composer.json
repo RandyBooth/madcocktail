@@ -10,14 +10,14 @@
         "kalnoy/nestedset": "^4.2",
         "vinkla/hashids": "^3.0",
         "cviebrock/eloquent-sluggable": "^4.1",
-        "graham-campbell/throttle": "^5.2",
         "intervention/image": "^2.3",
         "spekkionu/assetcachebuster": "^2.1",
         "intervention/imagecache": "^2.3",
         "predis/predis": "^1.1",
         "laravel/socialite": "^2.0",
         "barryvdh/laravel-debugbar": "^2.3",
-        "hobbiot/cacheable-auth-user": "^1.0"
+        "hobbiot/cacheable-auth-user": "^1.0",
+        "msurguy/honeypot": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

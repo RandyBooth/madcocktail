@@ -168,10 +168,10 @@ return [
          */
         Barryvdh\Debugbar\ServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
-        GrahamCampbell\Throttle\ThrottleServiceProvider::class,
         HobbIoT\Auth\CacheableAuthUserServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Msurguy\Honeypot\HoneypotServiceProvider::class,
         Spekkionu\Assetcachebuster\AssetcachebusterServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
 
@@ -236,9 +236,9 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
         'Helper' => App\Helpers\Helper::class,
+        'Honeypot' => Msurguy\Honeypot\HoneypotFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Throttle' => GrahamCampbell\Throttle\Facades\Throttle::class,
     ],
 
 ];
