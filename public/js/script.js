@@ -23,14 +23,14 @@ $(document).ready(function() {
         autoSelectFirst: true,
         dataType: 'json',
         deferRequestBy: 250,
-        groupBy: 'category',
+        groupBy: 'group',
         minChars: 3,
         serviceUrl: '/autocomplete',
         showNoSuggestionNotice: true,
         triggerSelectOnValidInput: false,
         type: 'POST',
         onSelect: function (suggestion) {
-            console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+            console.log('You selected: ' + suggestion.value + ', ' + JSON.stringify(suggestion.data));
         }
     });
 })

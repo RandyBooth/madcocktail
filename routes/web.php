@@ -30,9 +30,7 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('autocomplete', ['before' => 'csrf', 'as' => 'autocomplete', 'uses' => 'AutocompleteController@search']);
-Route::post('autocomplete', ['before' => 'csrf', 'middleware' => 'throttle:50,5', 'as' => 'autocomplete', 'uses' => 'AutocompleteController@search']);
-
+Route::post('autocomplete/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,5', 'as' => 'autocomplete', 'uses' => 'AutocompleteController@search']);
 
 Route::resource('ingredients', 'IngredientController', [
     'except' => [
