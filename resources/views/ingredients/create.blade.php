@@ -5,6 +5,7 @@
 @section('content')
     <form method="POST" action="{{ route('ingredients.store') }}">
         {{ csrf_field() }}
+        {!! Honeypot::generate('name', 'my_time') !!}
 
         @if (!empty($ingredients))
         <div class="form-group">
@@ -13,7 +14,7 @@
             <div class="col-md-6">
                 <select name="ingredients" id="ingredients">
                     @foreach($ingredients as $key => $val)
-                        <option value="{{ $key }}">{{ $val }}</option>
+                        <option value="{{ $key }}"@if(old('ingredients') == $key) {{ 'selected' }} @endif>{{ $val }}</option>
                     @endforeach
                 </select>
             </div>

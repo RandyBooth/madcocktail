@@ -14,6 +14,7 @@
 
     <form method="POST" action="{{ route('recipes.store') }}">
         {{ csrf_field() }}
+        {!! Honeypot::generate('name', 'my_time') !!}
 
         <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
             <label for="title" class="">Title</label>

@@ -36,16 +36,13 @@ class IngredientRequest extends FormRequest
                     return [];
                 }
                 case 'POST':
-                {
-                    return [
-                        'title' => 'required',
-                    ];
-                }
                 case 'PUT':
                 case 'PATCH':
                 {
                     return [
                         'title' => 'required',
+                        'name' => 'honeypot',
+                        'my_time' => 'required|honeytime:5',
                     ];
                 }
                 default:break;

@@ -36,16 +36,15 @@ class RecipeRequest extends FormRequest
                     return [];
                 }
                 case 'POST':
-                {
-                    return [
-                        'title' => 'required',
-                    ];
-                }
                 case 'PUT':
                 case 'PATCH':
                 {
                     return [
                         'title' => 'required',
+                        'description' => 'required',
+                        'directions' => 'required',
+                        'name' => 'honeypot',
+                        'my_time' => 'required|honeytime:5',
                     ];
                 }
                 default:break;
