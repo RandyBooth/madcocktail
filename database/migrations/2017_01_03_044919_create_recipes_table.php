@@ -16,10 +16,10 @@ class CreateRecipesTable extends Migration
         Schema::create('recipes', function($table)
         {
             $table->increments('id');
-            $table->string('token', 6);
+            $table->string('token', 6)->unique();
             $table->string('title');
             $table->string('title_first_letter', 1);
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('description');
             $table->text('directions');
             $table->tinyInteger('glass_id')->unsigned()->default(0);

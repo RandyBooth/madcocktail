@@ -16,10 +16,10 @@ class CreateNestedSetIngredientsTable extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('token', 6);
+            $table->string('token', 6)->unique();
             NestedSet::columns($table);
             $table->string('title');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->tinyInteger('level')->unsigned()->default(0);
             $table->tinyInteger('is_alcoholic')->unsigned()->default(0);
             $table->tinyInteger('is_active')->unsigned()->default(0);

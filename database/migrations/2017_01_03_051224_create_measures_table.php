@@ -17,7 +17,8 @@ class CreateMeasuresTable extends Migration
         {
             $table->increments('id');
             $table->string('title', 100);
-            $table->string('title_abbr', 20);
+            $table->string('title_abbr', 20)->unique();
+            $table->string('slug')->unique();
             $table->decimal('measurement_ml', 6, 2)->default(0);
             $table->decimal('measurement_oz', 6, 3)->default(0);
             $table->integer('user_id')->unsigned()->default(0);
