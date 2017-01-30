@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
     <link rel="stylesheet" href="{{ asset('css/skeleton.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vendor/select2.min.css') }}">
     @yield('style')
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
@@ -41,8 +42,9 @@
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="{{ asset('js/vendor/jquery.autocomplete.min.js') }}"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.1.1.min.js') }}"><\/script>')</script>
+    <script src="{{ asset('js/vendor/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/select2.min.js') }}"></script>
     {{--<script src="{{ asset('js/plugins.js') }}"></script>--}}
     @yield('script-bottom')
     <script src="{{ asset('js/script.js') }}"></script>

@@ -6,16 +6,16 @@ use App\Ingredient;
 use App\Recipe;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use App\Http\Requests\AutocompleteAjaxRequest;
+use App\Http\Requests\SearchAjaxRequest;
 
-class AutocompleteController extends Controller
+class SearchController extends Controller
 {
     public function __construct()
     {
         Cache::flush();
     }
 
-    public function search(AutocompleteAjaxRequest $request, $type = null)
+    public function search(SearchAjaxRequest $request, $type = null)
     {
         if ($request->ajax()) {
             $suggestions = [];
@@ -41,12 +41,11 @@ class AutocompleteController extends Controller
                     foreach ($type_arr as $data_single) {
                         if (isset($data[$data_single])) {
                             $arr = $data[$data_single];
-    //                        $arr_id = array_pluck($arr, 'id');
-                            $arr_title = array_pluck($arr, 'title', 'id');
+                            $arr_title = array_pluck($arr, 'title', 'token');
                             $arr_unique = array_unique($arr_title);
 
-                            foreach($arr_unique as $val) {
-                                $suggestions[] = ['value' => $val, 'data' => ['group' => title_case($data_single)]];
+                            foreach($arr_unique as $key => $val) {
+                                $suggestions[] = ['value' => $val, 'id' => $key, 'data' => ['group' => title_case($data_single)]];
                             }
                         }
                     }
@@ -90,11 +89,11 @@ class AutocompleteController extends Controller
                 }
             } else {
                 if ($has_recipe) {
-                    $query_recipe = Recipe::where('title', 'LIKE', '%'.$query_array[$i].'%');
+                    $query_recipe = Recipe::select('token', 'title')->where('title', 'LIKE', '%'.$query_array[$i].'%');
                 }
 
                 if ($has_ingredients) {
-                    $query_ingredient = Ingredient::where('title', 'LIKE', '%'.$query_array[$i].'%');
+                    $query_ingredient = Ingredient::select('token', 'title')->where('title', 'LIKE', '%'.$query_array[$i].'%');
                 }
             }
         }

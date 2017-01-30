@@ -19,18 +19,39 @@ $(document).ready(function() {
         }
     });
 
-    $('#search').autocomplete({
+    $('form.autocomplete .search').autocomplete({
         autoSelectFirst: true,
         dataType: 'json',
         deferRequestBy: 250,
         groupBy: 'group',
         minChars: 3,
-        serviceUrl: '/autocomplete',
+        serviceUrl: '/search',
         showNoSuggestionNotice: true,
         triggerSelectOnValidInput: false,
         type: 'POST',
-        onSelect: function (suggestion) {
-            console.log('You selected: ' + suggestion.value + ', ' + JSON.stringify(suggestion.data));
-        }
+    });
+
+    $(".search-select").select2({
+        ajax: {
+            cache: true,
+            data: function (params) {
+                console.log(JSON.stringify(params));
+                return {
+                    query: params.term
+                };
+            },
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) { return {results: data.suggestions}; },
+            type: 'POST',
+            url: "/search/ingredients",
+        },
+        escapeMarkup: function (markup) { return markup; },
+        minimumInputLength: 3,
+        templateResult: function  (repo) {
+            if (repo.loading) return repo.text;
+            return '<div>'+repo.value+'</div>';
+        },
+        templateSelection: function (data) { return data.value || data.text; },
     });
 })
