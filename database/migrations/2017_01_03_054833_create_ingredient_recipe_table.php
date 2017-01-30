@@ -20,8 +20,7 @@ class CreateIngredientRecipeTable extends Migration
             $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
             $table->integer('ingredient_id')->unsigned();
             $table->foreign('ingredient_id')->references('id')->on('ingredients')->onDelete('cascade');
-            $table->integer('measure_id')->unsigned();
-            $table->foreign('measure_id')->references('id')->on('measures')->onDelete('cascade');
+            $table->integer('measure_id')->unsigned()->default(0);
             $table->decimal('measure_amount', 5, 3);
             $table->tinyInteger('order_by')->unsigned()->default(0);
 //            $table->timestamps();
