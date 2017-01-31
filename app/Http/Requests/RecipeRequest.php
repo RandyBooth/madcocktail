@@ -43,6 +43,7 @@ class RecipeRequest extends FormRequest
                         'title' => 'required',
                         'description' => 'required',
                         'directions' => 'required',
+//                        'glass' => 'required',
                         'name' => 'honeypot',
                         'my_time' => 'required|honeytime:5',
                     ];

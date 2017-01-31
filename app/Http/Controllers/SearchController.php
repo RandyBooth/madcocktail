@@ -15,6 +15,10 @@ class SearchController extends Controller
         Cache::flush();
     }
 
+    public function test(Request $request) {
+        dd($request->all());
+    }
+
     public function search(SearchAjaxRequest $request, $type = null)
     {
         if ($request->ajax()) {

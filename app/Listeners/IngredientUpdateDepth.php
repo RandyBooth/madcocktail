@@ -29,10 +29,10 @@ class IngredientUpdateDepth
     {
         if (!empty($event->ingredient)) {
             $ingredient = $event->ingredient;
-//            dd($ingredient);
 
             if ($ingredient->id && $ingredient->_lft) {
                 $ingredient_depth = Ingredient::withDepth()->find($ingredient->id);
+
                 if (!empty($ingredient_depth)) {
                     $ingredient_depth->level = $ingredient_depth->depth;
                     $ingredient_depth->save();

@@ -15,7 +15,6 @@ class MeasureSeeder extends Seeder
         $is_active = 1;
 
         $measures = [
-            ['', '', 0, 0],
             ['Can', 'can', 0, 0],
             ['Cup', 'cup', 236.58, 8],
             ['Dash', 'dash', 0.92, 0.031],

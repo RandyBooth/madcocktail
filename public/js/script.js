@@ -1,6 +1,6 @@
 if (window.location.hash && window.location.hash == '#_=_') {
     if (window.history && history.pushState) {
-        window.history.pushState("", document.title, window.location.pathname);
+        window.history.pushState('', document.title, window.location.pathname);
     } else {
         var scroll = {
             top: document.body.scrollTop,
@@ -13,45 +13,30 @@ if (window.location.hash && window.location.hash == '#_=_') {
 }
 
 $(document).ready(function() {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $('form.autocomplete .search').autocomplete({
-        autoSelectFirst: true,
-        dataType: 'json',
-        deferRequestBy: 250,
-        groupBy: 'group',
-        minChars: 3,
-        serviceUrl: '/search',
-        showNoSuggestionNotice: true,
-        triggerSelectOnValidInput: false,
-        type: 'POST',
-    });
-
-    $(".search-select").select2({
-        ajax: {
-            cache: true,
-            data: function (params) {
-                console.log(JSON.stringify(params));
-                return {
-                    query: params.term
-                };
+    var autocompleteOption = {
+            ajax: {
+                cache: true,
+                data: function (params) {
+                    console.log(JSON.stringify(params));
+                    return {
+                        query: params.term
+                    };
+                },
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) { return {results: data.suggestions}; },
+                type: 'POST',
+                url: '/search/ingredients',
             },
-            dataType: 'json',
-            delay: 250,
-            processResults: function (data) { return {results: data.suggestions}; },
-            type: 'POST',
-            url: "/search/ingredients",
-        },
-        escapeMarkup: function (markup) { return markup; },
-        minimumInputLength: 3,
-        templateResult: function  (repo) {
-            if (repo.loading) return repo.text;
-            return '<div>'+repo.value+'</div>';
-        },
-        templateSelection: function (data) { return data.value || data.text; },
-    });
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 3,
+            templateResult: function  (repo) {
+                if (repo.loading) return repo.text;
+                return '<div>'+repo.value+'</div>';
+            },
+            templateSelection: function (data) { return data.value || data.text; },
+        }
+        ;
+
+    $('form.autocomplete .search').autocomplete(autocompleteOption);
 })

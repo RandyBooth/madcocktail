@@ -38,13 +38,13 @@ class RecipeSeeder extends Seeder
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
-                    [ 'slug' => 'vodka', 'measure_id' => 'oz', 'measure_amount' => 1 ],
-                    [ 'slug' => 'tequila', 'measure_id' => 'oz', 'measure_amount' => 1 ],
-                    [ 'slug' => 'gin', 'measure_id' => 'oz', 'measure_amount' => 1 ],
-                    [ 'slug' => 'rum', 'measure_id' => 'oz', 'measure_amount' => 1 ],
-                    [ 'slug' => 'triple-sec', 'measure_id' => 'oz', 'measure_amount' => 1 ],
-                    [ 'slug' => 'sweet-and-sour-mix', 'measure_id' => 'oz', 'measure_amount' => 1.5 ],
-                    [ 'slug' => 'coca-cola', 'measure_id' => 'splash', 'measure_amount' => 1 ],
+                    [ 'slug' => 'vodka', 'measure_abbr' => 'oz', 'measure_amount' => 1 ],
+                    [ 'slug' => 'tequila', 'measure_abbr' => 'oz', 'measure_amount' => 1 ],
+                    [ 'slug' => 'gin', 'measure_abbr' => 'oz', 'measure_amount' => 1 ],
+                    [ 'slug' => 'rum', 'measure_abbr' => 'oz', 'measure_amount' => 1 ],
+                    [ 'slug' => 'triple-sec', 'measure_abbr' => 'oz', 'measure_amount' => 1 ],
+                    [ 'slug' => 'sweet-and-sour-mix', 'measure_abbr' => 'oz', 'measure_amount' => 1.5 ],
+                    [ 'slug' => 'coca-cola', 'measure_abbr' => 'splash', 'measure_amount' => 1 ],
                 ]
             ],
             [
@@ -57,9 +57,9 @@ class RecipeSeeder extends Seeder
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
-                    [ 'slug' => '151-proof-rum', 'measure_id' => 'oz', 'measure_amount' => 1.5 ],
-                    [ 'slug' => 'malibu-coconut-rum', 'measure_id' => 'oz', 'measure_amount' => 1 ],
-                    [ 'slug' => 'pineapple', 'measure_id' => 'oz', 'measure_amount' => 5 ],
+                    [ 'slug' => '151-proof-rum', 'measure_abbr' => 'oz', 'measure_amount' => 1.5 ],
+                    [ 'slug' => 'malibu-coconut-rum', 'measure_abbr' => 'oz', 'measure_amount' => 1 ],
+                    [ 'slug' => 'pineapple', 'measure_abbr' => 'oz', 'measure_amount' => 5 ],
                 ]
             ],
             [
@@ -72,14 +72,32 @@ class RecipeSeeder extends Seeder
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
-                    [ 'slug' => 'red-bull', 'measure_id' => 'can', 'measure_amount' => .5 ],
-                    [ 'slug' => 'jagermeister', 'measure_id' => 'oz', 'measure_amount' => 2 ],
+                    [ 'slug' => 'red-bull', 'measure_abbr' => 'can', 'measure_amount' => .5 ],
+                    [ 'slug' => 'jagermeister', 'measure_abbr' => 'oz', 'measure_amount' => 2 ],
+                ]
+            ],
+            [
+                'recipe'      => [
+                    'title'       => 'Test',
+                    'description' => 'Testing',
+                    'directions'   => ['Open the bottle.', 'Drink it up!'],
+                    'glass_id'    => $glasses['beer'],
+                    'user_id'     => 1,
+                    'is_active'   => 1,
+                ],
+                'ingredients' => [
+                    [ 'slug' => 'rum', 'measure_abbr' => 'oz', 'measure_amount' => 20.777777 ],
+                    [ 'slug' => 'triple-sec', 'measure_abbr' => 'oz', 'measure_amount' => 120 ],
+                    [ 'slug' => 'gin', 'measure_abbr' => 'oz', 'measure_amount' => 20.99999999 ],
+                    [ 'slug' => 'herbal', 'measure_abbr' => 'oz', 'measure_amount' => 20.523525245 ],
+                    [ 'slug' => 'jagermeister', 'measure_abbr' => 'oz', 'measure_amount' => 20.88358383838 ],
+                    [ 'slug' => 'black-spiced-rum', 'measure_abbr' => 'oz', 'measure_amount' => 20.1111111 ],
+                    [ 'slug' => '10-cane', 'measure_abbr' => 'oz', 'measure_amount' => 20.44444444 ],
                 ]
             ],
         ];
 
         foreach ($lists as $list) {
-
             $count            = 0;
             $ingredients_data = [ ];
             $recipe           = Recipe::create( $list['recipe'] );
@@ -92,11 +110,16 @@ class RecipeSeeder extends Seeder
                     $data = Ingredient::where( 'slug', '=', $ingredient['slug'] )->first();
 
                     if ( ! empty( $data )) {
-                        $ingredients_data[$data->id] = [
-                            'measure_id'     => $measures[$ingredient['measure_id']],
+                        $ingredient_arr = [
                             'measure_amount' => $ingredient['measure_amount'],
                             'order_by'       => $count++
                         ];
+
+                        if (isset($ingredient['measure_abbr'])) {
+                            $ingredient_arr['measure_id'] = $measures[$ingredient['measure_abbr']];
+                        }
+
+                        $ingredients_data[$data->id] = $ingredient_arr;
                     }
                 }
 

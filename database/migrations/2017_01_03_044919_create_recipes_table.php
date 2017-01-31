@@ -20,7 +20,7 @@ class CreateRecipesTable extends Migration
             $table->string('title');
             $table->string('title_first_letter', 1);
             $table->string('slug')->unique();
-            $table->string('description');
+            $table->text('description');
             $table->text('directions');
             $table->tinyInteger('glass_id')->unsigned()->default(0);
             $table->tinyInteger('rate_avg')->unsigned()->default(0);

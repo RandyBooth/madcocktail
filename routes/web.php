@@ -30,7 +30,9 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,5', 'as' => 'search', 'uses' => 'SearchController@search']);
+Route::post('/', 'SearchController@test');
+
+Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 
 Route::resource('ingredients', 'IngredientController', [
     'except' => [

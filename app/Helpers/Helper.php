@@ -3,14 +3,77 @@ namespace App\Helpers;
 
 class Helper
 {
+    public static function decimal_to_fraction($value)
+    {
+        $value = (float)$value;
+
+        if ($value > 0) {
+            $whole = floor($value);
+            $decimal = $value - $whole;
+            $leastCommonDenom = 48; // 16 * 3;
+            $denominators = array(2, 3, 4, 8, 16, 24, 48);
+            $roundedDecimal = round($decimal * $leastCommonDenom) / $leastCommonDenom;
+
+            if ($roundedDecimal == 0) {
+                return $whole;
+            }
+
+            if ($roundedDecimal == 1) {
+                return $whole + 1;
+            }
+
+            foreach ($denominators as $d) {
+                if ($roundedDecimal * $d == floor($roundedDecimal * $d)) {
+                    $denom = $d;
+                    break;
+                }
+            }
+
+            return trim(($whole == 0 ? '' : $whole) . ' ' . ($roundedDecimal * $denom) . '/' . $denom);
+        }
+
+        return;
+    }
+
+    public static function fraction_to_decimal($value)
+    {
+        $result = 0;
+        $value = preg_replace('/[^0-9\. \/]/', '', $value);
+        $number = explode(' ', $value);
+        $number_count = count($number);
+
+        if (!$number_count == 1 && !$number_count = 2) {
+            return $value;
+        }
+
+        $fraction = explode('/', $number[$number_count-1]);
+        $fraction_count = count($fraction);
+
+        if ($fraction_count == 2) {
+            if ($number_count == 2) {
+                $result += $number[0];
+            }
+
+            $result += $fraction[0]/$fraction[1];
+            return round($result, 3);
+        }
+
+        return $value;
+    }
+
+    public static function fraction_html_encode()
+    {
+
+    }
+
     public static function html_sup($string)
     {
-        return preg_replace("/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/", "<sup>$1</sup>", $string);
+        return preg_replace('/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/', '<sup>$1</sup>', $string);
     }
 
     public static function textarea_to_array($text)
     {
-        return preg_split("/\r\n|\n|\r/", preg_replace("/[\r\n]+/", "\n", $text));
+        return preg_split('/\r\n|\n|\r/', preg_replace('/[\r\n]+/', '\n', $text));
     }
 
     public static function breadcrumbs($array, $route = '')

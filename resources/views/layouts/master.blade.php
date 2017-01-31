@@ -17,11 +17,11 @@
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
     <link rel="stylesheet" href="{{ asset('css/skeleton.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/vendor/select2.min.css') }}">
-    @yield('style')
+@yield('style')
+
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
-    @yield('script-top')
+@yield('script-top')
 {{--    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>--}}
 </head>
 <body>
@@ -43,10 +43,16 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.1.1.min.js') }}"><\/script>')</script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     <script src="{{ asset('js/vendor/jquery.autocomplete.min.js') }}"></script>
-    <script src="{{ asset('js/vendor/select2.min.js') }}"></script>
     {{--<script src="{{ asset('js/plugins.js') }}"></script>--}}
-    @yield('script-bottom')
+@yield('script-bottom')
     <script src="{{ asset('js/script.js') }}"></script>
 
      <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
