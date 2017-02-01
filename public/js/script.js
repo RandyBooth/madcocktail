@@ -14,29 +14,17 @@ if (window.location.hash && window.location.hash == '#_=_') {
 
 $(document).ready(function() {
     var autocompleteOption = {
-            ajax: {
-                cache: true,
-                data: function (params) {
-                    console.log(JSON.stringify(params));
-                    return {
-                        query: params.term
-                    };
-                },
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) { return {results: data.suggestions}; },
-                type: 'POST',
-                url: '/search/ingredients',
-            },
-            escapeMarkup: function (markup) { return markup; },
-            minimumInputLength: 3,
-            templateResult: function  (repo) {
-                if (repo.loading) return repo.text;
-                return '<div>'+repo.value+'</div>';
-            },
-            templateSelection: function (data) { return data.value || data.text; },
-        }
-        ;
+        autoSelectFirst: true,
+        dataType: 'json',
+        deferRequestBy: 250,
+        groupBy: 'group',
+        minChars: 3,
+        serviceUrl: '/search',
+        showNoSuggestionNotice: true,
+        triggerSelectOnValidInput: false,
+        type: 'POST',
+    }
+    ;
 
     $('form.autocomplete .search').autocomplete(autocompleteOption);
 })
