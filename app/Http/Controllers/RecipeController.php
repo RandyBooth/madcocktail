@@ -50,7 +50,6 @@ class RecipeController extends Controller
         });
 
         return view('recipes.index', compact('recipes_latest', 'recipes_top'));
-
     }
 
     /**
@@ -60,6 +59,33 @@ class RecipeController extends Controller
      */
     public function create()
     {
+        $ingredients = [];
+
+        if (!empty(old('ingredients'))) {
+            $ingredients_id = old('ingredients');
+            $ingredients_query = [];
+
+            $count = 0;
+
+            foreach ($ingredients_id as $token) {
+                $where = function ($query) use ($token, $count) {
+                    return $query->token($token);
+                };
+
+                if ($count++) {
+                    $ingredients_query->orWhere($where);
+                } else {
+                    $ingredients_query = Ingredient::select('title', 'token')->where($where);
+                }
+            }
+
+            $ingredients_data = $ingredients_query->get();
+
+            if (!$ingredients_data->isEmpty()) {
+                $ingredients = $ingredients_data->pluck('title', 'token')->all();
+            }
+        }
+
         $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
             return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
         });
@@ -71,7 +97,7 @@ class RecipeController extends Controller
         $glasses = $glasses_data->pluck('title', 'slug')->all();
         $measures = $measures_data->pluck('title', 'slug')->all();
 
-        return view('recipes.create', compact('glasses', 'measures'));
+        return view('recipes.create', compact('glasses', 'measures', 'ingredients'));
     }
 
     /**
@@ -155,18 +181,17 @@ class RecipeController extends Controller
             return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
         });
 
-        if ($recipe) {
-            if (!$recipe->counts) {
-                $recipe->counts()->create([]);
-                $recipe->load('counts');
-            }
+        if (!empty($recipe)) {
+            $ip_id = $request->ip().'_'.$recipe->id;
 
-            if ($recipe->counts) {
-                $counts = $recipe->counts;
-                $ip_id = $request->ip().'_'.$counts->id;
+            if (!Cache::tags('recipe_counter')->has($ip_id)) {
+                if (empty($recipe->counts)) {
+                    $recipe->counts()->create([]);
+                    $recipe->load('counts');
+                }
 
-                if (is_null(Cache::tags('recipe_counter')->get($ip_id))) {
-
+                if (!empty($recipe->counts)) {
+                    $counts = $recipe->counts;
                     $table_recipe_count = with(new RecipeCount)->getTable();
 
                     if (!empty($table_recipe_count)) {

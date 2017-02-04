@@ -31,6 +31,15 @@ $(document).ready(function() {
                     select2Count = 0
                 ;
 
+                function select2Insert() {
+                    var selectIngredientsDivCount = 'create-ingredients-div-'+(select2Count++),
+                    $selectIngredientsHTML = $('<select class="search-select select-ingredients" name="ingredients[]" style="width: 100%"><option value="">--</option></select>');
+
+                    $selectIngredientsGroup.append('<div id="'+selectIngredientsDivCount+'" class="create-ingredients-div"></div>');
+                    $('#'+selectIngredientsDivCount).append('<a class="create-ingredients-close" href="">X</a>').append($selectIngredientsHTML).append(measuresList);
+                    $selectIngredientsHTML.select2(select2Option);
+                }
+
                 $(document).on('select2:select', '.search-select', function (e) {
                     console.log('selected');
                 });
@@ -42,22 +51,16 @@ $(document).ready(function() {
                     }
                 });
 
+                $('.search-select').each(function() {
+                    $(this).select2(select2Option);
+                });
+
                 $.each(drinkMeasures, function(key, value){
                     measuresList += '<option value=' + key + '>' + value + '</option>';
                 });
 
                 measuresList = '<select class="select-ingredients-measure" name="ingredients.measure[]">'+measuresList+'</select><input class="select-ingredients-measure-amount" type="text" name="ingredients.measure.amount[]">';
-                $selectIngredientsGroup.empty();
-                $selectIngredients.append('<button id="create-ingredients-button" type="button">Add</button>');
-
-                function select2Insert() {
-                    var selectIngredientsDivCount = 'create-ingredients-div-'+(select2Count++),
-                    $selectIngredientsHTML = $('<select class="search-select select-ingredients" name="ingredients[]" style="width: 100%"><option value="">--</option></select>');
-
-                    $selectIngredientsGroup.append('<div id="'+selectIngredientsDivCount+'" class="create-ingredients-div"></div>');
-                    $('#'+selectIngredientsDivCount).append('<a class="create-ingredients-close" href="">X</a>').append($selectIngredientsHTML).append(measuresList);
-                    $selectIngredientsHTML.select2(select2Option);
-                }
+                // $selectIngredientsGroup.empty();
 
                 $(document).on('click', '#create-ingredients-button', function(e) {
                     e.preventDefault();

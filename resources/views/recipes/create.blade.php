@@ -67,7 +67,46 @@
 
             <div class="col-md-6">
                 <div id="select-ingredients">
-                    <div id="create-ingredients-group">Need JavaScript to run</div>
+                    <div id="create-ingredients-group">
+                    @if (!empty(old('ingredients')))
+                        @php
+                            $old_ingredients = old('ingredients');
+                            $old_ingredients_measure = old('ingredients_measure');
+                            $old_ingredients_measure_amount = old('ingredients_measure_amount');
+                        @endphp
+
+                        @foreach($old_ingredients as $token)
+                        @if(!empty($token))
+                        @if (!empty($ingredients[$token]))
+                        <div class="create-ingredients-div">
+                            <a class="create-ingredients-close" href="">X</a>
+                            <select class="search-select select-ingredients" name="ingredients[]" style="width: 100%">
+                                <option value="{{$token}}">{{$ingredients[$token]}}</option>
+                            </select>
+                            <select class="select-ingredients-measure" name="ingredients.measure[]">
+                                <option value="">--</option>
+                                @php
+                                    $ingredients_measure = (!empty($old_ingredients_measure[$loop->index])) ? $old_ingredients_measure[$loop->index] : '';
+                                @endphp
+
+                                @foreach($measures as $key => $val)
+                                    @php
+                                    $selected = '';
+                                    if ($ingredients_measure == $key)
+                                    $selected = ' selected';
+                                    @endphp
+                                    <option value="{{ $key }}"{{ $selected }}>{{ $val }}</option>
+                                @endforeach
+                            </select>
+                            <input class="select-ingredients-measure-amount" type="text" name="ingredients.measure.amount[]" value="@if(!empty($old_ingredients_measure_amount[$loop->index])){{ $old_ingredients_measure_amount[$loop->index] }}@endif">
+                        </div>
+                        @endif
+                        @endif
+                        @endforeach
+                    @endif
+                    </div>
+
+                    <button id="create-ingredients-button" type="button">Add</button>
                 </div>
 
                 @if ($errors->has('ingredients'))

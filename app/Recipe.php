@@ -26,7 +26,7 @@ class Recipe extends Model
         static::addGlobalScope(new ActiveScope);
 
         static::saving(function ($model) {
-            $model->title_first_letter = strtolower(substr($model->title, 0, 1));
+            $model->title_first_letter = strtolower(substr(preg_replace('/[^a-zA-Z0-9]+/', '', $model->title), 0, 1));
         });
 
         static::created(function ($model) {
@@ -35,12 +35,12 @@ class Recipe extends Model
                 $token_valid = false;
 
                 do {
-                    $token = Hashids::encode(mt_rand(100000,999999).$recipe_id);
+                    $token = Helper::hashids_random($recipe_id);
 
                     if (!empty($token)) {
                         $recipe = Recipe::where('token', $token)->first();
 
-                        if (!$recipe) {
+                        if (empty($recipe)) {
                             $model->token = $token;
 
                             if ($model->save()) {
@@ -67,11 +67,23 @@ class Recipe extends Model
         ];
     }
 
+    public function setTitleSupAttribute()
+    {
+        if (!empty($this->title)) {
+            return Helper::html_sup($this->title);
+        }
+    }
+
     public function getTitleSupAttribute()
     {
         if (!empty($this->title)) {
             return Helper::html_sup($this->title);
         }
+    }
+
+    public function scopeToken($query, $type)
+    {
+        return $query->where('token', 'LIKE BINARY', $type);
     }
 
     public function ingredients()
@@ -86,6 +98,11 @@ class Recipe extends Model
             ->orderBy('order_by')
             ->orderBy('title')
             ;
+    }
+
+    public function image()
+    {
+        return $this->hasOne('App\RecipeImage');
     }
 
     public function counts()

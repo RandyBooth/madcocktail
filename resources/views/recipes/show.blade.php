@@ -1,9 +1,34 @@
 @extends('layouts.master')
 
-@section('title', $recipe->title. ' | Recipes')
+@section('title', $recipe->title. ' - Recipe')
+
+@if(Auth::id())
+@if(Helper::is_owner($recipe->user_id))
+@section('script-bottom')
+    <script src="{{ asset('js/image-upload.js') }}"></script>
+@stop
+@endif
+@endif
 
 @section('content')
     @include('recipes.subheader')
+
+    <div class="image">
+        <div class="image-empty">
+            <a id="add-image" href="#">Add Image</a>
+            <form id="form-image" action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
+                {{ csrf_field() }}
+
+                <div style="display: none;">
+                    <input type="text" name="id" value="{{ $recipe->token }}">
+                    <input id="image" type="file" name="image" class="form-control">
+                    <button class="btn btn-success upload-image" type="submit">Upload Image</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <img id="preview" style="width: 300px; height: 300px;" src="">
 
     @if (!empty($recipe->title))
     <div><strong>Title:</strong> {{ $recipe->title_sup }}</div>
