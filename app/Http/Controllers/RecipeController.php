@@ -104,7 +104,7 @@ class RecipeController extends Controller
             }
 
             $data['is_active'] = ($user->role == 1) ? 1 : 0;
-            $data['user_id'] = Auth::id();
+            $data['user_id'] = $user->id;
 
             $recipe = Recipe::create($data);
 
@@ -116,7 +116,7 @@ class RecipeController extends Controller
 
                     foreach ($ingredients as $key => $token) {
                         if (!empty($token)) {
-                             $ingredient = Ingredient::select('id')->token($token)->first();
+                            $ingredient = Ingredient::select('id')->token($token)->first();
 
                             if (!empty($ingredient)) {
                                 $ingredients_data[$ingredient->id] = ['order_by' => $count++];

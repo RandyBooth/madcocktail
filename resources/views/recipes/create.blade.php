@@ -87,7 +87,7 @@
                 <select name="glass" id="glass">
                     <option value="">--</option>
                 @foreach($glasses as $key => $val)
-                    <option value="{{ $key }}"@if(old('glass') == $key) {{ 'selected' }} @endif>{{ $val }}</option>
+                    <option value="{{ $key }}"@if(old('glass') == $key){{ ' selected' }}@endif>{{ $val }}</option>
                 @endforeach
                 </select>
 
