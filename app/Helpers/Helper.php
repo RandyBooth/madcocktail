@@ -3,6 +3,18 @@ namespace App\Helpers;
 
 class Helper
 {
+    public static function is_owner($user_id)
+    {
+        if (\Auth::check()) {
+            if (is_int($user_id)) {
+                $user = \Auth::user();
+                return $user->role == 1 || $user->id == $user_id;
+            }
+        }
+
+        return false;
+    }
+
     public static function decimal_to_fraction($value)
     {
         $value = (float)$value;
