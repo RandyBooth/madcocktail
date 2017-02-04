@@ -16,7 +16,7 @@ return array(
     |
     */
    
-    'route' => null,
+    'route' => 'img/cache',
 
     /*
     |--------------------------------------------------------------------------
@@ -25,14 +25,13 @@ return array(
     |
     | The following paths will be searched for the image filename, submited 
     | by URI. 
-    | 
+    |
     | Define as many directories as you like.
     |
     */
     
     'paths' => array(
         public_path('upload'),
-        public_path('images')
     ),
 
     /*
@@ -52,6 +51,7 @@ return array(
     */
    
     'templates' => array(
+        'tiny' => 'App\Filters\Image\Tiny',
         'small' => 'Intervention\Image\Templates\Small',
         'medium' => 'Intervention\Image\Templates\Medium',
         'large' => 'Intervention\Image\Templates\Large',

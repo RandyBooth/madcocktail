@@ -43,11 +43,17 @@ return [
             'alphabet' => 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890', // remove I and l
         ],
 
-        'alternative' => [
-            'salt' => 'your-salt-string',
-            'length' => 'your-length-integer',
-            'alphabet' => 'your-alphabet-string',
+        'image' => [
+            'salt' => 'tvK6MrGcfCvUp8MDNaqBYPcQDYuurnYfsPxMswNkMgVLyzfuHm',
+            'length' => '32',
+            'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
+
+//        'alternative' => [
+//            'salt' => 'your-salt-string',
+//            'length' => 'your-length-integer',
+//            'alphabet' => 'your-alphabet-string',
+//        ],
 
     ],
 

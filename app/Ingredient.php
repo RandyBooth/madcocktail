@@ -9,7 +9,6 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
-use Vinkla\Hashids\Facades\Hashids;
 
 class Ingredient extends Model
 {
@@ -36,12 +35,12 @@ class Ingredient extends Model
                 $token_valid = false;
 
                 do {
-                    $token = Hashids::encode(mt_rand(100000,999999).$ingredent_id);
+                    $token = Helper::hashids_random($ingredent_id);
 
                     if (!empty($token)) {
                         $ingredent = Ingredient::where('token', $token)->first();
 
-                        if (!$ingredent) {
+                        if (empty($ingredent)) {
                             $model->token = $token;
 
                             if ($model->save()) {
@@ -73,7 +72,7 @@ class Ingredient extends Model
 
     public function scopeToken($query, $type)
     {
-        return $query->where('token', $type);
+        return $query->where('token', 'LIKE BINARY', $type);
     }
 
     public function scopeIsAlcoholic($query)

@@ -49,4 +49,8 @@ Route::resource('recipes', 'RecipeController');
 
 Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@show', function($token) {}])->where(['token' => '[A-Za-z0-9]+']);
 
+Route::group(['prefix' => 'ajax'], function() {
+    Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
+});
+
 Route::resource('occasions', 'OccasionController');

@@ -105,4 +105,17 @@ class Helper
 
         return '<ul class="breadcrumb">'.$str.'</ul>';
     }
+
+    public static function hashids_random($value = '', $connection = 'main')
+    {
+        $value = (int) $value;
+
+        if (!empty($value)) {
+            $milliseconds = (int) round(microtime(true) * 1000);
+            usleep(1000);
+            return \Hashids::connection($connection)->encode($milliseconds, $value);
+        }
+
+        return false;
+    }
 }
