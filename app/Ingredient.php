@@ -31,16 +31,16 @@ class Ingredient extends Model
 
         static::created(function ($model) {
             if ($model->id && empty($model->token)) {
-                $ingredent_id = $model->id;
+                $ingredient_id = $model->id;
                 $token_valid = false;
 
                 do {
-                    $token = Helper::hashids_random($ingredent_id);
+                    $token = Helper::hashids_random($ingredient_id);
 
                     if (!empty($token)) {
-                        $ingredent = Ingredient::where('token', $token)->first();
+                        $ingredient = self::token($token)->first();
 
-                        if (empty($ingredent)) {
+                        if (!$ingredient) {
                             $model->token = $token;
 
                             if ($model->save()) {

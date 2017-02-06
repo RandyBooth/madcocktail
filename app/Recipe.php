@@ -38,9 +38,9 @@ class Recipe extends Model
                     $token = Helper::hashids_random($recipe_id);
 
                     if (!empty($token)) {
-                        $recipe = Recipe::where('token', $token)->first();
+                        $recipe = self::token($token)->first();
 
-                        if (empty($recipe)) {
+                        if (!$recipe) {
                             $model->token = $token;
 
                             if ($model->save()) {

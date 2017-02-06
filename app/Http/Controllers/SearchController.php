@@ -107,7 +107,7 @@ class SearchController extends Controller
                 return $query_recipe->orderBy('title')->limit(5)->get();
             });
 
-            if (!empty($results_recipe)) {
+            if (!$results_recipe->isEmpty()) {
                 $data['recipes'] = $results_recipe;
             }
         }
@@ -117,7 +117,7 @@ class SearchController extends Controller
                 return $query_ingredient->orderBy('level')->orderBy('title')->limit(5)->get();
             });
 
-            if (!empty($results_ingredient)) {
+            if (!$results_ingredient->isEmpty()) {
                 $data['ingredients'] = $results_ingredient;
             }
         }

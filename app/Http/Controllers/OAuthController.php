@@ -40,7 +40,7 @@ class OAuthController extends Controller
                     $user = User::where('email', $social_user->email)->first();
                 }
 
-                if (!empty($user)) {
+                if ($user) {
                     $oauth = OAuth::firstOrCreate([
                         'user_id' => $user->id,
                         'provider' => $this->provider,

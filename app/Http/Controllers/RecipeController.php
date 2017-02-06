@@ -144,7 +144,7 @@ class RecipeController extends Controller
                         if (!empty($token)) {
                             $ingredient = Ingredient::select('id')->token($token)->first();
 
-                            if (!empty($ingredient)) {
+                            if ($ingredient) {
                                 $ingredients_data[$ingredient->id] = ['order_by' => $count++];
 
                                 if (!empty($data['ingredients_measure'][$key])) {
@@ -181,7 +181,7 @@ class RecipeController extends Controller
             return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
         });
 
-        if (!empty($recipe)) {
+        if ($recipe) {
             $ip_id = $request->ip().'_'.$recipe->id;
 
             if (!Cache::tags('recipe_counter')->has($ip_id)) {
