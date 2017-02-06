@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
                 'role' => 1,
                 'is_active' => 1
             ], [
-                'email' => 'john-doe@gmail.com',
+                'email' => 'john.doe@gmail.com',
                 'password' => bcrypt('11111111'),
     //            'role' => 0,
                 'is_active' => 1

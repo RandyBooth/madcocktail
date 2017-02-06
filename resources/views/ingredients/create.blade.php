@@ -7,7 +7,7 @@
         {{ csrf_field() }}
         {!! Honeypot::generate('name', 'my_time') !!}
 
-        @if (!$ingredients)
+        @if (!empty($ingredients))
         <div class="form-group">
             <label for="ingredients" class="">Parent</label>
 
