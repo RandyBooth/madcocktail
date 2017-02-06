@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', $ingredient->title. ' | Ingredients')
+@section('title', $ingredient->title. ' - Ingredient')
 
 @section('content')
     {!! Helper::breadcrumbs($ingredient_breadcrumbs, 'ingredients.show') !!}
