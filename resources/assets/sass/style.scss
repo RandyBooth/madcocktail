@@ -1,0 +1,89 @@
+a {
+    &,
+    &:focus,
+    &:hover {
+        text-decoration: none;
+    }
+
+    &:focus,
+    &:hover {
+        border-bottom: 1px solid;
+    }
+}
+
+.flash {
+    padding: 5px 20px;
+    color: white;
+
+    &- {
+        &success {
+            background-color: green;
+        }
+
+        &warning {
+            background-color: red;
+        }
+    }
+}
+
+.autocomplete {
+    &- {
+        &suggestions {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border: 1px solid #999;
+            background: #FFF;
+            cursor: default;
+            overflow: auto;
+            -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+            -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+            box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+
+            strong {
+                font-weight: bold;
+                color: #000;
+            }
+        }
+
+        &suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        &no-suggestion {
+            padding: 2px 5px;
+        }
+
+        &selected {
+            background: #F0F0F0;
+        }
+
+        &group {
+            padding: 2px 5px;
+
+            strong {
+                font-weight: bold;
+                font-size: 16px;
+                color: #000;
+                display: block;
+                border-bottom: 1px solid #000;
+            }
+        }
+    }
+
+    input {
+        font-size: 28px;
+        padding: 10px;
+        border: 1px solid #CCC;
+        display: block;
+        margin: 20px 0;
+    }
+}
+
+.preview {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+}
