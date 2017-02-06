@@ -16,7 +16,7 @@ class CreateRecipesTable extends Migration
         Schema::create('recipes', function($table)
         {
             $table->increments('id');
-            $table->string('token', 6)->unique();
+            $table->string('token')->unique();
             $table->string('title');
             $table->string('title_first_letter', 1);
             $table->string('slug')->unique();
