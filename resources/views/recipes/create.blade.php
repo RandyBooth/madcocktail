@@ -106,7 +106,7 @@
                     @endif
                     </div>
 
-                    <button id="create-ingredients-button" type="button">Add</button>
+                    <button id="create-ingredients-button" class="btn btn-primary" type="button">Add</button>
                 </div>
 
                 @if ($errors->has('ingredients'))
@@ -139,6 +139,6 @@
         </div>
         @endif
 
-        <div><button type="submit">Submit</button></div>
+        <div><button class="btn btn-primary" type="submit">Submit</button></div>
     </form>
 @stop

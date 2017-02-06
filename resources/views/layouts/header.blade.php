@@ -1,5 +1,5 @@
 <div style="margin: 20px 0;" class="row">
-    <div class="six columns">
+    <div class="col-12 col-md-6">
         <a href="{{ url('/') }}">Home</a>
         <span> | </span>
         <a href="{{ route('ingredients.index') }}">Ingredients</a>
@@ -7,7 +7,7 @@
         <a href="{{ route('recipes.index') }}">Recipes</a>
     </div>
 
-    <div class="six columns">
+    <div class="col-12 col-md-6">
     @if (Auth::check())
             <span>ID: {{ Auth::user()->id }}</span>
             <span> | </span>

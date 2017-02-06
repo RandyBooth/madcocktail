@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,21 +20,18 @@
 
     <title>@yield('title') | {{ config('app.name') }}</title>
 
-    <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/skeleton.css') }}">
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
 @yield('style')
 
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 @yield('script-top')
 {{--    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>--}}
 </head>
 <body>
-    <!--[if lt IE 7]>
-    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
     <div class="container">
         @include('layouts.header')
 

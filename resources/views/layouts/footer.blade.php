@@ -1,3 +1,5 @@
 <div style="margin: 20px 0;" class="row">
-    !! FOOTER !!
+    <div class="col-12">
+        !! FOOTER !!
+    </div>
 </div>

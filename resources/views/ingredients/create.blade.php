@@ -35,6 +35,6 @@
             </div>
         </div>
 
-        <div><button type="submit">Submit</button></div>
+        <div><button class="btn btn-primary" type="submit">Submit</button></div>
     </form>
 @stop

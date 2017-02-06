@@ -4,5 +4,5 @@
     <label for="search">Search</label>
     <input type="text" name="search" id="search" class="search">
 
-    <button type="submit">Submit</button>
+    <button class="btn btn-primary" type="submit">Submit</button>
 </form>
