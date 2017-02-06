@@ -40,12 +40,15 @@ class RecipeImageController extends Controller
      */
     public function store(Request $request)
     {
+        $response = [];
+        $response['success'] = false;
+
         if (Auth::check()) {
             if ($request->ajax()) {
-                if ($request->has('id') && $request->hasFile('image')) {
+                if ($request->has('id') && $request->hasFile('upload-image')) {
                     $validator = Validator::make($request->all(), [
-                        'id' => 'required|size:6',
-                        'image' => 'required|image|mimes:gif,jpeg,jpg,png|max:8192',
+                        'id' => 'required|min:12|max:20',
+                        'upload-image' => 'required|image|mimes:gif,jpeg,jpg,png|max:8192',
                     ]);
 
                     if ($validator->passes()) {
@@ -53,8 +56,8 @@ class RecipeImageController extends Controller
                         $token = $request->input('id');
                         $recipe = Recipe::select('id')->token($token)->where('user_id', $user->id)->first();
 
-                        if (!empty($recipe)) {
-                            $image = $request->file('image');
+                        if ($recipe) {
+                            $image = $request->file('upload-image');
 //                            $image_extension = $image->extension();
                             $recipe_id = $recipe->id;
                             $token_valid = false;
@@ -68,7 +71,7 @@ class RecipeImageController extends Controller
                                     $filename = $random.'.jpg';
                                     $recipe_image_check = RecipeImage::where('image', 'LIKE BINARY', $filename)->first();
 
-                                    if (empty($recipe_image_check)) {
+                                    if (!$recipe_image_check) {
                                         Image::make($image)->resize(1200, null, function ($constraint) {
                                             $constraint->aspectRatio();
                                             $constraint->upsize();
@@ -81,16 +84,23 @@ class RecipeImageController extends Controller
                                 }
                             } while(!$token_valid);
 
-                            if ($token_valid) {
-                                return response()->json(['success' => true, 'image' => route('imagecache', ['template' => 'large', 'filename' => $filename])]);
-                            }
+                            $response['success'] = true;
+                            $response['image'] = route('imagecache', ['template' => 'large', 'filename' => $filename]);
                         }
                     } else {
-                        return response()->json(['error' => $validator->errors()->all()]);
+                        $response['error'] = $validator->errors()->all();
                     }
+                } else {
+                    $response['error'] = 'Could not create image.';
                 }
+            } else {
+                $response['error'] = 'Is not ajax request.';
             }
+        } else {
+            $response['error'] = 'Please login.';
         }
+
+        return response()->json($response);
     }
 
     /**

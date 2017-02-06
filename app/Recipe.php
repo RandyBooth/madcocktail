@@ -100,11 +100,6 @@ class Recipe extends Model
             ;
     }
 
-    public function image()
-    {
-        return $this->hasOne('App\RecipeImage');
-    }
-
     public function counts()
     {
         return $this->hasOne('App\RecipeCount');

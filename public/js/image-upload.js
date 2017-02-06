@@ -1,16 +1,16 @@
 $(document).ready(function() {
     $('#add-image').on('click', function(e) {
         e.preventDefault();
-        $('#image').trigger('click');
+        $('#upload-image').trigger('click');
     });
 
-    $('#image').on('change', function() {
+    $('#upload-image').on('change', function() {
         $('#form-image').submit();
     });
 
     $('#form-image').on('submit', function(e) {
         e.preventDefault();
-        var file = $('#image').prop('files');
+        var file = $('#upload-image').prop('files');
 
         if (file.length) {
             file = file[0];
@@ -30,7 +30,10 @@ $(document).ready(function() {
                     success: function(data) {
                         if (typeof data.success !== 'undefined' && data.success !== null) {
                             if (data.success) {
-                                console.log('yes!');
+                                if (typeof data.image !== 'undefined' && data.image !== null) {
+                                    $('#image #preview').attr('src', data.image);
+                                }
+                            } else {
                                 console.log(data);
                             }
                         }

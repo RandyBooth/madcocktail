@@ -9,6 +9,7 @@ use App\Ingredient;
 use App\Measure;
 use App\Recipe;
 use App\RecipeCount;
+use App\RecipeImage;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -182,6 +183,10 @@ class RecipeController extends Controller
         });
 
         if ($recipe) {
+            $recipe_image = Cache::tags('recipe_image')->remember($recipe->id, 60, function () use ($recipe) {
+                return RecipeImage::image($recipe->id);
+            });
+
             $ip_id = $request->ip().'_'.$recipe->id;
 
             if (!Cache::tags('recipe_counter')->has($ip_id)) {
@@ -268,7 +273,7 @@ class RecipeController extends Controller
                 $ingredient_slug[$ingredient->id] = implode('/', array_merge($slug, [$ingredient->slug]));
             }
 
-            return view('recipes.show', compact('recipe', 'ingredients', 'ingredient_slug'));
+            return view('recipes.show', compact('recipe', 'recipe_image', 'ingredients', 'ingredient_slug'));
         }
     }
 
