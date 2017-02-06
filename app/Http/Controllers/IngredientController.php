@@ -18,7 +18,7 @@ class IngredientController extends Controller
     public function __construct()
     {
         Cache::flush();
-        $this->middleware('auth', ['only' => ['create', 'edit']]);
+        $this->middleware('admin', ['only' => ['create', 'edit']]);
         $this->middleware('xss', ['only' => ['store', 'update']]);
     }
     /**
