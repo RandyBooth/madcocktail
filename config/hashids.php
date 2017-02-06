@@ -39,7 +39,7 @@ return [
 
         'main' => [
             'salt' => 'wGfoRytqPHcMQpEGyUQKegAxjxJzYbjZodAs6j6AJhrDRmZyzZ',
-            'length' => '6',
+            'length' => '12',
             'alphabet' => 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890', // remove I and l
         ],
 
