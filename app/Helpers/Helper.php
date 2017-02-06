@@ -3,12 +3,22 @@ namespace App\Helpers;
 
 class Helper
 {
+    public static function is_admin()
+    {
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            return $user->role == 1;
+        }
+
+        return false;
+    }
+
     public static function is_owner($user_id)
     {
         if (\Auth::check()) {
             if (is_int($user_id)) {
                 $user = \Auth::user();
-                return $user->role == 1 || $user->id == $user_id;
+                return self::is_admin() || $user->id == $user_id;
             }
         }
 

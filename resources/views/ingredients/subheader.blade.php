@@ -1,6 +1,7 @@
-@if (Auth::check())
+@if(Auth::check())
+@if(Helper::is_admin())
 <div class="row">
-    <div class="six columns">
+    <div class="col-12 col-md-6">
         <a href="{{ route('ingredients.create') }}">Create</a>
         @if(Route::is('ingredients.show') && Helper::is_owner($ingredient->user_id))
             <span> | </span>
@@ -8,4 +9,5 @@
         @endif
     </div>
 </div>
+@endif
 @endif
