@@ -98,7 +98,7 @@ class Helper
         return preg_split('/\r\n|\n|\r/', preg_replace('/[\r\n]+/', '\n', $text));
     }
 
-    public static function breadcrumbs($array, $route = '')
+    public static function breadcrumbs($array, $route = '', $home = '')
     {
         $str = '';
         $url_path = '';
@@ -110,7 +110,11 @@ class Helper
         $count_array = count($array);
         $count = 1;
 
-        if ($count_array < 2) return;
+        if ($count_array < 1) return;
+
+        if (!empty($home)) {
+            $str .= '<li class="breadcrumb-item"><a href="'.route($route).'">'.$home.'</a></li>';
+        }
 
         foreach ($array as $key => $val) {
             $tmp = $val;
@@ -121,11 +125,13 @@ class Helper
                 $tmp = '<a href="'.$url.'">'.$val.'</a>';
             }
 
+            $active = ($count == $count_array) ? ' active' : '';
+
             $count++;
-            $str .= '<li>'.$tmp.'</li>';
+            $str .= '<li class="breadcrumb-item'.$active.'">'.$tmp.'</li>';
         }
 
-        return '<ul class="breadcrumb">'.$str.'</ul>';
+        return '<ol class="breadcrumb">'.$str.'</ol>';
     }
 
     public static function hashids_random($value = '', $connection = 'main')
