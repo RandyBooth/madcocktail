@@ -184,7 +184,7 @@ class RecipeController extends Controller
 
         if ($recipe) {
             $recipe_image = Cache::tags('recipe_image')->remember($recipe->id, 60, function () use ($recipe) {
-                return RecipeImage::image($recipe->id);
+                return RecipeImage::image($recipe->id)->first();
             });
 
             $ip_id = $request->ip().'_'.$recipe->id;
