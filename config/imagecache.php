@@ -52,9 +52,9 @@ return array(
    
     'templates' => array(
         'tiny' => 'App\Filters\Image\Tiny',
-        'small' => 'Intervention\Image\Templates\Small',
-        'medium' => 'Intervention\Image\Templates\Medium',
-        'large' => 'Intervention\Image\Templates\Large',
+        'small' => 'App\Filters\Image\Small',
+        'medium' => 'App\Filters\Image\Medium',
+        'large' => 'App\Filters\Image\Large',
     ),
 
     /*
