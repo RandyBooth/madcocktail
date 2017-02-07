@@ -32,13 +32,10 @@
 {{--    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>--}}
 </head>
 <body>
+    @include('layouts.alert')
+    @include('layouts.header')
+
     <div class="container">
-        @include('layouts.header')
-
-        @include('layouts.search')
-
-        @include('layouts.flash')
-
         @include('layouts.content')
 
         @include('layouts.footer')
