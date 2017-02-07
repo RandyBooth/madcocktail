@@ -17,7 +17,7 @@
         @endforeach
         </ul>
     @endif--}}
-
+    <h3>Latest Recipes</h3>
     @if(!empty($recipes_latest))
         <ul>
         @foreach($recipes_latest as $recipe)
@@ -31,6 +31,7 @@
         </ul>
     @endif
 
+    <h3>Top Recipes</h3>
     @if(!empty($recipes_top))
         <ul>
         @foreach($recipes_top as $recipe)

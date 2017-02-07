@@ -88,7 +88,7 @@ class IngredientController extends Controller
 
             if (!empty($ingredient)) {
                 event(new IngredientSaved($ingredient));
-                return redirect()->route('ingredients.index')->with('success', 'Ingredient created successfully');
+                return redirect()->route('ingredients.index')->with('success', 'Ingredient has been created successfully.');
             }
         }
 
@@ -211,7 +211,7 @@ class IngredientController extends Controller
     public function destroy($id)
     {
         Ingredient::token($id)->firstOrFail()->delete();
-        return redirect()->route('ingredients.index')->with('success', 'Ingredient deleted successfully');
+        return redirect()->route('ingredients.index')->with('success', 'Ingredient has been deleted successfully.');
     }
 
     public function tree()

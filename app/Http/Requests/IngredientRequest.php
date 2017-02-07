@@ -42,7 +42,7 @@ class IngredientRequest extends FormRequest
                     return [
                         'title' => 'required',
                         'name' => 'honeypot',
-                        'my_time' => 'required|honeytime:5',
+                        'my_time' => 'required|honeytime:2',
                     ];
                 }
                 default:break;

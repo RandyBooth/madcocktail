@@ -163,7 +163,7 @@ class RecipeController extends Controller
                 }
 
                 $recipe->ingredients()->sync($ingredients_data);
-                return redirect()->route('recipes.index')->with('success', 'Recipe created successfully');
+                return redirect()->route('recipes.index')->with('success', 'Recipe has been created successfully.');
             }
         }
 
@@ -312,6 +312,6 @@ class RecipeController extends Controller
 //            return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
 //        });
         Recipe::where('slug', $parameter)->firstOrFail()->delete();
-        return redirect()->route('recipes.index')->with('success', 'Recipe deleted successfully');
+        return redirect()->route('recipes.index')->with('success', 'Recipe has been deleted successfully.');
     }
 }

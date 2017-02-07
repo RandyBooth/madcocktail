@@ -14,8 +14,9 @@
     @include('recipes.subheader')
 
     <div id="image" class="image">
-        <img id="preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'large', 'filename' => $recipe_image->image])}}@endif">
+        <img id="preview" class="preview" src="@if(isset($recipe_image->image)){{route('imagecache', ['template' => 'large', 'filename' => $recipe_image->image])}}@endif">
 
+        @if(!isset($recipe_image->image) && Helper::is_owner($recipe->user_id))
         <div class="image-empty">
             <a id="add-image" href="#">Add Image</a>
             <form id="form-image" action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
@@ -28,6 +29,7 @@
                 </div>
             </form>
         </div>
+        @endif
     </div>
 
 
