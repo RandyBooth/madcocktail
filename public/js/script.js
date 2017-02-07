@@ -26,5 +26,15 @@ $(document).ready(function() {
     }
     ;
 
+    var $alert = $('.alert');
+
+    if ($alert.length > 0) {
+        $alert.alert();
+
+        setTimeout(function() {
+            $alert.alert('close');
+        }, 10000);
+    }
+
     $('form.autocomplete .search').autocomplete(autocompleteOption);
 })
