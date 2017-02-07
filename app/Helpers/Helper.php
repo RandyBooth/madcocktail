@@ -95,7 +95,7 @@ class Helper
 
     public static function textarea_to_array($text)
     {
-        return preg_split('/\r\n|\n|\r/', preg_replace('/[\r\n]+/', '\n', $text));
+        return array_values(array_filter(array_map('trim', preg_split('/\r\n|\n|\r/', $text, -1, PREG_SPLIT_NO_EMPTY))));
     }
 
     public static function breadcrumbs($array, $route = '', $home = '')
