@@ -22,6 +22,7 @@ class RecipeController extends Controller
     {
         Cache::flush();
         $this->middleware('auth', ['only' => ['create', 'edit']]);
+        $this->middleware('admin', ['only' => ['destroy']]);
         $this->middleware('xss', ['only' => ['store', 'update']]);
     }
 
@@ -306,12 +307,11 @@ class RecipeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($parameter = null)
+    public function destroy($id)
     {
-//        $recipe = Cache::tags('recipe')->remember($parameter, 60, function() use ($parameter) {
-//            return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
-//        });
-        Recipe::where('slug', $parameter)->firstOrFail()->delete();
-        return redirect()->route('recipes.index')->with('success', 'Recipe has been deleted successfully.');
+        if (Helper::is_admin()) {
+            Recipe::token($id)->firstOrFail()->delete();
+            return redirect()->route('recipes.index')->with('success', 'Recipe has been deleted successfully.');
+        }
     }
 }
