@@ -40,7 +40,7 @@ class IngredientRequest extends FormRequest
                 case 'PATCH':
                 {
                     return [
-                        'title' => 'required',
+                        'title' => 'required|least_one_letter|min:3',
                         'name' => 'honeypot',
                         'my_time' => 'required|honeytime:2',
                     ];

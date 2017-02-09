@@ -40,8 +40,8 @@ class RecipeRequest extends FormRequest
                 case 'PATCH':
                 {
                     return [
-                        'title' => 'required',
-                        'description' => 'required',
+                        'title' => 'required|least_one_letter|min:3',
+//                        'description' => 'required',
                         'directions' => 'required',
 //                        'glass' => 'required',
                         'name' => 'honeypot',

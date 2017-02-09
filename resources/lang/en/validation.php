@@ -101,6 +101,8 @@ return [
         ],
     ],
 
+    'least_one_letter' => 'The :attribute must be at least 1 letter.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
