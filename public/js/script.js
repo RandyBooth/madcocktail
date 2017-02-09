@@ -21,10 +21,9 @@ var alertMessage = function(type, message) {
 
 var alertRun = function() {
     $('.alert').alert();
-
-    setTimeout(function() {
-        $('.alert').alert('close');
-    }, 10000);
+    // setTimeout(function() {
+    //     $('.alert').alert('close');
+    // }, 10000);
 }
 
 $(document).ready(function() {
