@@ -48,7 +48,7 @@ class RecipeImageController extends Controller
                 if ($request->has('id') && $request->hasFile('upload-image')) {
                     $validator = Validator::make($request->all(), [
                         'id' => 'required|min:12|max:20',
-                        'upload-image' => 'required|image|mimes:gif,jpeg,jpg,png|max:8192',
+                        'upload-image' => 'required|file|image|mimes:gif,jpeg,jpg,png|max:2048',
                     ]);
 
                     if ($validator->passes()) {
@@ -57,11 +57,12 @@ class RecipeImageController extends Controller
                         $recipe = Recipe::select('id')->token($token)->where('user_id', $user->id)->first();
 
                         if ($recipe) {
+                            $recipe_id = $recipe->id;
+                            $filename = '';
                             $image = $request->file('upload-image');
 //                            $image_extension = $image->extension();
-                            $recipe_id = $recipe->id;
-                            $token_valid = false;
                             $recipe_image = RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
+                            $token_valid = false;
 
                             do {
                                 $random = \Helper::hashids_random($recipe_id, 'image');
@@ -79,6 +80,7 @@ class RecipeImageController extends Controller
 
                                         if ($recipe_image->update(['image' => $filename])) {
                                             $token_valid = true;
+                                            $response['message'] = 'Recipe image updated!';
                                         }
                                     }
                                 }
@@ -86,18 +88,20 @@ class RecipeImageController extends Controller
 
                             $response['success'] = true;
                             $response['image'] = route('imagecache', ['template' => 'large', 'filename' => $filename]);
+                        } else {
+                            $response['message'] = 'You are not allow to do that.';
                         }
                     } else {
-                        $response['error'] = $validator->errors()->all();
+                        $response['message'] = $validator->errors()->all();
                     }
                 } else {
-                    $response['error'] = 'Could not create image.';
+                    $response['message'] = 'Could not create image.';
                 }
             } else {
-                $response['error'] = 'Is not ajax request.';
+                $response['message'] = 'Is not ajax request.';
             }
         } else {
-            $response['error'] = 'Please login.';
+            $response['message'] = 'Please login.';
         }
 
         return response()->json($response);

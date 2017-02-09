@@ -18,7 +18,6 @@ $(document).ready(function() {
             var validImageTypes = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'];
 
             if ($.inArray(file.type, validImageTypes) > 0) {
-                // console.log('yes');
                 $.ajax({
                     url: '/ajax/recipe-image',
                     type: 'POST',
@@ -32,9 +31,13 @@ $(document).ready(function() {
                             if (data.success) {
                                 if (typeof data.image !== 'undefined' && data.image !== null) {
                                     $('#image #preview').attr('src', data.image);
+                                    alertMessage('success', data.message);
+                                    alertRun();
                                 }
                             } else {
-                                console.log(data);
+                                if (typeof data.message !== 'undefined' && data.message !== null) {
+                                    alertMessage('warning', data.message);
+                                }
                             }
                         }
                         // $('#loading').hide();
