@@ -114,7 +114,7 @@ class SearchController extends Controller
 
         if (!empty($query_ingredient)) {
             $results_ingredient = Cache::tags('search_ingredient')->remember(strtolower($query), 60, function() use ($query_ingredient) {
-                return $query_ingredient->orderBy('level')->orderBy('title')->limit(5)->get();
+                return $query_ingredient->withDepth()->orderBy('depth')->orderBy('title')->limit(5)->get();
             });
 
             if (!$results_ingredient->isEmpty()) {
