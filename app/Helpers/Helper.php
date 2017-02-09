@@ -146,4 +146,14 @@ class Helper
 
         return false;
     }
+
+    public static function get_admin_id()
+    {
+        $admin_users = \App\User::select('id')->where('role', 1)->get();
+        if (!$admin_users->isEmpty()) {
+            return array_pluck($admin_users, 'id');
+        }
+
+        return false;
+    }
 }
