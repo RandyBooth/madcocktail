@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
-@section('title', $recipe->title. ' - Recipe')
+@php $title = (!empty($recipe->title)) ? $recipe->title . ' - ': ''; @endphp
+@section('title', $title . 'Recipe')
 
 @if(Auth::id())
 @if(Helper::is_owner($recipe->user_id))
