@@ -88,7 +88,7 @@ class IngredientController extends Controller
             $ingredient = Ingredient::create($data);
 
             if (!empty($ingredient)) {
-                return redirect()->route('ingredients.index')->with('success', 'Ingredient has been created successfully.');
+                return redirect()->route('ingredients.show', $ingredient->slug)->with('success', 'Ingredient has been created successfully.');
             }
         }
 

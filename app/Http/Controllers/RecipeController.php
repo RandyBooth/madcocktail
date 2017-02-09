@@ -164,7 +164,7 @@ class RecipeController extends Controller
                 }
 
                 $recipe->ingredients()->sync($ingredients_data);
-                return redirect()->route('recipes.index')->with('success', 'Recipe has been created successfully.');
+                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe has been created successfully.');
             }
         }
 
