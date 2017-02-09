@@ -14,9 +14,9 @@
     @include('recipes.subheader')
 
     <div id="image" class="image">
-        <img id="preview" class="preview" src="@if(isset($recipe_image->image)){{route('imagecache', ['template' => 'large', 'filename' => $recipe_image->image])}}@endif">
+        <img id="preview" class="preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'large', 'filename' => $recipe_image->image])}}@endif">
 
-        @if(!isset($recipe_image->image) && Helper::is_owner($recipe->user_id))
+        @if(empty($recipe_image->image) && Helper::is_owner($recipe->user_id))
         <div class="image-empty">
             <a id="add-image" href="#">Add Image</a>
             <form id="form-image" action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
@@ -44,12 +44,12 @@
     @if (!empty($ingredients))
     <div><strong>Ingredients:</strong>
         <ul>
-            @foreach($ingredients as $ingredient)
+            @foreach($ingredients as $val)
                 <?php
-                    $ingredient_title = $ingredient->title_sup;
-                    $measure_title = strtolower($ingredient->pivot->measure_title);
-                    $measure_amount = $ingredient->pivot->measure_amount;
-                    $measure_amount_fraction = $ingredient->pivot->measure_amount_fraction;
+                    $ingredient_title = $val->title_sup;
+                    $measure_title = strtolower($val->pivot->measure_title);
+                    $measure_amount = $val->pivot->measure_amount;
+                    $measure_amount_fraction = $val->pivot->measure_amount_fraction;
                     $string = '';
 
                     if (!empty($ingredient_title)) {
@@ -62,9 +62,9 @@
                             }
                         }
 
-                        if ($ingredient->is_active) {
-                            if (isset($ingredient_slug[$ingredient->id])) {
-                                $ingredient_title = '<a href="'.route('ingredients.show', $ingredient_slug[$ingredient->id]).'">'.$ingredient_title.'</a>';
+                        if ($val->is_active) {
+                            if (isset($ingredient_slug[$val->id])) {
+                                $ingredient_title = '<a href="'.route('ingredients.show', $ingredient_slug[$val->id]).'">'.$ingredient_title.'</a>';
                             }
                         }
 
@@ -80,17 +80,22 @@
     @if (!empty($recipe->directions))
     <div><strong>Directions:</strong>
         <ol>
-            @foreach($recipe->directions as $direction)
-                <li>{{ $direction }}</li>
+            @foreach($recipe->directions as $val)
+                <li>{{ $val }}</li>
             @endforeach
         </ol>
     </div>
     @endif
-    <pre>
-        <form action="{{ route('recipes.destroy', $recipe->slug) }}" method="post">
+
+    <div>
+        <form action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
             {{ method_field('DELETE') }}
             {{ csrf_field() }}
             <input type="submit" value="Delete">
         </form>
-    </pre>
+    </div>
+@stop
+
+@section('sidebar')
+    Sidebar
 @stop

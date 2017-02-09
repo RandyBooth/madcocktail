@@ -13,11 +13,15 @@
             </li>
         </ul>
 
+        @include('layouts.search')
+
         <ul class="navbar-nav">
         @if (Auth::check())
+            @if(Auth::user()->role_type)
             <span class="navbar-text">
-                ID: {{ Auth::user()->id }} | Role: {{ Auth::user()->role_type }}
+                Role: {{ Auth::user()->role_type }}
             </span>
+            @endif
             <li class="nav-item">
                 <a class="nav-link" href="{{-- route('users.show') --}}">{{ Auth::user()->email }}</a>
             </li>
@@ -29,8 +33,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('login') }}">Login</a>
             </li>
-            @endif
+        @endif
         </ul>
-        @include('layouts.search')
     </div>
 </nav>
