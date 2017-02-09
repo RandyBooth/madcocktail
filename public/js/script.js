@@ -12,6 +12,21 @@ if (window.location.hash && window.location.hash == '#_=_') {
     }
 }
 
+var alertMessage = function(type, message) {
+    type = typeof type !== 'undefined' ? type : 'success';
+    message = typeof message !== 'undefined' ? message : '';
+    $('#alert-wrapper').html('<div class=\"alert alert-'+type+' alert-dismissible fade show\" role=\"alert\"><div class=\"container\"><div class=\"col-12\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>'+message+'</div></div></div>');
+    alertRun();
+}
+
+var alertRun = function() {
+    $('.alert').alert();
+
+    setTimeout(function() {
+        $('.alert').alert('close');
+    }, 10000);
+}
+
 $(document).ready(function() {
     var autocompleteOption = {
         autoSelectFirst: true,
@@ -29,11 +44,7 @@ $(document).ready(function() {
     var $alert = $('.alert');
 
     if ($alert.length > 0) {
-        $alert.alert();
-
-        setTimeout(function() {
-            $alert.alert('close');
-        }, 10000);
+        alertRun();
     }
 
     $('form.autocomplete .search').autocomplete(autocompleteOption);
