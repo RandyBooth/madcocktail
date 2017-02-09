@@ -27,6 +27,7 @@
     </ol>
     @endif
 
+    @if(Helper::is_admin())
     <div>
         <form action="{{ route('ingredients.destroy', $ingredient->token) }}" method="post">
             {{ method_field('DELETE') }}
@@ -34,4 +35,5 @@
             <input type="submit" value="Delete">
         </form>
     </div>
+    @endif
 @stop

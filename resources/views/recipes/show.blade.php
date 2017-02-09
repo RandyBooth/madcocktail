@@ -87,6 +87,7 @@
     </div>
     @endif
 
+    @if(Helper::is_admin())
     <div>
         <form action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
             {{ method_field('DELETE') }}
@@ -94,6 +95,7 @@
             <input type="submit" value="Delete">
         </form>
     </div>
+    @endif
 @stop
 
 @section('sidebar')
