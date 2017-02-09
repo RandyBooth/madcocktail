@@ -11,8 +11,8 @@
 
     @if (!$ingredients->isEmpty())
     <ul>
-    @foreach($ingredients as $ingredient)
-        <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $ingredient->slug }}">{!! $ingredient->title_sup !!}</a></li>
+    @foreach($ingredients as $val)
+        <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title_sup !!}</a></li>
     @endforeach
     </ul>
     @endif
@@ -26,4 +26,12 @@
     @endforeach
     </ol>
     @endif
+
+    <div>
+        <form action="{{ route('ingredients.destroy', $ingredient->token) }}" method="post">
+            {{ method_field('DELETE') }}
+            {{ csrf_field() }}
+            <input type="submit" value="Delete">
+        </form>
+    </div>
 @stop
