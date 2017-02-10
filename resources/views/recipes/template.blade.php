@@ -6,7 +6,7 @@
 
 @section('script-bottom')
     <script src="{{ asset('js/vendor/select2.min.js') }}"></script>
-    <script src="{{ asset('js/select-ingredients.js') }}"></script>
+    <script src="{{ asset('js/select-ingredients-min.js') }}"></script>
 @stop
 
 @section('content')

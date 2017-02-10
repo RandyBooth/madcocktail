@@ -55,7 +55,7 @@
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
     {{--<script src="{{ asset('js/plugins.js') }}"></script>--}}
 @yield('script-bottom')
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/script-min.js') }}"></script>
 
     <script>
         (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

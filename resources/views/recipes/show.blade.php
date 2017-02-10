@@ -3,12 +3,10 @@
 @php $title = (!empty($recipe->title)) ? $recipe->title . ' - ': ''; @endphp
 @section('title', $title . 'Recipe')
 
-@if(Auth::id())
 @if(Helper::is_owner($recipe->user_id))
 @section('script-bottom')
-    <script src="{{ asset('js/image-upload.js') }}"></script>
+    <script src="{{ asset('js/image-upload-min.js') }}"></script>
 @stop
-@endif
 @endif
 
 @section('content')
