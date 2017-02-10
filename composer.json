@@ -17,7 +17,10 @@
         "laravel/socialite": "^2.0",
         "barryvdh/laravel-debugbar": "^2.3",
         "hobbiot/cacheable-auth-user": "^1.0",
-        "msurguy/honeypot": "^1.0"
+        "msurguy/honeypot": "^1.0",
+        "graham-campbell/htmlmin": "^4.5",
+        "mrclay/minify": "^2.3",
+        "jrean/laravel-user-verification": "^3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

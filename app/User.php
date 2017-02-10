@@ -18,7 +18,6 @@ class User extends Authenticatable
     protected static function boot()
     {
         parent::boot();
-        static::addGlobalScope(new ActiveScope);
     }
 
     public function getRoleTypeAttribute() {

@@ -19,6 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->tinyInteger('role')->unsigned()->default(0);
             $table->tinyInteger('is_active')->unsigned()->default(0);
+            $table->boolean('verified')->default(false);
+            $table->string('verification_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
