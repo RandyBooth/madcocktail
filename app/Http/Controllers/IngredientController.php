@@ -42,7 +42,10 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        $ingredient = ['title' => '', 'ingredients' => ''];
+        $ingredient = [
+            'title' => '',
+            'ingredients' => ''
+        ];
         $ingredients = ['' => ''];
 
         $nodes = Cache::tags('ingredient_create_tree')->remember('', 60, function () {
@@ -50,14 +53,14 @@ class IngredientController extends Controller
         });
 
         $traverse = function ($ingredients_arr, $prefix = '-') use (&$traverse, &$ingredients) {
-            foreach ($ingredients_arr as $ingredient) {
-                $ingredients[$ingredient->token] = $prefix.' '.$ingredient->title;
-                $traverse($ingredient->children, $prefix.'-');
+            foreach ($ingredients_arr as $val) {
+                $ingredients[$val->token] = $prefix.' '.$val->title;
+                $traverse($val->children, $prefix.'-');
             }
         };
 
         $traverse($nodes);
-        return view('ingredients.create', compact('ingredients', 'ingredient'));
+        return view('ingredients.create', compact('ingredient', 'ingredients'));
     }
 
     /**
@@ -202,7 +205,11 @@ class IngredientController extends Controller
                         }
                     }
 
-                    $ingredient = ['token' => $ingredient_data->token, 'title' => $ingredient_data->title, 'ingredients' => $ingredients_token];
+                    $ingredient = [
+                        'token' => $ingredient_data->token,
+                        'title' => $ingredient_data->title,
+                        'ingredients' => $ingredients_token
+                    ];
                     $ingredients = ['' => ''];
 
                     $nodes = Cache::tags('ingredient_create_tree')->remember('', 60, function () {
@@ -210,14 +217,14 @@ class IngredientController extends Controller
                     });
 
                     $traverse = function ($ingredients_arr, $prefix = '-') use (&$traverse, &$ingredients) {
-                        foreach ($ingredients_arr as $ingredient) {
-                            $ingredients[$ingredient->token] = $prefix.' '.$ingredient->title;
-                            $traverse($ingredient->children, $prefix.'-');
+                        foreach ($ingredients_arr as $val) {
+                            $ingredients[$val->token] = $prefix.' '.$val->title;
+                            $traverse($val->children, $prefix.'-');
                         }
                     };
 
                     $traverse($nodes);
-                    return view('ingredients.edit', compact('ingredients', 'ingredient'));
+                    return view('ingredients.edit', compact('ingredient', 'ingredients'));
                 }
             }
         }
