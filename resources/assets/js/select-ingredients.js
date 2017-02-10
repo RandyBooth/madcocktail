@@ -20,7 +20,10 @@ $(document).ready(function() {
                         escapeMarkup: function (markup) { return markup; },
                         minimumInputLength: 3,
                         templateResult: function  (data) {
-                            if (data.loading) return data.text;
+                            if (data.loading) {
+                                return data.text;
+                            }
+
                             return '<div>'+data.value+'</div>';
                         },
                         templateSelection: function (data) { return data.value || data.text; },
@@ -31,18 +34,14 @@ $(document).ready(function() {
                     select2Count = 0
                 ;
 
-                function select2Insert() {
+                var select2Insert = function () {
                     var selectIngredientsDivCount = 'create-ingredients-div-'+(select2Count++),
                     $selectIngredientsHTML = $('<select class="search-select select-ingredients" name="ingredients[]" style="width: 100%"><option value="">--</option></select>');
 
                     $selectIngredientsGroup.append('<div id="'+selectIngredientsDivCount+'" class="create-ingredients-div"></div>');
                     $('#'+selectIngredientsDivCount).append('<a class="create-ingredients-close" href="">X</a>').append($selectIngredientsHTML).append(measuresList);
                     $selectIngredientsHTML.select2(select2Option);
-                }
-
-                $(document).on('select2:select', '.search-select', function (e) {
-                    console.log('selected');
-                });
+                };
 
                 $(document).on('click', '.create-ingredients-close', function (e) {
                     e.preventDefault();

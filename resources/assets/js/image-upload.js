@@ -32,7 +32,6 @@ $(document).ready(function() {
                                 if (typeof data.image !== 'undefined' && data.image !== null) {
                                     $('#image #preview').attr('src', data.image);
                                     alertMessage('success', data.message);
-                                    alertRun();
                                 }
                             } else {
                                 if (typeof data.message !== 'undefined' && data.message !== null) {
