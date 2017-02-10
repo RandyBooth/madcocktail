@@ -46,9 +46,7 @@ $(document).ready(function() {
 
                 $(document).on('click', '.create-ingredients-close', function (e) {
                     e.preventDefault();
-                    if ($('.create-ingredients-div', $selectIngredientsGroup).length > 1) {
-                        $(this).closest('.create-ingredients-div').remove();
-                    }
+                    $(this).closest('.create-ingredients-div').remove();
                 });
 
                 $('.search-select').each(function() {
@@ -65,10 +63,6 @@ $(document).ready(function() {
                     e.preventDefault();
                     select2Insert();
                 });
-
-                if (!$.trim($selectIngredientsGroup.html())) {
-                    select2Insert();
-                }
             }
         }
     }

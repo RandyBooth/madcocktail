@@ -398,7 +398,62 @@ class RecipeController extends Controller
      */
     public function update(RecipeRequest $request, $id)
     {
-        //
+        if (Auth::check()) {
+            $data = $request->all();
+
+            $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+                return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
+            });
+
+            $measures_data = Cache::tags('recipe_measures')->remember('', 60, function () {
+                return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
+            });
+
+            $glasses = $glasses_data->pluck('id', 'slug')->all();
+            $measures = $measures_data->pluck('id', 'slug')->all();
+
+            $data['directions'] = Helper::textarea_to_array($data['directions']);
+
+            if (array_key_exists($data['glass'], $glasses)) {
+                $data['glass_id'] = $glasses[$data['glass']];
+            }
+
+            $recipe = Recipe::token($id)->firstOrFail();
+
+            if (Helper::is_owner($recipe->user_id)) {
+                if (!empty($data['ingredients'])) {
+                    $ingredients_data = [];
+                    $ingredients = $data['ingredients'];
+                    $count = 0;
+
+                    foreach ($ingredients as $key => $token) {
+                        if (!empty($token)) {
+                            $ingredient = Ingredient::select('id')->token($token)->first();
+
+                            if ($ingredient) {
+                                $ingredients_data[$ingredient->id] = ['order_by' => $count++];
+
+                                if (!empty($data['ingredients_measure'][$key])) {
+                                    if (array_key_exists($data['ingredients_measure'][$key], $measures)) {
+                                        $ingredients_data[$ingredient->id]['measure_id'] = $measures[$data['ingredients_measure'][$key]];
+                                    }
+                                }
+
+                                if (!empty($data['ingredients_measure_amount'][$key])) {
+                                    $ingredients_data[$ingredient->id]['measure_amount'] = Helper::fraction_to_decimal($data['ingredients_measure_amount'][$key]);
+                                }
+                            }
+                        }
+                    }
+
+                    $recipe->ingredients()->sync($ingredients_data);
+                }
+
+                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe has been updated successfully.');
+            }
+        }
+
+        return redirect()->back()->withInput()->with('warning', 'Recipe update fail');
     }
 
     /**
