@@ -95,10 +95,10 @@
 
     @if(Helper::is_admin())
     <div>
-        <form action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
+        <form onsubmit="return confirm('Are you sure you want to delete?')" action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
             {{ method_field('DELETE') }}
             {{ csrf_field() }}
-            <input type="submit" value="Delete">
+            <button type="submit" class="btn btn-danger">Delete</button>
         </form>
     </div>
     @endif
