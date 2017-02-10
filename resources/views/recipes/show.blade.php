@@ -42,7 +42,7 @@
     <div><strong>Description:</strong> {{ $recipe->description }}</div>
     @endif
 
-    @if (!empty($ingredients))
+    @if (!$ingredients->isEmpty())
     <div><strong>Ingredients:</strong>
         <ul>
             @foreach($ingredients as $val)

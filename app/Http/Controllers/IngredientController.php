@@ -7,10 +7,7 @@ use App\Http\Requests\IngredientRequest;
 use App\Ingredient;
 use App\Recipe;
 use Auth;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Cache;
-use Vinkla\Hashids\Facades\Hashids;
 
 class IngredientController extends Controller
 {
@@ -240,13 +237,8 @@ class IngredientController extends Controller
     public function update(IngredientRequest $request, $id)
     {
         if (Auth::check()) {
-            $user = Auth::user();
             $data = $request->all();
-
             $data['parent_id'] = null;
-//            $data['is_alcoholic'] = 0;
-//            $data['is_active'] = ($user->role == 1) ? 1 : 0;
-//            $data['user_id'] = Auth::id();
 
             if (!empty($data['ingredients'])) {
                 $ingredient_id = Ingredient::token($data['ingredients'])->pluck('id')->first();
@@ -260,16 +252,10 @@ class IngredientController extends Controller
 
             if (Helper::is_owner($ingredient->user_id)) {
                 $ingredient->title = $data['title'];
-//                $ingredient->parent_id = $data['parent_id'];
                 $ingredient->parent()->associate($data['parent_id'])->save();
 
                 return redirect()->route('ingredients.index')->with('success', 'Ingredient has been created successfully.');
             }
-
-//            $ingredient = Ingredient::create($data);
-
-            exit();
-
         }
 
         return redirect()->back()->withInput()->with('warning', 'Ingredient create fail');
@@ -296,24 +282,6 @@ class IngredientController extends Controller
         $this->buildTree($tree, $nodes, 'title', 'children', true);
         return view('ingredients.tree', compact('tree'));
     }
-
-//    private function hashId($id, $type = 'encode') {
-//        switch($type) {
-//            case 'decode':
-//                $id = Hashids::decode($id);
-//                break;
-//            case 'encode':
-//            default:
-//                $id = Hashids::encode($id);
-//                break;
-//        }
-//
-//        if (!empty($id)) {
-//            return is_array($id) ? head($id) : $id;
-//        }
-//
-//        abort(404);
-//    }
 
     private function buildTree(&$tree_return = '', $tree_array, $display_field, $children_field, $link = false, $slug = '', $recursionDepth = 0, $maxDepth = false)
     {

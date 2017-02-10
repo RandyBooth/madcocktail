@@ -170,9 +170,10 @@ class RecipeController extends Controller
                             }
                         }
                     }
+
+                    $recipe->ingredients()->sync($ingredients_data);
                 }
 
-                $recipe->ingredients()->sync($ingredients_data);
                 return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe has been created successfully.');
             }
         }
@@ -352,33 +353,6 @@ class RecipeController extends Controller
                         'ingredients_measure_amount' => $old_ingredients_measure_amount,
                         'glass' => $glass,
                     ];
-
-//                    $ingredients = [];
-//
-//                    if (!empty(old('ingredients'))) {
-//                        $ingredients_id = old('ingredients');
-//                        $ingredients_query = [];
-//
-//                        $count = 0;
-//
-//                        foreach ($ingredients_id as $token) {
-//                            $where = function ($query) use ($token, $count) {
-//                                return $query->token($token);
-//                            };
-//
-//                            if ($count++) {
-//                                $ingredients_query->orWhere($where);
-//                            } else {
-//                                $ingredients_query = Ingredient::select('title', 'token')->where($where);
-//                            }
-//                        }
-//
-//                        $ingredients_data = $ingredients_query->get();
-//
-//                        if (!$ingredients_data->isEmpty()) {
-//                            $ingredients = $ingredients_data->pluck('title', 'token')->all();
-//                        }
-//                    }
 
                     $glasses = $glasses_data->pluck('title', 'slug')->all();
                     $measures = $measures_data->pluck('title', 'slug')->all();
