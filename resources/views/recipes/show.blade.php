@@ -61,6 +61,11 @@
                                 $string .= ($measure_amount > 1 ) ? str_plural($measure_title) : str_singular($measure_title);
                                 $string .= ' ';
                             }
+                        } else {
+                            if (!empty($measure_title)) {
+                                $string .= '1 '.str_singular($measure_title);
+                                $string .= ' ';
+                            }
                         }
 
                         if ($val->is_active) {

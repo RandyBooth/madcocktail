@@ -61,6 +61,15 @@ class RecipeController extends Controller
      */
     public function create()
     {
+        $recipe = [
+            'title' => '',
+            'description' => '',
+            'directions' => '',
+            'ingredients' => '',
+            'ingredients_measure' => '',
+            'ingredients_measure_amount' => '',
+            'glass' => '',
+        ];
         $ingredients = [];
 
         if (!empty(old('ingredients'))) {
@@ -99,7 +108,7 @@ class RecipeController extends Controller
         $glasses = $glasses_data->pluck('title', 'slug')->all();
         $measures = $measures_data->pluck('title', 'slug')->all();
 
-        return view('recipes.create', compact('glasses', 'measures', 'ingredients'));
+        return view('recipes.create', compact('recipe', 'ingredients', 'glasses', 'measures'));
     }
 
     /**
@@ -286,7 +295,98 @@ class RecipeController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Auth::check()) {
+            $recipe_data = Recipe::token($id)->with('ingredients')->firstOrFail();
+
+            if ($recipe_data) {
+                if (Helper::is_owner($recipe_data->user_id)) {
+                    $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+                        return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
+                    });
+
+                    $measures_data = Cache::tags('recipe_measures')->remember('', 60, function () {
+                        return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
+                    });
+
+                    $glasses = $glasses_data->pluck('slug', 'id')->all();
+                    $measures = $measures_data->pluck('slug', 'id')->all();
+
+                    $ingredients_data = $recipe_data->ingredients;
+                    $ingredients = [];
+                    $old_ingredients = [];
+                    $old_ingredients_measure = [];
+                    $old_ingredients_measure_amount = [];
+
+                    if (!$ingredients_data->isEmpty()) {
+                        foreach($ingredients_data as $val) {
+                            $old_ingredients[] = $val->token;
+                            $ingredients[$val->token] = $val->title;
+
+                            $old_ingredients_measure[] = (isset($measures[$val->pivot->measure_id]))
+                                ? $measures[$val->pivot->measure_id]
+                                : '';
+
+                            $measure_amount = Helper::trim_trailing_zeroes($val->pivot->measure_amount);
+
+                            $old_ingredients_measure_amount[] = (!empty($measure_amount))
+                                ? $measure_amount
+                                : '';
+                        }
+                    }
+
+                    $glass = '';
+
+                    if ($recipe_data->glass_id) {
+                        if (isset($glasses[$recipe_data->glass_id])) {
+                            $glass = $glasses[$recipe_data->glass_id];
+                        }
+                    }
+
+                    $recipe = [
+                        'token' => $recipe_data->token,
+                        'title' => $recipe_data->title,
+                        'description' => $recipe_data->description,
+                        'directions' => implode("\n", $recipe_data->directions),
+                        'ingredients' => $old_ingredients,
+                        'ingredients_measure' => $old_ingredients_measure,
+                        'ingredients_measure_amount' => $old_ingredients_measure_amount,
+                        'glass' => $glass,
+                    ];
+
+//                    $ingredients = [];
+//
+//                    if (!empty(old('ingredients'))) {
+//                        $ingredients_id = old('ingredients');
+//                        $ingredients_query = [];
+//
+//                        $count = 0;
+//
+//                        foreach ($ingredients_id as $token) {
+//                            $where = function ($query) use ($token, $count) {
+//                                return $query->token($token);
+//                            };
+//
+//                            if ($count++) {
+//                                $ingredients_query->orWhere($where);
+//                            } else {
+//                                $ingredients_query = Ingredient::select('title', 'token')->where($where);
+//                            }
+//                        }
+//
+//                        $ingredients_data = $ingredients_query->get();
+//
+//                        if (!$ingredients_data->isEmpty()) {
+//                            $ingredients = $ingredients_data->pluck('title', 'token')->all();
+//                        }
+//                    }
+
+                    $glasses = $glasses_data->pluck('title', 'slug')->all();
+                    $measures = $measures_data->pluck('title', 'slug')->all();
+
+                    return view('recipes.edit', compact('recipe', 'ingredients', 'glasses', 'measures'));
+                }
+            }
+        }
     }
 
     /**

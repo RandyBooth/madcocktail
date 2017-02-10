@@ -60,14 +60,15 @@ $(document).ready(function() {
                 });
 
                 measuresList = '<select class="select-ingredients-measure" name="ingredients.measure[]">'+measuresList+'</select><input class="select-ingredients-measure-amount" type="text" name="ingredients.measure.amount[]">';
-                // $selectIngredientsGroup.empty();
 
                 $(document).on('click', '#create-ingredients-button', function(e) {
                     e.preventDefault();
                     select2Insert();
                 });
 
-                select2Insert();
+                if (!$.trim($selectIngredientsGroup.html())) {
+                    select2Insert();
+                }
             }
         }
     }

@@ -88,6 +88,11 @@ class Helper
 
     }
 
+    public static function trim_trailing_zeroes($num)
+    {
+        return (strpos($num, '.') !== false) ? rtrim(rtrim($num, '0'), '.') : $num;
+    }
+
     public static function html_sup($string)
     {
         return preg_replace('/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/', '<sup>$1</sup>', $string);
