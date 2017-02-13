@@ -17,6 +17,10 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('least_one_letter', function ($attribute, $value, $parameters, $validator) {
             return preg_match('/^(?=.*[a-zA-Z])/', $value);
         });
+
+        Validator::extend('over_age', function ($attribute, $value, $parameters, $validator) {
+            return \App\Helpers\Helper::is_age_over($parameters[0], $value);
+        });
     }
 
     /**

@@ -12,7 +12,7 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
 
-    protected $fillable = ['email', 'password'];
+    protected $fillable = ['username', 'email', 'password', 'birth'];
     protected $hidden = ['password', 'remember_token'];
 
     protected static function boot()

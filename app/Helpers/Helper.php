@@ -25,6 +25,23 @@ class Helper
         return false;
     }
 
+    public static function is_age_over($age = 21, $birth)
+    {
+        $age = (int) $age;
+
+        if (!empty($age) && !empty($birth)) {
+            $birth = \Carbon\Carbon::parse($birth);
+            $now = new \Carbon\Carbon('+7 days'); // now + 7 days
+            $now->setTime(0, 0, 0);
+
+            if ($birth->diffInYears($now, false) >= $age) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function decimal_to_fraction($value)
     {
         $value = (float)$value;

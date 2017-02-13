@@ -43,7 +43,8 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => ['getVerification', 'getVerificationError']]);
+        $this->middleware(['guest'], ['except' => ['getVerification', 'getVerificationError']]);
+        $this->middleware(['xss', 'isVerified'], ['only' => ['register']]);
     }
 
     /**
@@ -55,9 +56,13 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'username' => 'required|min:3|max:255|alpha_dash|unique:users',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'birth' => 'filled|date_format:Y-m-d|over_age:21',
+            'month' => 'required|digits:2',
+            'day' => 'required|digits:2',
+            'year' => 'required|digits:4',
         ]);
     }
 
@@ -70,7 +75,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
@@ -84,17 +89,26 @@ class RegisterController extends Controller
     */
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        $data = $request->all();
+        $data['birth'] = '';
 
-        event(new Registered($user = $this->create($request->all())));
+        if (isset($data['month']) && isset($data['day']) && isset($data['year'])) {
+            $data['birth'] = $data['year'].'-'.$data['month'].'-'.$data['day'];
+        }
 
-//        $this->guard()->login($user);
+        $this->validator($data)->validate();
+        $user = $this->create($data);
+        event(new Registered($user));
 
-        UserVerification::generate($user);
+        if ($user) {
+//            $this->guard()->login($user);
+            UserVerification::generate($user);
+            UserVerification::sendQueue($user, 'Please Confirm Your Email');
 
-        UserVerification::sendQueue($user, 'Please Confirm Your Email');
+            return $this->registered($request, $user)
+            ?: redirect($this->redirectPath())->with('success', 'Confirm email sent!');
+        }
 
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
+        return false;
     }
 }
