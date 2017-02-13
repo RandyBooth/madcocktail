@@ -200,7 +200,7 @@ class RecipeController extends Controller
 
             $ip_id = $request->ip().'_'.$recipe->id;
 
-            if (!Cache::tags('recipe_counter')->has($ip_id)) {
+            if (!Cache::tags('recipe_counter')->has($ip_id) && !Helper::is_admin()) {
                 if (empty($recipe->counts)) {
                     $recipe->counts()->create([]);
                     $recipe->load('counts');
@@ -260,7 +260,7 @@ class RecipeController extends Controller
                                ->update($counts_arr);
 
                             if ($insert_count) {
-                                Cache::tags('recipe_counter')->put($ip_id, '1', (60*12));
+                                Cache::tags('recipe_counter')->put($ip_id, '1', (60*12)); // 12 hours
                             }
                         }
                     }
