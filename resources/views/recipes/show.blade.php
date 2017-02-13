@@ -61,7 +61,7 @@
                             }
                         } else {
                             if (!empty($measure_title)) {
-                                $string .= '1 '.str_singular($measure_title);
+                                $string .= str_singular($measure_title) . ' of';
                                 $string .= ' ';
                             }
                         }
