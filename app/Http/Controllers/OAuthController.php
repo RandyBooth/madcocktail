@@ -9,6 +9,7 @@ use App\User;
 use Auth;
 use Hash;
 use Socialite;
+use Jrean\UserVerification\Facades\UserVerification;
 
 class OAuthController extends Controller
 {
@@ -63,10 +64,14 @@ class OAuthController extends Controller
                                 'provider_uid' => $social_user->id
                             ]);
 
+                            UserVerification::generate($user);
+                            UserVerification::sendQueue($user, 'Please Confirm Your Email');
+
                             Auth::login($user);
 
                             // redirect the user and suggest changing their password
-                            return redirect('password/reset');
+//                            return redirect('password/reset')->with('success', 'Confirm email sent!');
+                            return redirect('/')->with('success', 'Confirm email sent!');
                         }
                     }
                 }
