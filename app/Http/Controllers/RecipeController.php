@@ -174,11 +174,11 @@ class RecipeController extends Controller
                     $recipe->ingredients()->sync($ingredients_data);
                 }
 
-                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe has been created successfully.');
+                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe ('.$recipe->title.') has been created successfully.');
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Recipe create fail');
+        return redirect()->back()->withInput()->with('warning', 'Recipe create fail.');
     }
 
     /**
@@ -423,11 +423,11 @@ class RecipeController extends Controller
                     $recipe->ingredients()->sync($ingredients_data);
                 }
 
-                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe has been updated successfully.');
+                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe ('.$recipe->title.') has been updated successfully.');
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Recipe update fail');
+        return redirect()->back()->withInput()->with('warning', 'Recipe update fail.');
     }
 
     /**
@@ -439,8 +439,9 @@ class RecipeController extends Controller
     public function destroy($id)
     {
         if (Helper::is_admin()) {
-            Recipe::token($id)->firstOrFail()->delete();
-            return redirect()->route('recipes.index')->with('success', 'Recipe has been deleted successfully.');
+            $recipe = Recipe::token($id)->firstOrFail();
+            $recipe->delete();
+            return redirect()->route('recipes.index')->with('success', 'Recipe ('.$recipe->title.') has been deleted successfully.');
         }
     }
 }

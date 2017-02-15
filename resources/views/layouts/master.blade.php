@@ -22,6 +22,8 @@
 
     <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
 
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400,400i,600" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
 @yield('style')
@@ -32,14 +34,14 @@
 {{--    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>--}}
 </head>
 <body>
-    @include('layouts.alert')
+
     @include('layouts.header')
 
-    <div class="container">
-        @include('layouts.content')
+    @include('layouts.alert')
 
-        @include('layouts.footer')
-    </div>
+    @include('layouts.content')
+
+    @include('layouts.footer')
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.1.1.min.js') }}"><\/script>')</script>

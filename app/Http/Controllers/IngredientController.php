@@ -88,11 +88,20 @@ class IngredientController extends Controller
             $ingredient = Ingredient::create($data);
 
             if (!empty($ingredient)) {
-                return redirect()->route('ingredients.show', $ingredient->slug)->with('success', 'Ingredient has been created successfully.');
+                $ingredient_slug = $ingredient->slug;
+
+                if ($data['parent_id']) {
+                    $ingredient_ancestors = $ingredient->ancestors()->get();
+                    $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
+                    $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+                    $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
+                }
+
+                return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been created successfully.');
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Ingredient create fail');
+        return redirect()->back()->withInput()->with('warning', 'Ingredient create fail.');
     }
 
     /**
@@ -128,7 +137,7 @@ class IngredientController extends Controller
         }
 
         if ($count_parameters == $count_ingredient_valid) {
-            $ingredient_breadcrumbs = array_pluck($ingredient_ancestors_self, 'title_sup', 'slug');
+            $ingredient_breadcrumbs = array_pluck($ingredient_ancestors_self, 'title', 'slug');
 
             $ingredients = Cache::tags('ingredient_children')->remember(strtolower($parameters), 60, function () use ($ingredient) {
                 return $ingredient->
@@ -252,13 +261,24 @@ class IngredientController extends Controller
 
             if (Helper::is_owner($ingredient->user_id)) {
                 $ingredient->title = $data['title'];
-                $ingredient->parent()->associate($data['parent_id'])->save();
+                $ingredient_save = $ingredient->parent()->associate($data['parent_id'])->save();
 
-                return redirect()->route('ingredients.index')->with('success', 'Ingredient has been created successfully.');
+                if ($ingredient_save) {
+                    $ingredient_slug = $ingredient->slug;
+
+                    if ($data['parent_id']) {
+                        $ingredient_ancestors = $ingredient->ancestors()->get();
+                        $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
+                        $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+                        $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
+                    }
+
+                    return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been updated successfully.');
+                }
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Ingredient create fail');
+        return redirect()->back()->withInput()->with('warning', 'Ingredient update fail.');
     }
 
     /**
@@ -270,8 +290,9 @@ class IngredientController extends Controller
     public function destroy($id)
     {
         if (Helper::is_admin()) {
-            Ingredient::token($id)->firstOrFail()->delete();
-            return redirect()->route('ingredients.index')->with('success', 'Ingredient has been deleted successfully.');
+            $ingredient = Ingredient::token($id)->firstOrFail();
+            $ingredient->delete();
+            return redirect()->route('ingredients.index')->with('success', 'Ingredient ('.$ingredient->title.') has been deleted successfully.');
         }
     }
 
