@@ -101,7 +101,7 @@ class IngredientController extends Controller
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Ingredient create fail.');
+        return redirect()->back()->withInput()->with('danger', 'Ingredient create fail.');
     }
 
     /**
@@ -163,10 +163,12 @@ class IngredientController extends Controller
                     ->select('title', 'slug')
                     ->where('recipe_counts.count_month', '>=', 5)
                     ->orderBy('recipe_counts.count_month', 'DESC')
-                    ->orderby('title')
+                    ->orderby('recipes.title')
                     ->take(10)
                     ->get();
             });
+
+            dd($recipes);
 
             /*$recipes = Cache::tags('ingredient_show_recipes_top_day')->remember(strtolower($parameters), 60, function() use ($ingredient_descendants_id) {
                 return Recipe::
@@ -278,7 +280,7 @@ class IngredientController extends Controller
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Ingredient update fail.');
+        return redirect()->back()->withInput()->with('danger', 'Ingredient update fail.');
     }
 
     /**

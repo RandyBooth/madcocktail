@@ -1,16 +1,23 @@
 $(document).ready(function() {
-    $('#add-image').on('click', function(e) {
+    var $image = $('#image'),
+        $imagePreview = $('#image-preview', $image),
+        $imageEdit = $('#image-edit', $image),
+        $imageEditChange = $('#image-edit-change', $imageEdit),
+        $imageEditForm = $('form', $imageEdit),
+        $imageEditFormFile = $('#image-edit-file', $imageEditForm);
+
+    $imageEditChange.on('click', function(e) {
         e.preventDefault();
-        $('#upload-image').trigger('click');
+        $imageEditFormFile.trigger('click');
     });
 
-    $('#upload-image').on('change', function() {
-        $('#form-image').submit();
+    $imageEditFormFile.on('change', function() {
+        $imageEditForm.submit();
     });
 
-    $('#form-image').on('submit', function(e) {
+    $imageEditForm.on('submit', function(e) {
         e.preventDefault();
-        var file = $('#upload-image').prop('files');
+        var file = $imageEditFormFile.prop('files');
 
         if (file.length) {
             file = file[0];
@@ -30,12 +37,12 @@ $(document).ready(function() {
                         if (typeof data.success !== 'undefined' && data.success !== null) {
                             if (data.success) {
                                 if (typeof data.image !== 'undefined' && data.image !== null) {
-                                    $('#image #preview').attr('src', data.image);
+                                    $imagePreview.attr('src', data.image);
                                     alertMessage('success', data.message);
                                 }
                             } else {
                                 if (typeof data.message !== 'undefined' && data.message !== null) {
-                                    alertMessage('warning', data.message);
+                                    alertMessage('danger', data.message);
                                 }
                             }
                         }

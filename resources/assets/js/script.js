@@ -44,4 +44,12 @@ $(document).ready(function() {
     }
 
     $('form.autocomplete .search').autocomplete(autocompleteOption);
+
+    $('form').on('submit', function() {
+        var $buttonBtn = $('button.btn', this);
+
+        if ($buttonBtn.length) {
+            $buttonBtn.prop('disabled', true);
+        }
+    });
 });

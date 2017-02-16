@@ -105,20 +105,18 @@ h6,
 }
 
 .header {
-    //background-color: $color-orange;
-    //
-    //a {
-    //    color: $color-black;
-    //}
-
-    background-color: $color-black;
-
-    a {
-        color: $color-gray-light;
-    }
-
     .navbar-brand {
         color: $color-orange;
+    }
+}
+
+.header,
+.footer {
+    background-color: $color-black;
+
+    &,
+    a {
+        color: $color-gray-light;
     }
 }
 
@@ -164,14 +162,15 @@ h6,
     //}
 }
 
-
-
 .content {
-    margin-top: 40px;
-}
+    padding-top: 40px;
+    padding-bottom: 60px;
 
-.footer {
-
+    img {
+        background-image: url(#{$path-image}/loading-cocktail.png);
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
 }
 
 .navbar {
@@ -235,9 +234,16 @@ h6,
     }
 }
 
-.preview {
+.image-preview {
     width: 100%;
     height: auto;
     min-height: 100px;
     background-color: lightgray;
+}
+
+
+
+.footer {
+    padding-top: 40px;
+    padding-bottom: 80px;
 }

@@ -10,21 +10,22 @@
 @endif
 
 @section('content')
-    @include('recipes.subheader')
+    {{--@include('recipes.subheader')--}}
 
     <div id="image" class="image">
-        <img id="preview" class="preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'large', 'filename' => $recipe_image->image])}}@endif">
+        <img id="image-preview" class="image-preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'large', 'filename' => $recipe_image->image])}}@endif">
 
         @if(empty($recipe_image->image) && Helper::is_owner($recipe->user_id))
-        <div class="image-empty">
-            <a id="add-image" href="#">Add Image</a>
-            <form id="form-image" action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
+        <div id="image-edit" class="image-edit">
+            <a id="image-edit-change" href="#">Add Image</a>
+
+            <form action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
                 {{ csrf_field() }}
 
-                <div style="display: none;">
+                <div class="hidden-xl-down">
                     <input type="text" name="id" value="{{ $recipe->token }}">
-                    <input id="upload-image" type="file" name="upload-image" class="form-control">
-                    <button class="btn btn-success upload-image" type="submit">Upload Image</button>
+                    <input id="image-edit-file" type="file" name="image" class="form-control">
+                    <button class="btn btn-success" type="submit">Upload Image</button>
                 </div>
             </form>
         </div>
@@ -92,16 +93,29 @@
     @endif
 
     @if(Helper::is_admin())
-    <div>
-        <form onsubmit="return confirm('Are you sure you want to delete?')" action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
-            {{ method_field('DELETE') }}
-            {{ csrf_field() }}
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
+    <div class="row">
+        <div class="col-auto mr-1">
+            <a class="btn btn-primary" href="{{ route('recipes.edit', $recipe->token) }}">Edit</a>
+        </div>
+        <div class="col-auto">
+            <form onsubmit="return confirm('Are you sure you want to delete?')" action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
+                {{ method_field('DELETE') }}
+                {{ csrf_field() }}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
     </div>
     @endif
 @stop
 
 @section('sidebar')
-    Sidebar
+    @if ($recipe_similar)
+        <div><strong>Similar Recipes:</strong>
+            <ol>
+                @foreach($recipe_similar as $val)
+                    <li><a href="{{ route('recipes.show', ['id' => $val->slug]) }}">{{ $val->title }}</a></li>
+                @endforeach
+            </ol>
+        </div>
+    @endif
 @stop

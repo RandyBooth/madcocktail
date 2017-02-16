@@ -184,7 +184,7 @@ class RecipeController extends Controller
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Recipe create fail.');
+        return redirect()->back()->withInput()->with('danger', 'Recipe create fail.');
     }
 
     /**
@@ -200,19 +200,21 @@ class RecipeController extends Controller
         });
 
         if ($recipe) {
-            $recipe_image = Cache::tags('recipe_image')->remember($recipe->id, 60, function () use ($recipe) {
-                return RecipeImage::image($recipe->id)->first();
+            $recipe_id = $recipe->id;
+
+            $recipe_image = Cache::tags('recipe_image')->remember($recipe_id, 60, function () use ($recipe_id) {
+                return RecipeImage::image($recipe_id)->first();
             });
 
-            $ip_id = $request->ip().'_'.$recipe->id;
+            $ip_id = $request->ip().'_'.$recipe_id;
 
-            if (!Cache::tags('recipe_counter')->has($ip_id) && !Helper::is_admin()) {
+            if (!Cache::tags('recipe_counter')->has($ip_id)) {
                 if (empty($recipe->counts)) {
                     $recipe->counts()->create([]);
                     $recipe->load('counts');
                 }
 
-                if (!empty($recipe->counts)) {
+                if (!empty($recipe->counts) && !Helper::is_admin()) {
                     $counts = $recipe->counts;
                     $table_recipe_count = with(new RecipeCount)->getTable();
 
@@ -275,22 +277,49 @@ class RecipeController extends Controller
 
             $ingredients = $recipe->ingredients;
             $ingredient_slug = [];
+            $ingredient_id = [];
 
             foreach ($ingredients as $ingredient) {
                 $ingredient_ancestors = Cache::tags('ingredient_ancestor')->remember($ingredient->id, 60, function () use ($ingredient) {
                     return $ingredient->getAncestors();
                 });
 
-                $slug = [];
-
-                if (!$ingredient_ancestors->isEmpty()) {
-                    $slug = array_pluck($ingredient_ancestors, 'slug');
+                foreach($ingredient_ancestors as $ancestor) {
+                    if (!$ancestor->is_alcoholic) {
+                        $ingredient_id[] = $ancestor->id;
+                    }
                 }
 
-                $ingredient_slug[$ingredient->id] = implode('/', array_merge($slug, [$ingredient->slug]));
+                if (!$ingredient->is_alcoholic) {
+                    $ingredient_id[] = $ingredient->id;
+                }
+
+                $ingredient_slug[$ingredient->id] = implode('/', array_merge(array_pluck($ingredient_ancestors, 'slug'), [$ingredient->slug]));
             }
 
-            return view('recipes.show', compact('recipe', 'recipe_image', 'ingredients', 'ingredient_slug'));
+            $recipe_similar = [];
+
+            if (!empty($ingredient_id)) {
+                $total = 20;
+
+                $recipe_similar = Cache::tags('recipe_similar')->remember($recipe_id, 60, function () use ($recipe_id, $ingredient_id) {
+                    return Recipe::
+                        join('ingredient_recipe', 'recipes.id', '=', 'ingredient_recipe.recipe_id')
+                        ->whereIn('ingredient_recipe.ingredient_id', array_unique(array_flatten($ingredient_id)))
+                        ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+    //                    ->select('title', 'slug')
+                        ->select(DB::raw('count(recipes.id) as recipe_count, recipes.*'))
+                        ->where('recipes.id', '<>', $recipe_id)
+    //                    ->where('recipe_counts.count_total', '>', $total)
+                        ->orderby('recipe_count', 'DESC')
+                        ->orderby('recipes.title')
+                        ->take(5)
+                        ->groupBy('recipes.id')
+                        ->get();
+                });
+            }
+
+            return view('recipes.show', compact('recipe', 'recipe_image', 'recipe_similar', 'ingredients', 'ingredient_slug'));
         }
     }
 
@@ -433,7 +462,7 @@ class RecipeController extends Controller
             }
         }
 
-        return redirect()->back()->withInput()->with('warning', 'Recipe update fail.');
+        return redirect()->back()->withInput()->with('danger', 'Recipe update fail.');
     }
 
     /**

@@ -41,9 +41,6 @@ class RecipeRequest extends FormRequest
                 {
                     return [
                         'title' => 'required|least_one_letter|min:3',
-//                        'description' => 'required',
-                        'directions' => 'required',
-//                        'glass' => 'required',
                         'name' => 'honeypot',
                         'my_time' => 'required|honeytime:2',
                     ];

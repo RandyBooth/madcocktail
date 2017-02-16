@@ -11,13 +11,16 @@
 |
 */
 
-Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
+Route::group(['middleware' => ['admin', 'isVerified'], 'prefix' => 'admin'], function () {
     Route::group(['prefix' => 'ingredients'], function () {
         Route::get('tree', 'IngredientController@tree');
     });
 });
 
 Auth::routes();
+
+Route::get('email/confirm/error', 'Auth\RegisterController@getVerificationError')->name('email-verification.error');
+Route::get('email/confirm/check/{token}', 'Auth\RegisterController@getVerification')->name('email-verification.check');
 
 Route::group(['prefix' => 'login'], function() {
     Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function() {
@@ -30,8 +33,11 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::post('/', 'SearchController@test');
+Route::get('profile', function() {
+    echo 'In work';
+})->name('profile');
 
+//Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 
 Route::resource('ingredients', 'IngredientController', [

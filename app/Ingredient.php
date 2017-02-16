@@ -82,14 +82,8 @@ class Ingredient extends Model
 
     public function recipes()
     {
-//        return $this->belongsToMany('App\Recipe')->orderBy('view_count', 'DESC')->orderBy('title');
+        return $this->belongsToMany('App\Recipe');
     }
-
-    /*public function recipes()
-    {
-        $table_recipe_count = with(new RecipeCount)->getTable();
-        return $this->belongsToMany('App\Recipe')->join($table_recipe_count, $table_recipe_count.'.id', '=', 'recipes.id')->orderBy('title');
-    }*/
 
     public function newPivot(Model $parent, array $attributes, $table, $exists) {
         if ($parent instanceof Recipe) {

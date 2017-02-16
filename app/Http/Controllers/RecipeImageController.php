@@ -45,10 +45,10 @@ class RecipeImageController extends Controller
 
         if (Auth::check()) {
             if ($request->ajax()) {
-                if ($request->has('id') && $request->hasFile('upload-image')) {
+                if ($request->has('id') && $request->hasFile('image')) {
                     $validator = Validator::make($request->all(), [
                         'id' => 'required|min:12|max:20',
-                        'upload-image' => 'required|file|image|mimes:gif,jpeg,jpg,png|max:2048',
+                        'image' => 'required|file|image|mimes:gif,jpeg,jpg,png|max:2048',
                     ]);
 
                     if ($validator->passes()) {
@@ -59,7 +59,7 @@ class RecipeImageController extends Controller
                         if ($recipe) {
                             $recipe_id = $recipe->id;
                             $filename = '';
-                            $image = $request->file('upload-image');
+                            $image = $request->file('image');
 //                            $image_extension = $image->extension();
                             $recipe_image = RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
                             $token_valid = false;

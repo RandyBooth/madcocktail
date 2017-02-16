@@ -21,13 +21,8 @@
 
                         <ul class="navbar-nav">
                         @if (Auth::check())
-                            @if(Auth::user()->role_type)
-                            <span class="navbar-text">
-                                Role: {{ Auth::user()->role_type }}
-                            </span>
-                            @endif
                             <li class="nav-item">
-                                <a class="nav-link" href="{{-- route('users.show') --}}">{{ Auth::user()->email }}</a>
+                                <a class="nav-link" href="{{ route('profile') }}">@if(Auth::user()->role){{ 'Admin' }}@else{{ 'Profile' }}@endif</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
