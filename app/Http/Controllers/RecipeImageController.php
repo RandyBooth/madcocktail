@@ -76,7 +76,7 @@ class RecipeImageController extends Controller
                                         Image::make($image)->resize(1200, null, function ($constraint) {
                                             $constraint->aspectRatio();
                                             $constraint->upsize();
-                                        })->save('upload/'.$filename)->destroy();
+                                        })->interlace()->save('upload/'.$filename)->destroy();
 
                                         if ($recipe_image->update(['image' => $filename])) {
                                             $token_valid = true;
@@ -87,7 +87,7 @@ class RecipeImageController extends Controller
                             } while(!$token_valid);
 
                             $response['success'] = true;
-                            $response['image'] = route('imagecache', ['template' => 'large', 'filename' => $filename]);
+                            $response['image'] = route('imagecache', ['template' => 'show', 'filename' => $filename]);
                         } else {
                             $response['message'] = 'You are not allow to do that.';
                         }

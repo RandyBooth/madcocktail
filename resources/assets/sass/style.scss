@@ -1,7 +1,7 @@
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
 @import "variables";
 @import "mixins";
-
-
 
 .color {
     &- {
@@ -56,6 +56,16 @@
 }
 
 a {
+    @include transition(all 0.3s linear);
+
+    &.link {
+        border-bottom: 1px solid transparent;
+
+        @include hover {
+            border-bottom: 1px solid;
+        }
+    }
+
 //    &,
 //    &:focus,
 //    &:hover {
@@ -63,13 +73,13 @@ a {
 //        border-bottom: 1px solid transparent;
 //    }
 //
-    color: $color-black;
-
-    &:focus,
-    &:hover {
-        color: $color-black;
-//        border-bottom: 1px solid;
-    }
+//    color: $color-black;
+//
+//    &:focus,
+//    &:hover {
+//        color: $color-black;
+////        border-bottom: 1px solid;
+//    }
 }
 
 //.alert {
@@ -84,30 +94,16 @@ a {
 //    }
 //}
 
-body {
-    background-color: $color-white;
-    font-family: 'Source Sans Pro', sans-serif;
+img {
+    &:not([src]) {
+        visibility: hidden;
+    }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-    font-family: 'Oxygen', sans-serif;
+body {
 }
 
 .header {
-    .navbar-brand {
-        color: $color-orange;
-    }
 }
 
 .header,
@@ -120,56 +116,30 @@ h6,
     }
 }
 
-.autocomplete {
-    .form-control {
-        background-color: $color-white;
-        color: $color-gray-dark;
-
-        &:focus {
-            border-color: $color-orange;
-        }
-
-        &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-          color: $color-gray-light;
-        }
-        &::-moz-placeholder { /* Firefox 19+ */
-          color: $color-gray-light;
-        }
-        &:-ms-input-placeholder { /* IE 10+ */
-          color: $color-gray-light;
-        }
-        &:-moz-placeholder { /* Firefox 18- */
-          color: $color-gray-light;
-        }
-    }
-
-    .btn-primary {
-        color: $color-gray-light;
-        background-color: $color-gray-dark;
-        border-color: $color-gray-dark;
-
-        &:focus,
-        &.focus {
-            box-shadow: 0 0 0 2px rgba($color-orange, 0.5);
-        }
-    }
-
-    //.btn-outline-primary {
-    //    color: $color-orange;
-    //    background-image: none;
-    //    background-color: transparent;
-    //    border-color: $color-orange;
-    //}
+.btn-gray {
+  @include button-variant($color-gray-light, $color-gray-dark, $color-gray-dark);
 }
+
+
 
 .content {
     padding-top: 40px;
     padding-bottom: 60px;
 
+    ol,
+    ul {
+        padding-left: 0;
+        list-style-position: inside;
+    }
+
     img {
-        background-image: url(#{$path-image}/loading-cocktail.png);
-        background-position: center center;
-        background-repeat: no-repeat;
+        width: 100%;
+        height: auto;
+        min-height: 100px;
+        background-color: $color-gray-light;
+        //background-image: url(#{$path-image}/loading-cocktail.png);
+        //background-position: center center;
+        //background-repeat: no-repeat;
     }
 }
 
@@ -179,6 +149,33 @@ h6,
 }
 
 .autocomplete {
+    .form-control {
+        background-color: $color-white;
+        color: $color-black;
+        border: 1px solid $color-gray-dark;
+
+        &:focus {
+            border-color: $color-orange;
+        }
+
+        &::placeholder {
+            color: $color-gray-light;
+        }
+
+        &::-webkit-input-placeholder {
+          color: $color-gray-light;
+        }
+        &::-moz-placeholder {
+          color: $color-gray-light;
+        }
+        &:-ms-input-placeholder {
+          color: $color-gray-light;
+        }
+        &:-moz-placeholder {
+          color: $color-gray-light;
+        }
+    }
+
     &- {
         &suggestions {
             -webkit-box-sizing: border-box;
@@ -224,26 +221,61 @@ h6,
             }
         }
     }
+}
 
-    input {
-        //font-size: 28px;
-        //padding: 10px;
-        //border: 1px solid #CCC;
-        //display: block;
-        //margin: 20px 0;
+.image {
+    position: relative;
+
+    &- {
+        &loading {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom:0;
+            left: 0;
+            background-color: rgba($color-black, .8);
+            color: $color-orange;
+
+            &- {
+                &parent {
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                }
+
+                &child {
+                    display: table-cell;
+                    vertical-align: middle;
+                }
+            }
+        }
+
+        &edit {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+    .btn-group {
+        opacity: .4;
+        @include transition(opacity 0.3s linear);
+    }
+
+    @include hover-focus {
+        .btn-group {
+            opacity: 1;
+        }
     }
 }
 
 .image-preview {
-    width: 100%;
-    height: auto;
-    min-height: 100px;
-    background-color: lightgray;
 }
-
-
 
 .footer {
     padding-top: 40px;
     padding-bottom: 80px;
 }
+
+@import "font-awesome/font-awesome";

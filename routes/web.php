@@ -37,7 +37,7 @@ Route::get('profile', function() {
     echo 'In work';
 })->name('profile');
 
-//Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,1', 'as' => 'search', 'uses' => 'SearchController@search']);
+Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 
 Route::resource('ingredients', 'IngredientController', [
@@ -57,6 +57,7 @@ Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@sho
 
 Route::group(['prefix' => 'ajax'], function() {
     Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
+    Route::delete('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image_destroy', 'uses' => 'RecipeImageController@destroy']);
 });
 
 Route::resource('occasions', 'OccasionController');

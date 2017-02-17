@@ -11,6 +11,6 @@ class Tiny implements FilterInterface
     {
         return $image->resize(30, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->blur()->encode('jpg', 20);
+        })->blur()->interlace()->encode('jpg', 20);
     }
 }

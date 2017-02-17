@@ -11,6 +11,6 @@ class Small implements FilterInterface
     {
         return $image->resize(120, null, function ($constraint) {
             $constraint->aspectRatio();
-        });
+        })->interlace();
     }
 }

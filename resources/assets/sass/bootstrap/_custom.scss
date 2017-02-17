@@ -2,3 +2,43 @@
 //
 // Copy variables from `_variables.scss` to this file to override default values
 // without modifying source files.
+@import "variables";
+@import "../variables";
+
+$brand-primary: $color-orange;
+
+$font-family-sans-serif: 'Source Sans Pro', sans-serif;
+$font-family-sans-serif-headings: 'Oxygen', sans-serif;
+
+$font-family-base: $font-family-sans-serif;
+
+$body-bg: $color-white;
+
+$link-color: $brand-primary;
+//$link-decoration: none;
+$link-hover-color: darken($link-color, 10%);
+$link-hover-decoration: none;
+
+$headings-font-family: $font-family-sans-serif-headings; // inherit
+
+$font-size-h1: 1.5rem; //2.5rem
+$font-size-h2: 1.375rem; //2rem
+$font-size-h3: 1.25rem; //1.75rem
+$font-size-h4: 1.125rem; //1.5rem
+$font-size-h5: 1rem; //1.25rem
+$font-size-h6: .875rem; //1rem
+
+$headings-font-weight: 700; //500
+
+$input-border-focus: lighten($brand-primary, 25%);
+
+$navbar-inverse-color: $color-gray-light; //rgba($white,.5);
+$navbar-inverse-hover-color: rgba($color-gray-light, 0.75); //rgba($white,.75);
+$navbar-inverse-active-color: $color-orange; //rgba($white,1);
+$navbar-inverse-disabled-color: rgba($color-gray-light, 0.25); //rgba($white,.25);
+$navbar-inverse-toggler-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23"); //str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-inverse-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
+$navbar-inverse-toggler-border: rgba($color-gray-light, 0.5); //rgba($white,.1);
+
+$btn-primary-color: $color-white;
+$btn-primary-bg: $brand-primary;
+$btn-primary-border: $btn-primary-bg;

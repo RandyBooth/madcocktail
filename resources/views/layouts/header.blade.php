@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <nav class="navbar navbar-toggleable-md">
+                <nav class="navbar navbar-toggleable-md navbar-inverse">
                     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -17,9 +17,7 @@
                             </li>
                         </ul>
 
-                        @include('layouts.search')
-
-                        <ul class="navbar-nav">
+                        <ul class="navbar-nav order-last ml-lg-2">
                         @if (Auth::check())
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('profile') }}">@if(Auth::user()->role){{ 'Admin' }}@else{{ 'Profile' }}@endif</a>
@@ -37,6 +35,8 @@
                             </li>
                         @endif
                         </ul>
+
+                        @include('layouts.search')
                     </div>
                 </nav>
             </div>

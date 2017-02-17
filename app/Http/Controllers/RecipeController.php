@@ -312,6 +312,7 @@ class RecipeController extends Controller
                         ->where('recipes.id', '<>', $recipe_id)
     //                    ->where('recipe_counts.count_total', '>', $total)
                         ->orderby('recipe_count', 'DESC')
+                        ->orderby('recipe_counts.count_total', 'DESC')
                         ->orderby('recipes.title')
                         ->take(5)
                         ->groupBy('recipes.id')

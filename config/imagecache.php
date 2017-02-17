@@ -51,6 +51,7 @@ return array(
     */
    
     'templates' => array(
+        'show' => 'App\Filters\Image\Show',
         'tiny' => 'App\Filters\Image\Tiny',
         'small' => 'App\Filters\Image\Small',
         'medium' => 'App\Filters\Image\Medium',

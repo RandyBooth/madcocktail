@@ -20,18 +20,16 @@
 
     <title>@yield('title') | {{ config('app.name') }}</title>
 
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+    {{--<link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400,400i,600" rel="stylesheet">--}}
 
-    <link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400,400i,600" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.css') }}">
+    {{--<link rel="stylesheet" href="{{ asset('css/vendor/font-awesome.css') }}">--}}
 @yield('style')
-
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+
 @yield('script-top')
-{{--    <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js') }}"></script>--}}
 </head>
 <body>
 
@@ -43,19 +41,26 @@
 
     @include('layouts.footer')
 
+    {{--<script>
+        var WebFontConfig = {
+            google: {
+                families: [ 'Oxygen:700', 'Source+Sans+Pro:400,400i,600' ]
+            },
+        };
+
+        (function(){
+            var wf = document.createElement("script");
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+            wf.async = 'true';
+            document.head.appendChild(wf);
+        })();
+    </script>--}}
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.1.1.min.js') }}"><\/script>')</script>
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-    </script>
-    <script src="{{ asset('js/vendor/jquery.autocomplete.min.js') }}"></script>
-    <script src="{{ asset('js/vendor/tether.min.js') }}"></script>
+    <script src="{{ asset('js/plugins-min.js') }}"></script>
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
-    {{--<script src="{{ asset('js/plugins.js') }}"></script>--}}
 @yield('script-bottom')
     <script src="{{ asset('js/script-min.js') }}"></script>
 

@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var $image = $('#image'),
         $imagePreview = $('#image-preview', $image),
+        $imageLoading = $('#image-loading', $image),
         $imageEdit = $('#image-edit', $image),
         $imageEditChange = $('#image-edit-change', $imageEdit),
         $imageEditForm = $('form', $imageEdit),
@@ -25,6 +26,8 @@ $(document).ready(function() {
             var validImageTypes = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'];
 
             if ($.inArray(file.type, validImageTypes) > 0) {
+                $imageLoading.removeClass('hidden-xs-up');
+
                 $.ajax({
                     url: '/ajax/recipe-image',
                     type: 'POST',
@@ -38,6 +41,7 @@ $(document).ready(function() {
                             if (data.success) {
                                 if (typeof data.image !== 'undefined' && data.image !== null) {
                                     $imagePreview.attr('src', data.image);
+                                    $('span.image-edit__add', $imageEdit).text('Update');
                                     alertMessage('success', data.message);
                                 }
                             } else {
@@ -46,8 +50,8 @@ $(document).ready(function() {
                                 }
                             }
                         }
-                        // $('#loading').hide();
-                        // $('#message').html(data);
+
+                        $imageLoading.addClass('hidden-xs-up');
                     }
                 });
             }
