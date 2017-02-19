@@ -38,7 +38,7 @@ Route::get('profile', function() {
 })->name('profile');
 
 Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search']);
-Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:50,1', 'as' => 'search', 'uses' => 'SearchController@search']);
+Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 
 Route::resource('ingredients', 'IngredientController', [
     'except' => [

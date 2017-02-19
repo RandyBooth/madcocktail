@@ -168,8 +168,6 @@ class IngredientController extends Controller
                     ->get();
             });
 
-            dd($recipes);
-
             /*$recipes = Cache::tags('ingredient_show_recipes_top_day')->remember(strtolower($parameters), 60, function() use ($ingredient_descendants_id) {
                 return Recipe::
                     whereHas('ingredients', function($query) use($ingredient_descendants_id) {

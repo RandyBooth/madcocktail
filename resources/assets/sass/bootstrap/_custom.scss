@@ -6,6 +6,8 @@
 @import "../variables";
 
 $brand-primary: $color-orange;
+$gray-light: $color-gray-light;
+$dropdown-link-hover-bg: $gray-light;
 
 $font-family-sans-serif: 'Source Sans Pro', sans-serif;
 $font-family-sans-serif-headings: 'Oxygen', sans-serif;
@@ -20,6 +22,9 @@ $link-hover-color: darken($link-color, 10%);
 $link-hover-decoration: none;
 
 $headings-font-family: $font-family-sans-serif-headings; // inherit
+
+$component-active-bg: $brand-primary;
+$dropdown-link-active-bg: $component-active-bg;
 
 $font-size-h1: 1.5rem; //2.5rem
 $font-size-h2: 1.375rem; //2rem

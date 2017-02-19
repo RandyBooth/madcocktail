@@ -423,6 +423,7 @@ class RecipeController extends Controller
             $measures = $measures_data->pluck('id', 'slug')->all();
 
             $data['directions'] = Helper::textarea_to_array($data['directions']);
+            $data['glass_id'] = '';
 
             if (array_key_exists($data['glass'], $glasses)) {
                 $data['glass_id'] = $glasses[$data['glass']];
@@ -431,8 +432,9 @@ class RecipeController extends Controller
             $recipe = Recipe::token($id)->firstOrFail();
 
             if (Helper::is_owner($recipe->user_id)) {
+                $ingredients_data = [];
+
                 if (!empty($data['ingredients'])) {
-                    $ingredients_data = [];
                     $ingredients = $data['ingredients'];
                     $count = 0;
 
@@ -455,9 +457,10 @@ class RecipeController extends Controller
                             }
                         }
                     }
-
-                    $recipe->ingredients()->sync($ingredients_data);
                 }
+
+                $recipe->update($data);
+                $recipe->ingredients()->sync($ingredients_data);
 
                 return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe ('.$recipe->title.') has been updated successfully.');
             }
