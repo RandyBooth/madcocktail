@@ -161,7 +161,7 @@ class IngredientController extends Controller
                     })
                     ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                     ->select('title', 'slug')
-                    ->where('recipe_counts.count_month', '>=', 5)
+//                    ->where('recipe_counts.count_month', '>=', 5)
                     ->orderBy('recipe_counts.count_month', 'DESC')
                     ->orderby('recipes.title')
                     ->take(10)

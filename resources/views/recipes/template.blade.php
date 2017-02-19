@@ -135,7 +135,7 @@
                 <div class="form-group{{ $errors->has('glass') ? ' has-danger' : '' }}">
                     <label for="glass" class="">Glass Type</label>
 
-                    <select style="width: 100%" name="glass" id="glass" class="form-control select2-set">
+                    <select style="width: 100%" name="glass" id="glass" class="select2-set form-control">
                         <option value="">--</option>
                     @foreach($glasses as $key => $val)
                         <option value="{{ $key }}"@if(old('glass', $recipe['glass']) == $key){{ ' selected' }}@endif>{{ $val }}</option>

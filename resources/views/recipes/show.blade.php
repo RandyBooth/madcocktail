@@ -66,8 +66,7 @@
     <div class="row">
         <div class="col-12">
             <h3>Ingredients</h3>
-        </div>
-        <div class="col-12">
+
             <ul class="list-unstyled">
                 @foreach($ingredients as $val)
                     <?php
@@ -112,8 +111,7 @@
     <div class="row">
         <div class="col-12">
             <h3>Directions</h3>
-        </div>
-        <div class="col-12">
+
             <ol>
                 @foreach($recipe->directions as $val)
                     <li>{{ $val }}</li>
@@ -145,11 +143,16 @@
 
 @section('sidebar-right')
     @if ($recipe_similar)
-        <h3>Similar Recipes</h3>
-        <ul class="list-unstyled">
-            @foreach($recipe_similar as $val)
-                <li><a href="{{ route('recipes.show', ['id' => $val->slug]) }}">{{ $val->title }}</a></li>
-            @endforeach
-        </ul>
+    <div class="row">
+        <div class="col-12">
+            <h3>Similar Recipes</h3>
+
+            <ul class="list-unstyled">
+                @foreach($recipe_similar as $val)
+                    <li><a href="{{ route('recipes.show', ['id' => $val->slug]) }}">{{ $val->title }}</a></li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
     @endif
 @stop

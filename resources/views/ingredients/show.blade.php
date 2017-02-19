@@ -11,25 +11,19 @@
 
     @include('ingredients.subheader')
 
-    <h1>{!! $ingredient->title_sup !!}</h1>
+    <div class="row">
+        <div class="col-12">
+            <h1>{!! $ingredient->title_sup !!}</h1>
 
-    @if (!$ingredients->isEmpty())
-    <ul>
-    @foreach($ingredients as $val)
-        <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title_sup !!}</a></li>
-    @endforeach
-    </ul>
-    @endif
-
-    @if (!$recipes->isEmpty())
-    <h3>Top recipes</h3>
-
-    <ol>
-    @foreach($recipes as $recipe)
-        <li><a href="{{ route('recipes.show', $recipe->slug) }}">{!! $recipe->title_sup !!}</a></li>
-    @endforeach
-    </ol>
-    @endif
+            @if (!$ingredients->isEmpty())
+            <ul class="list-unstyled">
+            @foreach($ingredients as $val)
+                <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title_sup !!}</a></li>
+            @endforeach
+            </ul>
+            @endif
+        </div>
+    </div>
 
     @if(Helper::is_admin())
     <div class="row">
@@ -42,6 +36,22 @@
                     <button onclick="return confirm('Are you sure you want to delete?')" type="submit" class="btn btn-danger"><i class="fa fa-trash-o mr-1" aria-hidden="true"></i> Delete</button>
                 </div>
             </form>
+        </div>
+    </div>
+    @endif
+@stop
+
+@section('sidebar-right')
+    @if (!$recipes->isEmpty())
+    <div class="row">
+        <div class="col-12">
+            <h3>Top recipes</h3>
+
+            <ol>
+            @foreach($recipes as $recipe)
+                <li><a href="{{ route('recipes.show', $recipe->slug) }}">{!! $recipe->title_sup !!}</a></li>
+            @endforeach
+            </ol>
         </div>
     </div>
     @endif

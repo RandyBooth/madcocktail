@@ -5,7 +5,7 @@
 @section('content')
     @include('ingredients.subheader')
 
-    <ul>
+    <ul class="list-unstyled">
     @foreach($ingredients as $ingredient)
         <li><a href="{{ route('ingredients.show', ['id' => $ingredient->slug]) }}">{!! $ingredient->title !!}</a></li>
     @endforeach
