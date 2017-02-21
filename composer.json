@@ -20,7 +20,8 @@
         "msurguy/honeypot": "^1.0",
         "graham-campbell/htmlmin": "^4.5",
         "mrclay/minify": "^2.3",
-        "jrean/laravel-user-verification": "^3.0"
+        "jrean/laravel-user-verification": "^3.0",
+        "watson/active": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

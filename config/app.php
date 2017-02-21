@@ -176,6 +176,7 @@ return [
         Msurguy\Honeypot\HoneypotServiceProvider::class,
         Spekkionu\Assetcachebuster\AssetcachebusterServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
+        Watson\Active\ActiveServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,6 +236,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Active' => Watson\Active\Facades\Active::class,
         'Asset' => Spekkionu\Assetcachebuster\Facades\Cachebuster::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class,

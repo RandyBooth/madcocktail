@@ -11,16 +11,24 @@
 |
 */
 
-Route::group(['middleware' => ['admin', 'isVerified'], 'prefix' => 'admin'], function () {
+Auth::routes();
+
+Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified']], function () {
     Route::group(['prefix' => 'ingredients'], function () {
         Route::get('tree', 'IngredientController@tree');
     });
 });
 
-Auth::routes();
+Route::group(['prefix' => 'settings'], function() {
+    Route::get('/', ['as' => 'user-settings.index', 'uses' => 'UserSettingController@index']);
+    Route::get('email', ['as' => 'user-settings.email.edit', 'uses' => 'UserSettingController@emailEdit']);
+    Route::put('email', ['as' => 'user-settings.email.update', 'uses' => 'UserSettingController@emailUpdate']);
+    Route::get('password', ['as' => 'user-settings.password.edit', 'uses' => 'UserSettingController@passwordEdit']);
+    Route::put('password', ['as' => 'user-settings.password.update', 'uses' => 'UserSettingController@passwordUpdate']);
+});
 
-Route::get('email/confirm/error', 'Auth\RegisterController@getVerificationError')->name('email-verification.error');
-Route::get('email/confirm/check/{token}', 'Auth\RegisterController@getVerification')->name('email-verification.check');
+Route::get('email/error', 'Auth\RegisterController@getVerificationError')->name('email-verification.error');
+Route::get('email/activate/{token}', 'Auth\RegisterController@getVerification')->name('email-verification.check');
 
 Route::group(['prefix' => 'login'], function() {
     Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function() {
@@ -30,10 +38,6 @@ Route::group(['prefix' => 'login'], function() {
 });
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
-
-Route::get('profile', function() {
-    echo 'In work';
-})->name('profile');
 
 Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search', 'uses' => 'SearchController@search']);

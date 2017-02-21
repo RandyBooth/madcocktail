@@ -20,7 +20,7 @@
                         <ul class="navbar-nav order-last ml-lg-2">
                         @if (Auth::check())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('profile') }}">@if(Auth::user()->role){{ 'Admin' }}@else{{ 'Profile' }}@endif</a>
+                                <a class="nav-link" href="{{ route('user-settings.index') }}">@if(Auth::user()->role){{ 'Admin' }}@else{{ 'Settings' }}@endif</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
