@@ -52,6 +52,7 @@ return array(
    
     'templates' => array(
         'lists' => 'App\Filters\Image\Lists',
+        'shared' => 'App\Filters\Image\Shared',
         'single' => 'App\Filters\Image\Single',
         'tiny' => 'App\Filters\Image\Tiny',
 //        'tiny' => 'App\Filters\Image\Tiny',
