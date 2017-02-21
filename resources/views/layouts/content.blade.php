@@ -1,4 +1,4 @@
-<div class="content">
+<div id="content" class="content">
     <div class="container">
         @if(View::hasSection('content-top'))
         <div class="row">

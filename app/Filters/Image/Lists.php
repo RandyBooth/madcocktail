@@ -5,12 +5,12 @@ namespace App\Filters\Image;
 use Intervention\Image\Image;
 use Intervention\Image\Filters\FilterInterface;
 
-class Medium implements FilterInterface
+class Lists implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        return $image->resize(240, null, function ($constraint) {
-            $constraint->aspectRatio();
+        return $image->fit(400, 200, function ($constraint) {
+            $constraint->upsize();
         })->interlace();
     }
 }

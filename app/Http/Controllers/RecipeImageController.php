@@ -87,7 +87,7 @@ class RecipeImageController extends Controller
                             } while(!$token_valid);
 
                             $response['success'] = true;
-                            $response['image'] = route('imagecache', ['template' => 'show', 'filename' => $filename]);
+                            $response['image'] = route('imagecache', ['template' => 'single', 'filename' => $filename]);
                         } else {
                             $response['message'] = 'You are not allow to do that.';
                         }

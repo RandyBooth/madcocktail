@@ -51,8 +51,9 @@ return array(
     */
    
     'templates' => array(
+        'lists' => 'App\Filters\Image\Lists',
         'single' => 'App\Filters\Image\Single',
-        'single-tiny' => 'App\Filters\Image\SingleTiny',
+        'tiny' => 'App\Filters\Image\Tiny',
 //        'tiny' => 'App\Filters\Image\Tiny',
 //        'small' => 'App\Filters\Image\Small',
 //        'medium' => 'App\Filters\Image\Medium',

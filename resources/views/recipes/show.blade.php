@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-12 col-md-7 order-md-last">
             <div id="image" class="image">
-                <img id="image-preview" class="image-preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'show', 'filename' => $recipe_image->image])}}@endif">
+                <img id="image-preview" class="image-preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'single', 'filename' => $recipe_image->image])}}@endif">
 
                 @if(Helper::is_owner($recipe->user_id))
                 <div id="image-loading" class="image-loading hidden-xs-up">

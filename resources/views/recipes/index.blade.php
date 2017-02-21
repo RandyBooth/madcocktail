@@ -16,7 +16,7 @@
                 <div class="col-12 mb-3 col-md-6">
                     <div class="card">
                         <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
-                            <img class="card-img-top img-fluid" src="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'show', 'filename' => $recipe->image])}}@endif" alt="">
+                            <img class="card-img-top img-fluid" data-original="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'lists', 'filename' => $recipe->image])}}@endif" src="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'tiny', 'filename' => $recipe->image])}}@endif" alt="">
                         </a>
                         <div class="card-block">
                             <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">

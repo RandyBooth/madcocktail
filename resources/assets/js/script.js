@@ -8,7 +8,9 @@ var autocompleteOption = {
     showNoSuggestionNotice: true,
     triggerSelectOnValidInput: false,
     type: 'POST',
-}, alertRun = function() {
+}, myLazyLoad = new LazyLoad({
+    container: document.getElementById('content'),
+}), alertRun = function() {
     $('.alert').alert();
 }, alertMessage = function(type, message) {
     type = typeof type !== 'undefined' ? type : 'success';
