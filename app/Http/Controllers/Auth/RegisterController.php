@@ -63,6 +63,8 @@ class RegisterController extends Controller
             'month' => 'required|digits:2',
             'day' => 'required|digits:2',
             'year' => 'required|digits:4',
+            'name' => 'honeypot',
+            'my_time' => 'required|honeytime:5',
         ]);
     }
 
