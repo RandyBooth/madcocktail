@@ -51,11 +51,12 @@ return array(
     */
    
     'templates' => array(
-        'show' => 'App\Filters\Image\Show',
-        'tiny' => 'App\Filters\Image\Tiny',
-        'small' => 'App\Filters\Image\Small',
-        'medium' => 'App\Filters\Image\Medium',
-        'large' => 'App\Filters\Image\Large',
+        'single' => 'App\Filters\Image\Single',
+        'single-tiny' => 'App\Filters\Image\SingleTiny',
+//        'tiny' => 'App\Filters\Image\Tiny',
+//        'small' => 'App\Filters\Image\Small',
+//        'medium' => 'App\Filters\Image\Medium',
+//        'large' => 'App\Filters\Image\Large',
     ),
 
     /*

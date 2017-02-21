@@ -16,6 +16,11 @@ $font-family-base: $font-family-sans-serif;
 
 $body-bg: $color-white;
 
+$breadcrumb-padding-x: 0;
+$breadcrumb-bg: $color-gray-dark;
+$breadcrumb-divider-color: $color-orange;
+$breadcrumb-active-color: $color-white;
+
 $link-color: $brand-primary;
 //$link-decoration: none;
 $link-hover-color: darken($link-color, 10%);

@@ -43,3 +43,15 @@
         </div>
     </div>
 </div>
+
+@if(View::hasSection('breadcrumb'))
+    <div class="breadcrumb-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    @yield('breadcrumb')
+                </div>
+            </div>
+        </div>
+    </div>
+@endif

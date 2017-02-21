@@ -5,7 +5,7 @@ namespace App\Filters\Image;
 use Intervention\Image\Image;
 use Intervention\Image\Filters\FilterInterface;
 
-class Show implements FilterInterface
+class Single implements FilterInterface
 {
     public function applyFilter(Image $image)
     {

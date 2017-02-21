@@ -126,6 +126,19 @@ body {
   @include button-variant($color-gray-light, $color-gray-dark, $color-gray-dark);
 }
 
+.breadcrumb-wrapper {
+    background-color: $color-gray-dark;
+    //margin-bottom: $spacer-y;
+
+    .breadcrumb {
+        margin-bottom: 0;
+
+        a {
+            color: $color-gray-light;
+        }
+    }
+}
+
 .content {
     padding-top: 40px;
     padding-bottom: 60px;

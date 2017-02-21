@@ -121,24 +121,7 @@
     </div>
     @endif
 
-    @if(Helper::is_owner($recipe->user_id))
-    <div class="row">
-        <div class="col-12">
-            @if(Helper::is_admin())
-            <form action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
-                {{ method_field('DELETE') }}
-                {{ csrf_field() }}
-                <div class="btn-group btn-group-sm" role="group" aria-label="">
-            @endif
-                    <a class="btn btn-primary" href="{{ route('recipes.edit', $recipe->token) }}"><i class="fa fa-pencil mr-1" aria-hidden="true"></i> Edit</a>
-            @if(Helper::is_admin())
-                    <button onclick="return confirm('Are you sure you want to delete?')" type="submit" class="btn btn-danger"><i class="fa fa-trash-o mr-1" aria-hidden="true"></i> Delete</button>
-                </div>
-            </form>
-            @endif
-        </div>
-    </div>
-    @endif
+    @include('recipes.footer-option')
 @stop
 
 @section('sidebar-right')

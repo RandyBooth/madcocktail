@@ -38,17 +38,19 @@ class RecipeController extends Controller
         $recipes_latest = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
 //                ->where('recipe_counts.count_total', '>', $total)
                 ->orderby('recipes.created_at', 'DESC')
                 ->orderby('recipes.title')
-                ->take(10)
+                ->take(20)
                 ->get();
         });
 
         $recipes_top = Cache::tags('recipe_index_popular')->remember('', (60*25), function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
 //                ->where('recipe_counts.count_total', '>', $total)
                 ->orderBy('recipe_counts.count_total', 'DESC')

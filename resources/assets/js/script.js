@@ -19,7 +19,8 @@ var autocompleteOption = {
 
 $(document).ready(function() {
     var $alert = $('.alert'),
-        $select2Set = $('.select2-set');
+        $select2Set = $('.select2-set'),
+        $grid = $('.grid');
 
     if ($alert.length > 0) {
         alertRun();

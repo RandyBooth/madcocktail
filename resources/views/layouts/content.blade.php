@@ -1,5 +1,13 @@
 <div class="content">
     <div class="container">
+        @if(View::hasSection('content-top'))
+        <div class="row">
+            <div class="col-12">
+                @yield('content-top')
+            </div>
+        </div>
+        @endif
+
         <div class="row">
         @if(View::hasSection('sidebar-left'))
             <div class="col12 col-md-4">

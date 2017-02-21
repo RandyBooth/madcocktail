@@ -29,9 +29,7 @@ Route::group(['prefix' => 'login'], function() {
     });
 });
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 Route::get('profile', function() {
     echo 'In work';
