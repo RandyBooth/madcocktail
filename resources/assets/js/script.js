@@ -4,10 +4,30 @@ var autocompleteOption = {
     deferRequestBy: 250,
     groupBy: 'group',
     minChars: 3,
-    serviceUrl: '/search',
+    serviceUrl: '/ajax/search',
     showNoSuggestionNotice: true,
     triggerSelectOnValidInput: false,
     type: 'POST',
+    onSearchStart: function() {
+        var $formSearch = $('#form-search'),
+            $formSearchId = $('#search-id', $formSearch),
+            $formSearchGroup = $('#search-group', $formSearch);
+
+        $formSearchId.val('');
+        $formSearchGroup.val('');
+    },
+    onSelect: function (suggestion) {
+        console.log(suggestion);
+        if ((typeof suggestion.id !== 'undefined' && suggestion.id !== null) && (typeof suggestion.data.group !== 'undefined' && suggestion.data.group !== null)) {
+            var $formSearch = $('#form-search'),
+                $formSearchId = $('#search-id', $formSearch),
+                $formSearchGroup = $('#search-group', $formSearch);
+
+            $formSearchId.val(suggestion.id);
+            $formSearchGroup.val(suggestion.data.group);
+            $formSearch.submit();
+        }
+    }
 }, myLazyLoad = new LazyLoad({
     container: document.getElementById('content'),
 }), alertRun = function() {

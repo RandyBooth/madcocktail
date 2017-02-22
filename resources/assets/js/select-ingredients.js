@@ -13,7 +13,7 @@ $(document).ready(function() {
                     delay: 250,
                     processResults: function (data) { return {results: data.suggestions}; },
                     type: 'POST',
-                    url: '/search/ingredients',
+                    url: '/ajax/search/ingredients',
                 },
                 escapeMarkup: function (markup) { return markup; },
                 minimumInputLength: 3,

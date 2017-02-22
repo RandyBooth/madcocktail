@@ -15,3 +15,7 @@
 
     @include('ingredients.footer-option')
 @stop
+
+@section('sidebar-right')
+
+@stop

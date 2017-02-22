@@ -21,10 +21,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified']], fun
 
 Route::group(['prefix' => 'settings'], function() {
     Route::get('/', ['as' => 'user-settings.index', 'uses' => 'UserSettingController@index']);
+
     Route::get('username', ['as' => 'user-settings.username.edit', 'uses' => 'UserSettingController@usernameEdit']);
     Route::put('username', ['as' => 'user-settings.username.update', 'uses' => 'UserSettingController@usernameUpdate']);
+
     Route::get('email', ['as' => 'user-settings.email.edit', 'uses' => 'UserSettingController@emailEdit']);
     Route::put('email', ['as' => 'user-settings.email.update', 'uses' => 'UserSettingController@emailUpdate']);
+
     Route::get('password', ['as' => 'user-settings.password.edit', 'uses' => 'UserSettingController@passwordEdit']);
     Route::put('password', ['as' => 'user-settings.password.update', 'uses' => 'UserSettingController@passwordUpdate']);
 });
@@ -41,9 +44,6 @@ Route::group(['prefix' => 'login'], function() {
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
 
-Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search']);
-Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search', 'uses' => 'SearchController@search']);
-
 Route::resource('ingredients', 'IngredientController', [
     'except' => [
         'show'
@@ -57,11 +57,14 @@ Route::get('ingredients/{parameters?}', ['as' => 'ingredients.show', 'uses' => '
 
 Route::resource('recipes', 'RecipeController');
 
-Route::get('r/{token}', ['as' => 'r.show_token', 'uses' => 'RecipeController@show', function($token) {}])->where(['token' => '[A-Za-z0-9]+']);
-
 Route::group(['prefix' => 'ajax'], function() {
+//    Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@ajax']);
+    Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax']);
+
     Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
     Route::delete('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image_destroy', 'uses' => 'RecipeImageController@destroy']);
 });
+
+Route::post('search/{type?}', ['middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search']);
 
 Route::resource('occasions', 'OccasionController');

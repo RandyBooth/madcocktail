@@ -37,11 +37,11 @@ if (window.location.hash && window.location.hash === '#_=_') {
     }
 }
 
-WebFont.load({
-  google: {
-    families: ['Oxygen:700', 'Source+Sans+Pro:400,400i,600']
-  }
-});
+// WebFont.load({
+//   google: {
+//     families: ['Oxygen:700', 'Source+Sans+Pro:400,400i,600']
+//   }
+// });
 
 $.ajaxSetup({
     headers: {

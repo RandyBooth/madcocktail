@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,7 +20,7 @@
 
     <title>@yield('title') | {{ config('app.name') }}</title>
 
-    {{--<link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400,400i,600" rel="stylesheet">--}}
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400{{--,400i,600--}}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.css') }}">
     {{--<link rel="stylesheet" href="{{ asset('css/vendor/font-awesome.css') }}">--}}
@@ -56,7 +56,7 @@
             document.head.appendChild(wf);
         })();
     </script>--}}
-    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    {{--<script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>--}}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.1.1.min.js') }}"><\/script>')</script>
     <script src="{{ asset('js/plugins-min.js') }}"></script>

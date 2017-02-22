@@ -34,8 +34,7 @@
 @stop
 
 @section('sidebar-right')
-
-@if(!empty($recipes_top))
+    @if(!empty($recipes_top))
     <div class="row">
         <div class="col-12">
             <h3>Popular Recipes</h3>

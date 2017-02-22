@@ -6,7 +6,6 @@ use App\Ingredient;
 use App\Recipe;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use App\Http\Requests\SearchAjaxRequest;
 
 class SearchController extends Controller
 {
@@ -15,11 +14,56 @@ class SearchController extends Controller
         Cache::flush();
     }
 
-    public function test(Request $request) {
-        dd($request->all());
+    public function search(Request $request, $type = null)
+    {
+        if ($request->has('search-id') && $request->has('search-group')) {
+            $id = $request->input('search-id');
+            $group = strtolower($request->input('search-group'));
+
+            if ($group == 'recipes') {
+                $recipe = Recipe::token($id)->first();
+
+                if ($recipe) {
+                    return redirect()->route('recipes.show', $recipe->slug);
+                }
+            } elseif ($group == 'ingredients') {
+                $ingredient = Ingredient::token($id)->first();
+
+                if ($ingredient) {
+                    $ingredient_ancestors = $ingredient->ancestors()->get();
+                    $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
+                    $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+
+                    return redirect()->route('ingredients.show', implode('/', $ingredient_ancestors_self_slug));
+                }
+            }
+        }
+
+//        if ($request->has('search')) {
+//            $query = preg_replace('/\s+/', ' ', trim($request->input('search')));
+//
+//            if (strlen($query) >= 3) {
+//                $type_arr = $this->_searchType($type);
+//                $data = $this->_search($query, $type_arr, 'search', 20);
+//
+//                foreach ($type_arr as $data_single) {
+//                    if (isset($data[$data_single])) {
+//                        $arr = $data[$data_single];
+//                        $arr_title = array_pluck($arr, 'title', 'token');
+//                        $arr_unique = array_unique($arr_title);
+//
+//                        foreach($arr_unique as $key => $val) {
+//                            $suggestions[] = ['value' => $val, 'id' => $key, 'data' => ['group' => title_case($data_single)]];
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+        return redirect()->route('home');
     }
 
-    public function search(SearchAjaxRequest $request, $type = null)
+    public function ajax(Request $request, $type = null)
     {
         if ($request->ajax()) {
             $suggestions = [];
@@ -28,19 +72,8 @@ class SearchController extends Controller
                 $query = preg_replace('/\s+/', ' ', trim($request->input('query')));
 
                 if (strlen($query) >= 3) {
-                    switch($type) {
-                        case 'ingredients':
-                            $type_arr = ['ingredients'];
-                            break;
-                        case 'recipes':
-                            $type_arr = ['recipes'];
-                            break;
-                        default:
-                            $type_arr = ['recipes', 'ingredients'];
-                            break;
-                    }
-
-                    $data = $this->_search($query, $type_arr);
+                    $type_arr = $this->_searchType($type);
+                    $data = $this->_search($query, $type_arr, 'search_ajax');
 
                     foreach ($type_arr as $data_single) {
                         if (isset($data[$data_single])) {
@@ -60,7 +93,24 @@ class SearchController extends Controller
         }
     }
 
-    private function _search($query, $type)
+    private function _searchType($type)
+    {
+        switch($type) {
+            case 'ingredients':
+                $type_arr = ['ingredients'];
+                break;
+            case 'recipes':
+                $type_arr = ['recipes'];
+                break;
+            default:
+                $type_arr = ['recipes', 'ingredients'];
+                break;
+        }
+
+        return $type_arr;
+    }
+
+    private function _search($query, $type, $cache = 'search', $limit = 5, $select = ['token', 'title'])
     {
         $data = [];
 
@@ -93,18 +143,18 @@ class SearchController extends Controller
                 }
             } else {
                 if ($has_recipe) {
-                    $query_recipe = Recipe::select('token', 'title')->where('title', 'LIKE', '%'.$query_array[$i].'%');
+                    $query_recipe = Recipe::select($select)->where('title', 'LIKE', '%'.$query_array[$i].'%');
                 }
 
                 if ($has_ingredients) {
-                    $query_ingredient = Ingredient::select('token', 'title')->where('title', 'LIKE', '%'.$query_array[$i].'%');
+                    $query_ingredient = Ingredient::select($select)->where('title', 'LIKE', '%'.$query_array[$i].'%');
                 }
             }
         }
 
         if (!empty($query_recipe)) {
-            $results_recipe = Cache::tags('search_recipe')->remember(strtolower($query), 30, function() use ($query_recipe) {
-                return $query_recipe->orderBy('title')->limit(5)->get();
+            $results_recipe = Cache::tags($cache.'_recipe')->remember(strtolower($query), 60*4, function() use ($query_recipe, $limit) {
+                return $query_recipe->orderBy('title')->limit($limit)->get();
             });
 
             if (!$results_recipe->isEmpty()) {
@@ -113,8 +163,8 @@ class SearchController extends Controller
         }
 
         if (!empty($query_ingredient)) {
-            $results_ingredient = Cache::tags('search_ingredient')->remember(strtolower($query), 60, function() use ($query_ingredient) {
-                return $query_ingredient->withDepth()->orderBy('depth')->orderBy('title')->limit(5)->get();
+            $results_ingredient = Cache::tags($cache.'_ingredient')->remember(strtolower($query), 60*24, function() use ($query_ingredient, $limit) {
+                return $query_ingredient->withDepth()->orderBy('depth')->orderBy('title')->limit($limit)->get();
             });
 
             if (!$results_ingredient->isEmpty()) {
