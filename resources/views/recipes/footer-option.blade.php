@@ -1,6 +1,6 @@
 @if(Helper::is_owner($recipe->user_id))
 <div class="row">
-    <div class="col-12 text-right mt-3">
+    <div class="col-12 my-3 text-md-right">
 @if(Route::is('recipes.show') && Helper::is_admin())
         <form action="{{ route('recipes.destroy', $recipe->token) }}" method="post">
             {{ method_field('DELETE') }}

@@ -22,7 +22,7 @@
                 {!! Honeypot::generate('name', 'my_time') !!}
 
                 <div class="form-group{{ $errors->has('title') ? ' has-danger' : '' }}">
-                    <label for="title" class="">Title</label>
+                    <label class="form-control-label" for="title" class="">Title</label>
 
                     <input id="title" type="text" class="form-control" name="title" value="{{ old('title', $recipe['title']) }}" required  autofocus>
 
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="form-group{{ $errors->has('description') ? ' has-danger' : '' }}">
-                    <label for="description" class="">Description</label>
+                    <label class="form-control-label" for="description" class="">Description</label>
 
                     <textarea name="description" id="description" class="form-control" rows="4">{{ old('description', $recipe['description']) }}</textarea>
 
@@ -48,13 +48,13 @@
                 <div class="form-group{{ $errors->has('ingredients') ? ' has-danger' : '' }}">
                     <div class="row hidden-md-down">
                         <div class="col-6">
-                            <label class="">Ingredients</label>
+                            <label class="form-control-label">Ingredients</label>
                         </div>
                         <div class="col-2">
-                            <label class="">Quality</label>
+                            <label class="form-control-label">Quality</label>
                         </div>
                         <div class="col-4">
-                            <label class="">Unit</label>
+                            <label class="form-control-label">Unit</label>
                         </div>
                     </div>
 
@@ -72,17 +72,17 @@
                             @if(!empty($ingredients[$token]))
                             <div class="row mb-4 mb-lg-0 create-ingredients-div">
                                 <div class="col-12 mb-2 col-lg-6 mb-lg-4 pr-lg-0">
-                                    <label class="hidden-lg-up">Ingredients</label>
+                                    <label class="form-control-label hidden-lg-up">Ingredients</label>
                                     <select style="width: 100%" class="select-ingredients form-control" name="ingredients[]">
                                         <option value="{{$token}}">{{$ingredients[$token]}}</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-2 col-lg-2 mb-lg-4 pr-lg-0">
-                                    <label class="hidden-lg-up">Quality</label>
+                                    <label class="form-control-label hidden-lg-up">Quality</label>
                                     <input class="select-ingredients-measure-amount form-control" type="text" name="ingredients.measure.amount[]" value="@if(!empty($old_ingredients_measure_amount[$loop->index])){{ $old_ingredients_measure_amount[$loop->index] }}@endif">
                                 </div>
                                 <div class="col-12 mb-2 col-lg-3 mb-lg-4 pr-lg-0">
-                                    <label class="hidden-lg-up">Unit</label>
+                                    <label class="form-control-label hidden-lg-up">Unit</label>
                                     <select style="width: 100%" class="select-ingredients-measure form-control" name="ingredients.measure[]">
                                         <option value="">--</option>
                                         @php
@@ -120,7 +120,7 @@
                 </div>
 
                 <div class="form-group{{ $errors->has('directions') ? ' has-danger' : '' }}">
-                    <label for="directions" class="">Directions</label>
+                    <label class="form-control-label" for="directions" class="">Directions</label>
 
                     <textarea name="directions" id="directions" class="form-control" rows="4">{{ old('directions', $recipe['directions']) }}</textarea>
 
@@ -133,7 +133,7 @@
 
                 @if (!empty($glasses))
                 <div class="form-group{{ $errors->has('glass') ? ' has-danger' : '' }}">
-                    <label for="glass" class="">Glass Type</label>
+                    <label class="form-control-label" for="glass" class="">Glass Type</label>
 
                     <select style="width: 100%" name="glass" id="glass" class="select2-set form-control">
                         <option value="">--</option>

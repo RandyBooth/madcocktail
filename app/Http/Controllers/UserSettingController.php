@@ -125,7 +125,7 @@ class UserSettingController extends Controller
      */
     public function index()
     {
-        //
+        return view('user-settings.index');
     }
 
     /**

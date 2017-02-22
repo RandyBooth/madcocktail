@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-md-7 order-md-last">
+        <div class="col-12 mb-4 col-md-7 order-md-last">
             <div id="image" class="image">
                 <img id="image-preview" class="image-preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'single', 'filename' => $recipe_image->image])}}@endif">
 
@@ -31,7 +31,7 @@
                             <div class="hidden-xs-up">
                                 <input type="text" name="id" value="{{ $recipe->token }}">
                             </div>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="">
                                 <button type="button" id="image-edit-change" class="btn btn-gray" href="#"><i class="fa fa-camera" aria-hidden="true"></i> @if(!empty($recipe_image->image)){!! '<span>Update' !!}@else{!! '<span class="image-edit__add">Add' !!}@endif</span> Image</button>
                                 {{--<button onclick="return confirm('Are you sure you want to delete?')" type="submit" class="btn btn-danger @if(empty($recipe_image->image)){{ 'hidden-xs-up' }}@endif"><i class="fa fa-trash-o" aria-hidden="true"></i></button>--}}
                             </div>
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-5">
+        <div class="col-12 mb-4 col-md-5">
         @if (!empty($recipe->title))
             <h1>{{ $recipe->title_sup }}</h1>
         @endif
@@ -63,7 +63,7 @@
     </div>
 
     @if (!$ingredients->isEmpty())
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <h3>Ingredients</h3>
 

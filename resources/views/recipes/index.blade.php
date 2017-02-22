@@ -31,6 +31,8 @@
         </div>
     </div>
     @endif
+
+    @include('recipes.footer-option')
 @stop
 
 @section('sidebar-right')

@@ -17,7 +17,7 @@
                 {!! Honeypot::generate('name', 'my_time') !!}
 
                 <div class="form-group{{ $errors->has('title') ? ' has-danger' : '' }}">
-                    <label for="title" class="">Title</label>
+                    <label class="form-control-label" for="title" class="">Title</label>
 
                     <input id="title" type="text" class="form-control" name="title" value="{{ old('title', $ingredient['title']) }}" required autofocus>
 
@@ -30,7 +30,7 @@
 
                 @if (!empty($ingredients))
                 <div class="form-group{{ $errors->has('ingredients') ? ' has-danger' : '' }}">
-                    <label for="ingredients" class="">Parent of ingredient</label>
+                    <label class="form-control-label" for="ingredients" class="">Parent of ingredient</label>
 
                     <select style="width: 100%;" class="form-control select2-set" name="ingredients" id="ingredients">
                         @foreach($ingredients as $key => $val)
