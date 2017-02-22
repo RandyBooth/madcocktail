@@ -57,6 +57,7 @@ class RecipeImageController extends Controller
                         $recipe = Recipe::select('id')->token($token)->where('user_id', $user->id)->first();
 
                         if ($recipe) {
+                            $path = 'upload/';
                             $recipe_id = $recipe->id;
                             $filename = '';
                             $image = $request->file('image');
@@ -76,9 +77,15 @@ class RecipeImageController extends Controller
                                         Image::make($image)->resize(1200, null, function ($constraint) {
                                             $constraint->aspectRatio();
                                             $constraint->upsize();
-                                        })->interlace()->save('upload/'.$filename)->destroy();
+                                        })->interlace()->save($path.$filename)->destroy();
+
+                                        $old_image = $recipe_image->image;
 
                                         if ($recipe_image->update(['image' => $filename])) {
+                                            if (!empty($old_image)) {
+                                                \File::delete($path.$old_image);
+                                            }
+
                                             $token_valid = true;
                                             $response['message'] = 'Recipe image updated!';
                                         }
