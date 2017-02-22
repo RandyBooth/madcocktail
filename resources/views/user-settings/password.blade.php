@@ -1,15 +1,6 @@
 @extends('user-settings.default')
 
-@section('title', 'E-mail - Settings')
-
-@section('style')
-    {{--<link rel="stylesheet" href="{{ asset('css/vendor/select2.min.css') }}">--}}
-    {{--<link rel="stylesheet" href="{{ asset('css/vendor/select2-bootstrap.css') }}">--}}
-@stop
-
-@section('script-bottom')
-    {{--<script src="{{ asset('js/vendor/select2.min.js') }}"></script>--}}
-@stop
+@section('title', 'Password - Settings')
 
 @section('content')
     <div class="row">

@@ -14,6 +14,39 @@ class UserSettingController extends Controller
         $this->middleware(['auth']);
     }
 
+    public function usernameEdit()
+    {
+        $user = Auth::user();
+        $username = $user->username;
+
+        return view('user-settings.username', compact('username'));
+    }
+
+    public function usernameUpdate(Request $request)
+    {
+        $user = Auth::user();
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'username' => [
+                'required', 'min:3', 'max:255', 'alpha_dash',
+                Rule::unique('users')->ignore($user->id)
+            ],
+            'name' => 'honeypot',
+            'my_time' => 'required|honeytime:1',
+        ]);
+
+        if ($validator->passes()) {
+            $user->username = $data['username'];
+
+            if ($user->save()) {
+                return redirect()->route('user-settings.username.edit')->with('success', 'Username has been updated successfully.');
+            }
+        }
+
+        return redirect()->back()->withErrors($validator)->withInput()->with('danger', 'Username update fail.');
+    }
+
     public function emailEdit()
     {
         $user = Auth::user();
@@ -37,11 +70,11 @@ class UserSettingController extends Controller
         ]);
 
         if ($validator->passes()) {
-            $email_copy = $user->email;
+            $old_email = $user->email;
             $user->email = $data['email'];
 
             if ($user->save()) {
-                if (strtolower($email_copy) != strtolower($data['email'])) {
+                if (strtolower($old_email) != strtolower($data['email'])) {
                     \Jrean\UserVerification\Facades\UserVerification::generate($user);
                     \Jrean\UserVerification\Facades\UserVerification::sendQueue($user, 'Please Confirm Your Email');
                 }

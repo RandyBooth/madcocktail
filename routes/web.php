@@ -21,6 +21,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified']], fun
 
 Route::group(['prefix' => 'settings'], function() {
     Route::get('/', ['as' => 'user-settings.index', 'uses' => 'UserSettingController@index']);
+    Route::get('username', ['as' => 'user-settings.username.edit', 'uses' => 'UserSettingController@usernameEdit']);
+    Route::put('username', ['as' => 'user-settings.username.update', 'uses' => 'UserSettingController@usernameUpdate']);
     Route::get('email', ['as' => 'user-settings.email.edit', 'uses' => 'UserSettingController@emailEdit']);
     Route::put('email', ['as' => 'user-settings.email.update', 'uses' => 'UserSettingController@emailUpdate']);
     Route::get('password', ['as' => 'user-settings.password.edit', 'uses' => 'UserSettingController@passwordEdit']);
