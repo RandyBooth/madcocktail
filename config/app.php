@@ -169,12 +169,10 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         GrahamCampbell\HTMLMin\HTMLMinServiceProvider::class,
-        HobbIoT\Auth\CacheableAuthUserServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Jrean\UserVerification\UserVerificationServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Msurguy\Honeypot\HoneypotServiceProvider::class,
-        Spekkionu\Assetcachebuster\AssetcachebusterServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
         Watson\Active\ActiveServiceProvider::class,
 
@@ -245,6 +243,7 @@ return [
         'Honeypot' => Msurguy\Honeypot\HoneypotFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'UserVerification' => Jrean\UserVerification\Facades\UserVerification::class,
     ],
 
 ];

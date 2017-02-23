@@ -75,8 +75,9 @@ class UserSettingController extends Controller
 
             if ($user->save()) {
                 if (strtolower($old_email) != strtolower($data['email'])) {
-                    \Jrean\UserVerification\Facades\UserVerification::generate($user);
-                    \Jrean\UserVerification\Facades\UserVerification::sendQueue($user, 'Please Confirm Your Email');
+                    UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
+                    UserVerification::generate($user);
+                    UserVerification::sendQueue($user);
                 }
 
                 return redirect()->route('user-settings.email.edit')->with('success', 'E-mail address has been updated successfully.');

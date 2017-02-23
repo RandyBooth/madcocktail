@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 use Illuminate\Http\Request;
@@ -104,8 +104,9 @@ class RegisterController extends Controller
 
         if ($user) {
 //            $this->guard()->login($user);
+            UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
             UserVerification::generate($user);
-            UserVerification::sendQueue($user, 'Please Confirm Your Email');
+            UserVerification::sendQueue($user);
 
             return $this->registered($request, $user)
             ?: redirect($this->redirectPath())->with('success', 'Confirm email sent!');

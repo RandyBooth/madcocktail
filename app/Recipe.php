@@ -120,10 +120,10 @@ class Recipe extends Model
 //        return $this->hasMany('App\Review');
 //    }
 
-    public function newPivot(Model $parent, array $attributes, $table, $exists) {
+    public function newPivot(Model $parent, array $attributes, $table, $exists, $using = NULL) {
         if ($parent instanceof Ingredient) {
-            return new IngredientRecipe($parent, $attributes, $table, $exists);
+            return new IngredientRecipe($parent, $attributes, $table, $exists, $using);
         }
-        return parent::newPivot($parent, $attributes, $table, $exists);
+        return parent::newPivot($parent, $attributes, $table, $exists, $using);
     }
 }
