@@ -169,6 +169,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         GrahamCampbell\HTMLMin\HTMLMinServiceProvider::class,
+        HobbIoT\Auth\CacheableAuthUserServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Jrean\UserVerification\UserVerificationServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,

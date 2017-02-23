@@ -4,6 +4,12 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/RandyBooth/cacheable-auth-user"
+        }
+    ],
     "require": {
         "php": ">=5.6.4",
         "laravel/framework": "5.4.*",
@@ -19,7 +25,8 @@
         "graham-campbell/htmlmin": "^4.5",
         "mrclay/minify": "^2.3",
         "jrean/laravel-user-verification": "^4.0",
-        "watson/active": "^2.0"
+        "watson/active": "^2.0",
+        "hobbiot/cacheable-auth-user": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
