@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Scopes\ActiveScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

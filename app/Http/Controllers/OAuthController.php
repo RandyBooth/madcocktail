@@ -69,14 +69,14 @@ class OAuthController extends Controller
 
                             Auth::login($user);
 
-                            // redirect the user and suggest changing their password
-//                            return redirect('password/reset')->with('success', 'Confirm email sent!');
                             return redirect('/')->with('success', 'Confirm email sent!');
                         }
                     }
                 }
             }
         }
+
+        abort(404);
     }
 
     private function validProvider($provider)
