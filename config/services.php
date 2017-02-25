@@ -1,7 +1,5 @@
 <?php
 
-$service_redirect = env('APP_URL', 'http://localhost').'/login';
-
 return [
 
     /*
@@ -38,21 +36,20 @@ return [
     ],
 
     'facebook' => array(
-        'client_id'     => '632169013530721',
-        'client_secret' => 'e62c8d0de3f4fd9285b81f045d621846',
-        'redirect'      => $service_redirect.'/facebook/callback',
+        'client_id'     => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect'      => env('APP_URL').'/login/facebook/callback',
     ),
 
     'google' => array(
-        'client_id'     => '754238603270-jjfnqn8e0e01dfvq74k4b38vt59l53sh.apps.googleusercontent.com',
-        'client_secret' => 'q63tyPD_alxhNkIz_WpwTYGH',
-        'redirect'      => $service_redirect.'/google/callback',
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect'      => env('APP_URL').'/login/google/callback',
     ),
 
     'twitter' => array(
-        'client_id'     => 'pu3xY9j7k5tfzYhgVjkQFNqYV',
-        'client_secret' => 'vMrsvDyAxHhBGbGQeVlqJTAFbohosuSkkuID9StJuwQNazhPgE',
-        'redirect'      => $service_redirect.'/twitter/callback',
+        'client_id'     => env('TWITTER_CLIENT_ID'),
+        'client_secret' => env('TWITTER_CLIENT_SECRET'),
+        'redirect'      => env('APP_URL').'/login/twitter/callback',
     ),
-
 ];
