@@ -178,4 +178,23 @@ class Helper
 
         return false;
     }
+
+    public static function share($title = '', $desc = '', $img = '')
+    {
+        $title = urlencode($title);
+        $desc = urlencode($desc);
+        $img = urlencode($img);
+        $url = urlencode(url()->full());
+
+        return '
+        <div class="social-media">
+        <a href="https://www.facebook.com/dialog/share?app_id='.config('services.facebook.client_id').'&display=page&href='.$url.'" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+        <a href="https://twitter.com/intent/tweet?url='.$url.'&text='.$title.'" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+        <a href="https://pinterest.com/pin/create/bookmarklet/?media='.$img.'&url='.$url.'&description='.$title.'" target="_blank"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+        <a href="https://reddit.com/submit?url='.$url.'&title='.$title.'" target="_blank"><i class="fa fa-reddit" aria-hidden="true"></i></a>
+        <a href="https://plus.google.com/share?url='.$url.'" target="_blank"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+        <a href="https://www.tumblr.com/widgets/share/tool?canonicalUrl='.$url.'&title='.$title.'&caption='.$desc.'" target="_blank"><i class="fa fa-tumblr" aria-hidden="true"></i></a>
+        </div>';
+        // &via='.config('services.twitter.via').'
+    }
 }

@@ -13,11 +13,25 @@
 
             <div class="row">
                 @foreach($recipes_latest as $recipe)
+                    @php
+                        $class_blur = '';
+
+                        if (!empty($recipe->image)) {
+                            $image = $recipe->image;
+                            $class_blur = ' image-blur';
+                        } else {
+                            $image = 'blank.gif';
+                        }
+
+                        $image_color = (!empty($recipe->color)) ? 'style="background-color:'.$recipe->color.';" ' : '';
+                    @endphp
                 <div class="col-12 mb-3 col-md-6">
-                    <div class="card">
-                        <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
-                            <img class="card-img-top img-fluid" data-original="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'lists', 'filename' => $recipe->image])}}@endif" src="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'tiny', 'filename' => $recipe->image])}}@endif" alt="">
-                        </a>
+                    <div class="recipe card">
+                        <div class="image">
+                            <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
+                                <img {!! $image_color !!}class="card-img-top img-fluid{{$class_blur}}" data-original="{{ route('imagecache', ['template' => 'lists', 'filename' => $image]) }}" src="{{ route('imagecache', ['template' => 'lists-tiny', 'filename' => $image]) }}" alt="">
+                            </a>
+                        </div>
                         <div class="card-block">
                             <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
                                 <h4 class="card-title">{{ $recipe->title }}</h4>

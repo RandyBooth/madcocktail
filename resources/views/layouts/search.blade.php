@@ -1,4 +1,4 @@
-<form id="form-search" class="autocomplete form-inline mt-2 mt-md-0" method="POST" action="{{ route('search') }}">
+<form id="form-search" class="autocomplete form-inline mt-2 mt-lg-0" method="POST" action="{{ route('search') }}">
     {{ csrf_field() }}
 
     <div class="hidden-xs-up">

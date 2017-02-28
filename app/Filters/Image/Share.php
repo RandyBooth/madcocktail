@@ -5,12 +5,15 @@ namespace App\Filters\Image;
 use Intervention\Image\Image;
 use Intervention\Image\Filters\FilterInterface;
 
-class Tiny implements FilterInterface
+class Share implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        return $image->fit(30, 15, function ($constraint) {
+        $width = 1200;
+        $height = 627;
+
+        return $image->fit($width, $height, function ($constraint) {
             $constraint->upsize();
-        })->blur()->interlace()->encode('jpg', 20);
+        })->interlace();
     }
 }

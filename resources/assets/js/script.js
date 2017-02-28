@@ -30,6 +30,7 @@ var autocompleteOption = {
     }
 }, myLazyLoad = new LazyLoad({
     container: document.getElementById('content'),
+    skip_invisible: false
 }), alertRun = function() {
     $('.alert').alert();
 }, alertMessage = function(type, message) {
@@ -40,10 +41,36 @@ var autocompleteOption = {
 };
 
 $(document).ready(function() {
-    var $alert = $('.alert'),
+    var $socialMedia = $('.social-media'),
+        $alert = $('.alert'),
         $select2Set = $('.select2-set');
 
-    if ($alert.length > 0) {
+    if ($socialMedia.length) {
+        $('a', $socialMedia).on('click', function (e) {
+            var $self = $(this),
+                width = $self.data() - width || 800,
+                height = $self.data() - height || 500;
+
+            var
+                px = Math.floor(((screen.availWidth || 1024) - width) / 2),
+                py = Math.floor(((screen.availHeight || 700) - height) / 2);
+
+            var popup = window.open($self.attr('href'), "social",
+                "width=" + width + ",height=" + height +
+                ",left=" + px + ",top=" + py +
+                ",location=0,menubar=0,toolbar=0,status=0,scrollbars=1,resizable=1");
+
+            if (popup) {
+                popup.focus();
+                e.preventDefault();
+                e.returnValue = false;
+            }
+
+            return !!popup;
+        });
+    }
+
+    if ($alert.length) {
         alertRun();
     }
 

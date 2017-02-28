@@ -9,7 +9,11 @@ class Lists implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        return $image->fit(400, 200, function ($constraint) {
+        $width = 250;
+        $height = ceil($width / 1.2);
+        if ($height % 2 == 1) $height++;
+
+        return $image->fit($width, $height, function ($constraint) {
             $constraint->upsize();
         })->interlace();
     }

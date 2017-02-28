@@ -74,14 +74,15 @@ class RecipeImageController extends Controller
                                     $recipe_image_check = RecipeImage::where('image', 'LIKE BINARY', $filename)->first();
 
                                     if (!$recipe_image_check) {
-                                        Image::make($image)->resize(1200, null, function ($constraint) {
+                                        $new_image = Image::make($image)->resize(1200, null, function ($constraint) {
                                             $constraint->aspectRatio();
                                             $constraint->upsize();
-                                        })->interlace()->save($path.$filename)->destroy();
+                                        })->interlace()->save($path.$filename);
 
-                                        $old_image = $recipe_image->image;
+                                        $color = $this->getColorAverage($new_image);
+                                        $new_image->destroy();
 
-                                        if ($recipe_image->update(['image' => $filename])) {
+                                        if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
                                             if (!empty($old_image)) {
                                                 \File::delete($path.$old_image);
                                             }
@@ -157,5 +158,14 @@ class RecipeImageController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function getColorAverage($image)
+    {
+        $image = clone $image;
+        $color = $image->limitColors(1)->pickColor(0, 0, 'hex');
+        $image->destroy();
+
+        return $color;
     }
 }

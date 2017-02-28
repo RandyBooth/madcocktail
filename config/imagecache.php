@@ -32,6 +32,7 @@ return array(
     
     'paths' => array(
         public_path('upload'),
+        public_path('upload_site'),
     ),
 
     /*
@@ -52,10 +53,10 @@ return array(
    
     'templates' => array(
         'lists' => 'App\Filters\Image\Lists',
-        'shared' => 'App\Filters\Image\Shared',
+        'lists-tiny' => 'App\Filters\Image\ListsTiny',
+        'share' => 'App\Filters\Image\Share',
         'single' => 'App\Filters\Image\Single',
-        'tiny' => 'App\Filters\Image\Tiny',
-//        'tiny' => 'App\Filters\Image\Tiny',
+        'single-tiny' => 'App\Filters\Image\SingleTiny',
 //        'small' => 'App\Filters\Image\Small',
 //        'medium' => 'App\Filters\Image\Medium',
 //        'large' => 'App\Filters\Image\Large',

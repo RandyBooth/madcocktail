@@ -84,7 +84,7 @@
                                 <div class="col-12 mb-2 col-lg-3 mb-lg-4 pr-lg-0">
                                     <label class="form-control-label hidden-lg-up">Unit</label>
                                     <select style="width: 100%" class="select-ingredients-measure form-control" name="ingredients.measure[]">
-                                        <option value="">--</option>
+                                        <option value="">&nbsp;</option>
                                         @php
                                             $ingredients_measure = (!empty($old_ingredients_measure[$loop->index])) ? $old_ingredients_measure[$loop->index] : '';
                                         @endphp
@@ -136,7 +136,7 @@
                     <label class="form-control-label" for="glass" class="">Glass Type</label>
 
                     <select style="width: 100%" name="glass" id="glass" class="select2-set form-control">
-                        <option value="">--</option>
+                        <option value="">&nbsp;</option>
                     @foreach($glasses as $key => $val)
                         <option value="{{ $key }}"@if(old('glass', $recipe['glass']) == $key){{ ' selected' }}@endif>{{ $val }}</option>
                     @endforeach

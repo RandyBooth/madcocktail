@@ -29,14 +29,14 @@ $(document).ready(function() {
             },
             $selectIngredients = $('#select-ingredients'),
             $selectIngredientsGroup = $('#create-ingredients-group', $selectIngredients),
-            measuresList = '<option value="">--</option>',
+            measuresList = '<option value="">&nbsp;</option>',
             select2Count = 0
         ;
 
         var select2Insert = function () {
             var selectIngredientsDivCount = 'create-ingredients-div-'+(select2Count++);
 
-            $selectIngredientsGroup.append('<div id="'+selectIngredientsDivCount+'" class="row mb-4 mb-lg-0 create-ingredients-div"><div class="col-12 mb-2 col-lg-6 mb-lg-4 pr-lg-0"><label class="hidden-lg-up">Ingredients</label><select style="width: 100%" class="select-ingredients form-control" name="ingredients[]"><option value="">--</option></select></div><div class="col-12 mb-2 col-lg-2 mb-lg-4 pr-lg-0"><label class="hidden-lg-up">Quality</label><input class="select-ingredients-measure-amount form-control" type="text" name="ingredients.measure.amount[]" value=""></div><div class="col-12 mb-2 col-lg-3 mb-lg-4 pr-lg-0"><label class="hidden-lg-up">Unit</label>'+measuresList+'</div><div class="col-12 mb-2 col-lg-1 mb-lg-4 align-self-end"><button type="button" class="btn btn-gray create-ingredients-close"><i class="fa fa-times" aria-hidden="true"></i></button></div></div>');
+            $selectIngredientsGroup.append('<div id="'+selectIngredientsDivCount+'" class="row mb-4 mb-lg-0 create-ingredients-div"><div class="col-12 mb-2 col-lg-6 mb-lg-4 pr-lg-0"><label class="hidden-lg-up">Ingredients</label><select style="width: 100%" class="select-ingredients form-control" name="ingredients[]"><option value="">&nbsp;</option></select></div><div class="col-12 mb-2 col-lg-2 mb-lg-4 pr-lg-0"><label class="hidden-lg-up">Quality</label><input class="select-ingredients-measure-amount form-control" type="text" name="ingredients.measure.amount[]" value=""></div><div class="col-12 mb-2 col-lg-3 mb-lg-4 pr-lg-0"><label class="hidden-lg-up">Unit</label>'+measuresList+'</div><div class="col-12 mb-2 col-lg-1 mb-lg-4 align-self-end"><button type="button" class="btn btn-gray create-ingredients-close"><i class="fa fa-times" aria-hidden="true"></i></button></div></div>');
             $('#'+selectIngredientsDivCount+' .select-ingredients').select2(select2AjaxOption);
             $('#'+selectIngredientsDivCount+' .select-ingredients-measure').select2({theme: 'bootstrap'});
         };

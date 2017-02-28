@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RecipeImage extends Model
 {
-    protected $fillable = ['recipe_id', 'image'];
+    protected $fillable = ['recipe_id', 'image', 'color'];
     protected $table = 'recipe_images';
 
     public function scopeImage($query, $id)

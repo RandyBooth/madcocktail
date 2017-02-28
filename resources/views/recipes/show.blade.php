@@ -3,6 +3,17 @@
 @php $title = (!empty($recipe->title)) ? $recipe->title . ' - ': ''; @endphp
 @section('title', $title . 'Recipe')
 
+@php
+    $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'blank.gif';
+    $social_title = $recipe->title. ' Recipe';
+    $social_description = $recipe->description;
+    $social_image = route('imagecache', ['template' => 'share', 'filename' => $image]);
+@endphp
+
+@section('og-title', $social_title)
+@section('og-description', $social_description)
+@section('og-image', $social_image)
+
 @if(Helper::is_owner($recipe->user_id))
 @section('script-bottom')
     <script src="{{ asset('js/image-upload-min.js') }}"></script>
@@ -11,9 +22,19 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 mb-4 col-md-7 order-md-last">
+        <div class="col-12 mb-4 col-lg-7 order-lg-last col-xl-6">
             <div id="image" class="image">
-                <img id="image-preview" class="image-preview" src="@if(!empty($recipe_image->image)){{route('imagecache', ['template' => 'single', 'filename' => $recipe_image->image])}}@endif">
+                @php
+                    $class_blur = '';
+
+                    if (!empty($recipe_image->image)) {
+                        $image = $recipe_image->image;
+                        $class_blur = ' image-blur';
+                    } else {
+                        $image = 'blank.gif';
+                    }
+                @endphp
+                <img id="image-preview" class="image-preview card-img-top img-fluid{{$class_blur}}" data-original="{{ route('imagecache', ['template' => 'single', 'filename' => $image]) }}" src="{{ route('imagecache', ['template' => 'single-tiny', 'filename' => $image]) }}" alt="">
 
                 @if(Helper::is_owner($recipe->user_id))
                 <div id="image-loading" class="image-loading hidden-xs-up">
@@ -51,7 +72,7 @@
             </div>
         </div>
 
-        <div class="col-12 mb-4 col-md-5">
+        <div class="col-12 mb-4 col-lg-5 col-xl-6">
         @if (!empty($recipe->title))
             <h1>{{ $recipe->title_sup }}</h1>
         @endif
@@ -59,6 +80,8 @@
         @if (!empty($recipe->description))
             <p>{{ $recipe->description }}</p>
         @endif
+
+            {!! Helper::share($social_title, $social_description, $social_image) !!}
         </div>
     </div>
 

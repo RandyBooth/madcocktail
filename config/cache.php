@@ -88,6 +88,6 @@ return [
     |
     */
 
-    'prefix' => 'laravel',
+    'prefix' => 'madcocktail',
 
 ];

@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <meta property="fb:app_id" content="{{ config('services.facebook.client_id') }}" />
     <meta property="og:url" content="@yield('og-url', url()->full())" />
     {{--<meta property="og:type" content="@yield('og-type')" />--}}
     <meta property="og:title" content="@yield('og-title')" />
@@ -42,22 +43,6 @@
 
     @include('layouts.footer')
 
-    {{--<script>
-        var WebFontConfig = {
-            google: {
-                families: [ 'Oxygen:700', 'Source+Sans+Pro:400,400i,600' ]
-            },
-        };
-
-        (function(){
-            var wf = document.createElement("script");
-            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-                '://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
-            wf.async = 'true';
-            document.head.appendChild(wf);
-        })();
-    </script>--}}
-    {{--<script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>--}}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.1.1.min.js') }}"><\/script>')</script>
     <script src="{{ asset('js/plugins-min.js') }}"></script>
@@ -65,14 +50,16 @@
     <script src="{{ asset('js/script-min.js') }}"></script>
 @yield('script-bottom')
 
+    @if(!empty(config('services.google.analytics')))
     <script>
-        (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-        ga('create','UA-91000248-1', 'none');
-        ga('send','pageview');
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '{{ config('services.google.analytics') }}', 'auto');
+        ga('send', 'pageview');
     </script>
+    @endif
 </body>
 </html>

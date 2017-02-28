@@ -5,16 +5,16 @@ namespace App\Filters\Image;
 use Intervention\Image\Image;
 use Intervention\Image\Filters\FilterInterface;
 
-class Single implements FilterInterface
+class SingleTiny implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        $width = 600;
+        $width = 30;
         $height = ceil($width / 1.8);
         if ($height % 2 == 1) $height++;
 
         return $image->fit($width, $height, function ($constraint) {
             $constraint->upsize();
-        })->interlace();
+        })->blur(2)->interlace()->encode('jpg', 20);
     }
 }
