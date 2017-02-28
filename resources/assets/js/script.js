@@ -46,7 +46,14 @@ $(document).ready(function() {
         $select2Set = $('.select2-set');
 
     if ($socialMedia.length) {
-        $('a', $socialMedia).on('click', function (e) {
+        var $socialMediaLinks = $('a', $socialMedia);
+
+        $socialMedia.matchHeight({
+            property: 'max-height',
+            target: $socialMediaLinks
+        });
+
+        $socialMediaLinks.on('click', function (e) {
             var $self = $(this),
                 width = $self.data() - width || 800,
                 height = $self.data() - height || 500;

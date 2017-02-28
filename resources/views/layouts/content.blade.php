@@ -10,7 +10,7 @@
 
         <div class="row">
         @if(View::hasSection('sidebar-left'))
-            <div class="col12 col-md-4 col-lg-3">
+            <div class="col-12 col-md-4 col-lg-3">
                 @yield('sidebar-left')
             </div>
             <div class="col-12 col-md-8 col-lg-9">
@@ -20,7 +20,7 @@
             <div class="col-12 col-md-8 col-lg-9">
                 @yield('content')
             </div>
-            <div class="col12 col-md-4 col-lg-3">
+            <div class="col-12 col-md-4 col-lg-3">
                 @yield('sidebar-right')
             </div>
         @else

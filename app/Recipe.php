@@ -67,13 +67,6 @@ class Recipe extends Model
         ];
     }
 
-    public function setTitleSupAttribute()
-    {
-        if (!empty($this->title)) {
-            return Helper::html_sup($this->title);
-        }
-    }
-
     public function getTitleSupAttribute()
     {
         if (!empty($this->title)) {

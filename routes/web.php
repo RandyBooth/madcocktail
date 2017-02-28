@@ -43,7 +43,7 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
         });
     });
 
-    Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
+    Route::get('/', ['as' => 'home', 'uses' => 'RecipeController@home']);
 
     Route::resource('ingredients', 'IngredientController', [
         'except' => [

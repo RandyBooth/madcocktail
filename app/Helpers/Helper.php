@@ -110,6 +110,10 @@ class Helper
         return (strpos($num, '.') !== false) ? rtrim(rtrim($num, '0'), '.') : $num;
     }
 
+    public static function nl2empty($text) {
+        return trim(preg_replace('/\s+/', ' ', $text));
+    }
+
     public static function html_sup($string)
     {
         return preg_replace('/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/', '<sup>$1</sup>', $string);
@@ -118,6 +122,20 @@ class Helper
     public static function textarea_to_array($text)
     {
         return array_values(array_filter(array_map('trim', preg_split('/\r\n|\n|\r/', $text, -1, PREG_SPLIT_NO_EMPTY))));
+    }
+
+    public static function nl2p($string, $line_breaks = true, $xml = true)
+    {
+        $string = str_replace(array('<p>', '</p>', '<br>', '<br />'), '', $string);
+
+        if ($line_breaks == true) {
+            return '<p>'.preg_replace(array("/([\n]{2,})/i", "/([^>])\n([^<])/i"), array("</p>\n<p>", '$1<br'.($xml == true ? ' /' : '').'>$2'), trim($string)).'</p>';
+        } else {
+            return '<p>'.preg_replace(
+            array("/([\n]{2,})/i", "/([\r\n]{3,})/i","/([^>])\n([^<])/i"),
+            array("</p>\n<p>", "</p>\n<p>", '$1<br'.($xml == true ? ' /' : '').'>$2'),
+            trim($string)).'</p>';
+        }
     }
 
     public static function breadcrumbs($array, $route = '', $home = '')
@@ -188,13 +206,29 @@ class Helper
 
         return '
         <div class="social-media">
-        <a href="https://www.facebook.com/dialog/share?app_id='.config('services.facebook.client_id').'&display=page&href='.$url.'" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-        <a href="https://twitter.com/intent/tweet?url='.$url.'&text='.$title.'" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-        <a href="https://pinterest.com/pin/create/bookmarklet/?media='.$img.'&url='.$url.'&description='.$title.'" target="_blank"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-        <a href="https://reddit.com/submit?url='.$url.'&title='.$title.'" target="_blank"><i class="fa fa-reddit" aria-hidden="true"></i></a>
-        <a href="https://plus.google.com/share?url='.$url.'" target="_blank"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
-        <a href="https://www.tumblr.com/widgets/share/tool?canonicalUrl='.$url.'&title='.$title.'&caption='.$desc.'" target="_blank"><i class="fa fa-tumblr" aria-hidden="true"></i></a>
+            <a class="color-link-facebook px-md-2" href="https://www.facebook.com/dialog/share?app_id='.config('services.facebook.client_id').'&display=page&href='.$url.'" target="_blank">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            
+            <a class="color-link-twitter px-md-2" href="https://twitter.com/intent/tweet?url='.$url.'&text='.$title.'&via='.config('services.twitter.via').'" target="_blank">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+            </a>
+            
+            <a class="color-link-pinterest px-md-2" href="https://pinterest.com/pin/create/bookmarklet/?media='.$img.'&url='.$url.'&description='.$title.'" target="_blank">
+                <i class="fa fa-pinterest" aria-hidden="true"></i>
+            </a>
+            
+            <a class="color-link-tumblr px-md-2" href="https://www.tumblr.com/widgets/share/tool?canonicalUrl='.$url.'&title='.$title.'&caption='.$desc.'" target="_blank">
+                <i class="fa fa-tumblr" aria-hidden="true"></i>
+            </a>
+            
+            <a class="color-link-reddit px-md-2" href="https://reddit.com/submit?url='.$url.'&title='.$title.'" target="_blank">
+                <i class="fa fa-reddit" aria-hidden="true"></i>
+            </a>
+            
+            <a class="color-link-googleplus px-md-2" href="https://plus.google.com/share?url='.$url.'" target="_blank">
+                <i class="fa fa-google-plus" aria-hidden="true"></i>
+            </a>
         </div>';
-        // &via='.config('services.twitter.via').'
     }
 }

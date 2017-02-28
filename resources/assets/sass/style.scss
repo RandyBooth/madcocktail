@@ -33,23 +33,211 @@
             &- {
                 &white {
                     color: $color-white;
+
+                    @include hover-focus {
+                        color: $color-white;
+                    }
                 }
 
                 &gray-light {
                     color: $color-gray-light;
+
+                    @include hover-focus {
+                        color: $color-gray-light;
+                    }
                 }
 
                 &gray-dark {
                     color: $color-gray-dark;
+
+                    @include hover-focus {
+                        color: $color-gray-dark;
+                    }
                 }
 
                 &black {
                     color: $color-black;
+
+                    @include hover-focus {
+                        color: $color-black;
+                    }
                 }
 
                 &orange {
                     color: $color-orange;
+
+                    @include hover-focus {
+                        color: $color-orange;
+                    }
                 }
+
+                //&blogger {
+                //    color: $color-blogger;
+                //
+                //    @include hover-focus {
+                //        color: $color-blogger;
+                //    }
+                //}
+                //
+                //&dribbble {
+                //    color: $color-dribbble;
+                //
+                //    @include hover-focus {
+                //        color: $color-dribbble;
+                //    }
+                //}
+
+                &facebook {
+                    color: $color-facebook;
+
+                    @include hover-focus {
+                        color: lighten($color-facebook, 10%);
+                    }
+                }
+
+                //&flickr {
+                //    color: $color-flickr;
+                //
+                //    @include hover-focus {
+                //        color: $color-flickr;
+                //    }
+                //}
+                //
+                //&forrst {
+                //    color: $color-forrst;
+                //
+                //    @include hover-focus {
+                //        color: $color-forrst;
+                //    }
+                //}
+                //
+                //&foursquare {
+                //    color: $color-foursquare;
+                //
+                //    @include hover-focus {
+                //        color: $color-foursquare;
+                //    }
+                //}
+
+                &googleplus {
+                    color: $color-googleplus;
+
+                    @include hover-focus {
+                        color: lighten($color-googleplus, 10%);
+                    }
+                }
+
+                //&instagram {
+                //    color: $color-instagram;
+                //
+                //    @include hover-focus {
+                //        color: $color-instagram;
+                //    }
+                //}
+                //
+                //&linkedin {
+                //    color: $color-linkedin;
+                //
+                //    @include hover-focus {
+                //        color: $color-linkedin;
+                //    }
+                //}
+
+                &pinterest {
+                    color: $color-pinterest;
+
+                    @include hover-focus {
+                        color: lighten($color-pinterest, 10%);
+                    }
+                }
+
+                //&quora {
+                //    color: $color-quora;
+                //
+                //    @include hover-focus {
+                //        color: $color-quora;
+                //    }
+                //}
+
+                &reddit {
+                    color: $color-reddit;
+
+                    @include hover-focus {
+                        color: lighten($color-reddit, 10%);
+                    }
+                }
+
+                //&soundcloud {
+                //    color: $color-soundcloud;
+                //
+                //    @include hover-focus {
+                //        color: $color-soundcloud;
+                //    }
+                //}
+                //
+                //&stumbleupon {
+                //    color: $color-stumbleupon;
+                //
+                //    @include hover-focus {
+                //        color: $color-stumbleupon;
+                //    }
+                //}
+
+                &tumblr {
+                    color: $color-tumblr;
+
+                    @include hover-focus {
+                        color: lighten($color-tumblr, 10%);
+                    }
+                }
+
+                &twitter {
+                    color: $color-twitter;
+
+                    @include hover-focus {
+                        color: lighten($color-twitter, 10%);
+                    }
+                }
+
+                //&vimeo {
+                //    color: $color-vimeo;
+                //
+                //    @include hover-focus {
+                //        color: $color-vimeo;
+                //    }
+                //}
+                //
+                //&vk {
+                //    color: $color-vk;
+                //
+                //    @include hover-focus {
+                //        color: $color-vk;
+                //    }
+                //}
+                //
+                //&wordpress {
+                //    color: $color-wordpress;
+                //
+                //    @include hover-focus {
+                //        color: $color-wordpress;
+                //    }
+                //}
+                //
+                //&yahoo {
+                //    color: $color-yahoo;
+                //
+                //    @include hover-focus {
+                //        color: $color-yahoo;
+                //    }
+                //}
+                //
+                //&youtube {
+                //    color: $color-youtube;
+                //
+                //    @include hover-focus {
+                //        color: $color-youtube;
+                //    }
+                //}
             }
         }
     }
@@ -61,7 +249,7 @@ a {
     &.link {
         border-bottom: 1px solid transparent;
 
-        @include hover {
+        @include hover-focus {
             border-bottom: 1px solid;
         }
     }
@@ -343,6 +531,95 @@ body {
                 }
             }
         }
+    }
+}
+
+.social-media {
+    font-size: 28px;
+
+    a {
+        float: left;
+    }
+
+    @include media-breakpoint-down(sm) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: $color-black;
+        font-size: 32px;
+        z-index: $zindex-fixed;
+        max-height: 0;
+        @include transition(max-height 0.5s);
+
+        @include hover-focus-active {
+            max-height: 500px !important;
+        }
+
+        a {
+            width: 25%;
+            text-align: center;
+
+            @include plain-hover-focus {
+                color: $white !important;
+            }
+
+            &.color-link {
+                &- {
+                    &facebook {
+                        background-color: $color-facebook;
+
+                        @include hover-focus {
+                            background-color: lighten($color-facebook, 10%);
+                        }
+                    }
+
+                    &googleplus {
+                        background-color: $color-googleplus;
+
+                        @include hover-focus {
+                            background-color: lighten($color-googleplus, 10%);
+                        }
+                    }
+
+                    &pinterest {
+                        background-color: $color-pinterest;
+
+                        @include hover-focus {
+                            background-color: lighten($color-pinterest, 10%);
+                        }
+                    }
+
+                    &reddit {
+                        background-color: $color-reddit;
+
+                        @include hover-focus {
+                            background-color: lighten($color-reddit, 10%);
+                        }
+                    }
+
+                    &tumblr {
+                        background-color: $color-tumblr;
+
+                        @include hover-focus {
+                            background-color: lighten($color-tumblr, 10%);
+                        }
+                    }
+
+                    &twitter {
+                        background-color: $color-twitter;
+
+                        @include hover-focus {
+                            background-color: lighten($color-twitter, 10%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(xs) {
+        font-size: 24px;
     }
 }
 

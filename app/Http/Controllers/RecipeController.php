@@ -25,6 +25,23 @@ class RecipeController extends Controller
         $this->middleware(['xss', 'isVerified'], ['only' => ['store', 'update']]);
         $this->middleware(['admin', 'isVerified'], ['only' => ['destroy']]);
     }
+    public function home()
+    {
+        $total = 20;
+
+        $recipes = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
+            return Recipe
+                ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
+//                ->select(['title', 'slug'])
+//                ->where('recipe_counts.count_total', '>', $total)
+                ->inRandomOrder()
+                ->take(20)
+                ->get();
+        });
+
+        return view('recipes.home', compact('recipes'));
+    }
 
     /**
      * Display a listing of the resource.
@@ -35,7 +52,7 @@ class RecipeController extends Controller
     {
         $total = 20;
 
-        $recipes_latest = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
+        $recipes = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
@@ -59,7 +76,7 @@ class RecipeController extends Controller
                 ->get();
         });
 
-        return view('recipes.index', compact('recipes_latest', 'recipes_top'));
+        return view('recipes.index', compact('recipes', 'recipes_top'));
     }
 
     /**
@@ -182,7 +199,7 @@ class RecipeController extends Controller
                     $recipe->ingredients()->sync($ingredients_data);
                 }
 
-                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe ('.$recipe->title.') has been created successfully.');
+                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe "'.$recipe->title.'" has been created successfully.');
             }
         }
 
@@ -464,7 +481,7 @@ class RecipeController extends Controller
                 $recipe->update($data);
                 $recipe->ingredients()->sync($ingredients_data);
 
-                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe ('.$recipe->title.') has been updated successfully.');
+                return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe "'.$recipe->title.'" has been updated successfully.');
             }
         }
 

@@ -6,7 +6,7 @@
 @php
     $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'blank.gif';
     $social_title = $recipe->title. ' Recipe';
-    $social_description = $recipe->description;
+    $social_description = Helper::nl2empty($recipe->description);
     $social_image = route('imagecache', ['template' => 'share', 'filename' => $image]);
 @endphp
 
@@ -78,10 +78,8 @@
         @endif
 
         @if (!empty($recipe->description))
-            <p>{{ $recipe->description }}</p>
+            {!! Helper::nl2p($recipe->description, false) !!}
         @endif
-
-            {!! Helper::share($social_title, $social_description, $social_image) !!}
         </div>
     </div>
 
@@ -89,6 +87,8 @@
     <div class="row mb-4">
         <div class="col-12">
             <h3>Ingredients</h3>
+
+            <hr>
 
             <ul class="list-unstyled">
                 @foreach($ingredients as $val)
@@ -131,9 +131,11 @@
     @endif
 
     @if (!empty($recipe->directions))
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <h3>Directions</h3>
+
+            <hr>
 
             <ol>
                 @foreach($recipe->directions as $val)
@@ -144,12 +146,22 @@
     </div>
     @endif
 
+    <div class="row mb-md-4">
+        <div class="col-12">
+            <h3 class="hidden-sm-down">Share</h3>
+
+            <hr class="hidden-sm-down">
+
+            {!! Helper::share($social_title, $social_description, $social_image) !!}
+        </div>
+    </div>
+
     @include('recipes.footer-option')
 @stop
 
 @section('sidebar-right')
     @if ($recipe_similar)
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <h3>Similar Recipes</h3>
 
