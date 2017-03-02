@@ -6,12 +6,18 @@ use Auth;
 use App\Http\Requests\ImageRequest;
 use App\Recipe;
 use App\RecipeImage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Image;
 use Validator;
 
 class RecipeImageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'isVerified', 'xss'], ['only' => ['store']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -61,7 +67,6 @@ class RecipeImageController extends Controller
                             $recipe_id = $recipe->id;
                             $filename = '';
                             $image = $request->file('image');
-//                            $image_extension = $image->extension();
                             $recipe_image = RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
                             $token_valid = false;
 
@@ -69,7 +74,6 @@ class RecipeImageController extends Controller
                                 $random = \Helper::hashids_random($recipe_id, 'image');
 
                                 if (!empty($random)) {
-//                                    $filename = $random.'.'.$image_extension;
                                     $filename = $random.'.jpg';
                                     $recipe_image_check = RecipeImage::where('image', 'LIKE BINARY', $filename)->first();
 
@@ -79,12 +83,13 @@ class RecipeImageController extends Controller
                                             $constraint->upsize();
                                         })->interlace()->save($path.$filename);
 
+                                        $old_image = $recipe_image->image;
                                         $color = $this->getColorAverage($new_image);
                                         $new_image->destroy();
 
                                         if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
                                             if (!empty($old_image)) {
-                                                \File::delete($path.$old_image);
+                                                File::delete($path.$old_image);
                                             }
 
                                             $token_valid = true;

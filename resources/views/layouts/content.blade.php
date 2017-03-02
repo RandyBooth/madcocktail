@@ -23,6 +23,13 @@
             <div class="col-12 col-md-4 col-lg-3">
                 @yield('sidebar-right')
             </div>
+        @elseif(View::hasSection('content-left'))
+            <div class="col-12 col-md-6">
+                @yield('content-left')
+            </div>
+            <div class="col-12 col-md-6">
+                @yield('content-right')
+            </div>
         @else
             <div class="col-12">
                 @yield('content')

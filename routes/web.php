@@ -20,6 +20,8 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
         });
     });
 
+    Route::get('me/{username}', ['as' => 'user-profile.show', 'uses' => 'UserProfileController@show']);
+
     Route::group(['prefix' => 'settings'], function() {
         Route::get('/', ['as' => 'user-settings.index', 'uses' => 'UserSettingController@index']);
 
@@ -47,6 +49,7 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
 
     Route::resource('ingredients', 'IngredientController', [
         'except' => [
+            'index',
             'show'
         ],
         'parameters' => [
@@ -54,21 +57,21 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
         ]
     ]);
 
+    Route::get('ingredients', ['as' => 'ingredients.index', 'uses' => 'IngredientController@show']);
     Route::get('ingredients/{parameters?}', ['as' => 'ingredients.show', 'uses' => 'IngredientController@show'])->where('parameters', '(.*)');
 
     Route::resource('recipes', 'RecipeController');
 
     Route::group(['prefix' => 'ajax'], function() {
-    //    Route::get('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@ajax']);
-        Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax']);
+        Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax'])->where('type', '[A-Za-z]+');
 
         Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
         Route::delete('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image_destroy', 'uses' => 'RecipeImageController@destroy']);
     });
 
-    Route::post('search/{type?}', ['middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search']);
+    Route::post('search/{type?}', ['middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search'])->where('type', '[A-Za-z]+');
 
-    Route::resource('occasions', 'OccasionController');
+//    Route::resource('occasions', 'OccasionController');
 
     Route::get('privacy', function() {echo 'Coming soon - Privacy Policy';});
     Route::get('terms', function() {echo 'Coming soon - Terms of Service';});

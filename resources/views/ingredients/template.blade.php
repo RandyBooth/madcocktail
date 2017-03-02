@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @section('style')
-    <link rel="stylesheet" href="{{ asset('css/vendor/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/vendor/select2-bootstrap.css') }}">
 @stop
 

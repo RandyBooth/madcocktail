@@ -3,5 +3,5 @@
 @section('title', 'Create New Ingredient')
 
 @section('form')
-    <form method="POST" action="{{ route('ingredients.store') }}">
+    <form role="form" method="POST" action="{{ route('ingredients.store') }}">
 @stop

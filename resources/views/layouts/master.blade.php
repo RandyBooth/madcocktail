@@ -22,14 +22,14 @@
 
     <title>@yield('title') | {{ config('app.name') }}</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400{{--,400i,600--}}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:700|Source+Sans+Pro:400{{--,400i--}},600" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.css') }}">
     {{--<link rel="stylesheet" href="{{ asset('css/vendor/font-awesome.css') }}">--}}
 @yield('style')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
 @yield('script-top')
 </head>

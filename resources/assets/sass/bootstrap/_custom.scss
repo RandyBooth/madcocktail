@@ -21,6 +21,8 @@ $breadcrumb-bg: $color-gray-dark;
 $breadcrumb-divider-color: $color-orange;
 $breadcrumb-active-color: $color-white;
 
+$card-cap-bg: $white;
+
 $link-color: $brand-primary;
 //$link-decoration: none;
 $link-hover-color: darken($link-color, 10%);
@@ -52,3 +54,35 @@ $navbar-inverse-toggler-border: rgba($color-gray-light, 0.5); //rgba($white,.1);
 $btn-primary-color: $color-white;
 $btn-primary-bg: $brand-primary;
 $btn-primary-border: $btn-primary-bg;
+
+$list-group-bg: $color-orange;
+$list-group-hover-bg:  darken($color-orange, 10%);
+$list-group-link-active-bg: darken($color-orange, 15%);
+
+$list-group-link-color: $color-white;
+$list-group-link-hover-color: $color-white;
+$list-group-link-active-color: $color-white;
+
+//$list-group-bg: $color-white;
+//$list-group-hover-bg:  $color-orange;
+//$list-group-link-active-bg: darken($color-orange, 5%);
+//
+//$list-group-link-color: $color-orange;
+//$list-group-link-hover-color: $color-white;
+//$list-group-link-active-color: $color-white;
+
+//$list-group-bg: $color-gray-dark;
+//$list-group-hover-bg:  $color-gray-dark;
+//$list-group-link-active-bg: darken($color-gray-dark, 5%);
+//
+//$list-group-link-color: $color-white;
+//$list-group-link-hover-color: $color-gray-light;
+//$list-group-link-active-color: $color-gray-light;
+
+//$list-group-bg: $color-white;
+//$list-group-hover-bg:  $color-gray-dark;
+//$list-group-link-active-bg: darken($color-gray-dark, 5%);
+//
+//$list-group-link-color: $color-orange;
+//$list-group-link-hover-color: $color-gray-light;
+//$list-group-link-active-color: $color-gray-light;

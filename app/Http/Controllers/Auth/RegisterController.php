@@ -59,7 +59,7 @@ class RegisterController extends Controller
             'username' => 'required|min:3|max:255|alpha_dash|unique:users',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'birth' => 'filled|date_format:Y-m-d|over_age:21',
+            'birth' => 'date_format:Y-m-d|over_age:21',
             'month' => 'required|digits:2',
             'day' => 'required|digits:2',
             'year' => 'required|digits:4',
@@ -94,7 +94,7 @@ class RegisterController extends Controller
         $data = $request->all();
         $data['birth'] = '';
 
-        if (isset($data['month']) && isset($data['day']) && isset($data['year'])) {
+        if (!empty($data['month']) && !empty($data['day']) && !empty($data['year'])) {
             $data['birth'] = $data['year'].'-'.$data['month'].'-'.$data['day'];
         }
 

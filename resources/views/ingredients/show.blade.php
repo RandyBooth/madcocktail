@@ -1,22 +1,38 @@
 @extends('layouts.master')
 
-@section('title', $ingredient->title. ' - Ingredient')
+@php $title = (isset($ingredient->title)) ? $ingredient->title . ' - Ingredient' : 'Ingredients'; @endphp
+@php $title_sup = (isset($ingredient->title_sup)) ? $ingredient->title_sup : 'Ingredients'; @endphp
+
+@section('title', $title)
 
 @section('breadcrumb')
-    {!! Helper::breadcrumbs($ingredient_breadcrumbs, 'ingredients.show', 'Ingredients') !!}
+    @if (!empty($ingredient_breadcrumbs))
+        {!! Helper::breadcrumbs($ingredient_breadcrumbs, 'ingredients.show', 'Ingredients') !!}
+    @endif
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <h1>{!! $ingredient->title_sup !!}</h1>
+            <h1 class="mb-4">{!! $title_sup !!}</h1>
 
             @if (!$ingredients->isEmpty())
-            <ul class="list-unstyled">
-            @foreach($ingredients as $val)
-                <li><a href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title_sup !!}</a></li>
-            @endforeach
-            </ul>
+            <div class="row text-center">
+                {{--<div class="col-12">--}}
+                    @php
+                        $total = count($ingredients);
+                        $mid = ceil($total/2);
+                    @endphp
+                    @foreach($ingredients as $val)
+                        @if ($loop->iteration == 1 || $loop->iteration == ($mid+1))
+                            @php $position = ($loop->iteration == 1) ? 'first' : 'last' @endphp
+                            <div class="col-12 col-lg-6"><div class="list-group list-group-{{$position}}">
+                        @endif
+                        <a class="list-group-item list-group-item-action" href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title_sup !!}</a>
+                        @if ($loop->iteration == $total || $loop->iteration == $mid)</div></div>@endif
+                    @endforeach
+                {{--</div>--}}
+            </div>
             @endif
         </div>
     </div>
@@ -28,7 +44,7 @@
     @if (!$recipes->isEmpty())
     <div class="row">
         <div class="col-12">
-            <h3>Top recipes</h3>
+            <h4>Ingredient popular recipes</h4>
 
             <ol>
             @foreach($recipes as $recipe)

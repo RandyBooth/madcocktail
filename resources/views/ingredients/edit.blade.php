@@ -3,6 +3,6 @@
 @section('title', 'Edit Ingredient')
 
 @section('form')
-<form method="POST" action="{{ route('ingredients.update', $ingredient['token']) }}">
+<form role="form" method="POST" action="{{ route('ingredients.update', $ingredient['token']) }}">
     {{ method_field('PUT') }}
 @stop

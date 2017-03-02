@@ -100,14 +100,17 @@ $s2bs-form-control-transition: border-color ease-in-out .15s, box-shadow ease-in
   .select2-container--focus .select2-selection,
   .select2-container--open .select2-selection {
     @include box-shadow($shadow);
-    border-color: darken($color, 10%);
+    //border-color: darken($color, 10%);
+    border-color: $color;
   }
 
   &.select2-drop-active {
-    border-color: darken($color, 10%);
+    //border-color: darken($color, 10%);
+    border-color: $color;
 
     &.select2-drop.select2-drop-above {
-      border-top-color: darken($color, 10%);
+      //border-top-color: darken($color, 10%);
+      border-color: $color;
     }
   }
 }
@@ -722,15 +725,15 @@ $s2bs-form-control-transition: border-color ease-in-out .15s, box-shadow ease-in
  */
 
 .has-warning {
-  @include validation-state-focus($state-warning-text);
+  @include validation-state-focus($brand-warning);
 }
 
-.has-error {
-  @include validation-state-focus($state-danger-text);
+.has-danger {
+  @include validation-state-focus($brand-danger);
 }
 
 .has-success {
-  @include validation-state-focus($state-success-text);
+  @include validation-state-focus($brand-success);
 }
 
 /**

@@ -30,13 +30,26 @@ class Helper
         $age = (int) $age;
 
         if (!empty($age) && !empty($birth)) {
-            $birth = \Carbon\Carbon::parse($birth);
-            $now = new \Carbon\Carbon('+7 days'); // now + 7 days
-            $now->setTime(0, 0, 0);
+            if (self::checkmydate($birth)) {
+                $birth = \Carbon\Carbon::parse($birth);
+                $now = new \Carbon\Carbon('+7 days'); // now + 7 days
+                $now->setTime(0, 0, 0);
 
-            if ($birth->diffInYears($now, false) >= $age) {
-                return true;
+                if ($birth->diffInYears($now, false) >= $age) {
+                    return true;
+                }
             }
+        }
+
+        return false;
+    }
+
+    public static function checkmydate($date)
+    {
+        $temp = explode('-', $date);
+
+        if (!empty($temp[0]) && !empty($temp[1]) && !empty($temp[2])) {
+            return checkdate($temp[1], $temp[2], $temp[0]);
         }
 
         return false;

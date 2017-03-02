@@ -22,16 +22,18 @@ class RecipeController extends Controller
     {
         Cache::flush();
         $this->middleware(['auth', 'isVerified'], ['only' => ['create', 'edit']]);
-        $this->middleware(['xss', 'isVerified'], ['only' => ['store', 'update']]);
+        $this->middleware(['auth', 'isVerified', 'xss'], ['only' => ['store', 'update']]);
         $this->middleware(['admin', 'isVerified'], ['only' => ['destroy']]);
     }
+
     public function home()
     {
         $total = 20;
 
-        $recipes = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
+        $recipes = Cache::tags('recipe_index_latest')->remember('', 10, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                ->join('users', 'recipes.user_id', '=', 'users.id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
 //                ->where('recipe_counts.count_total', '>', $total)
@@ -55,6 +57,7 @@ class RecipeController extends Controller
         $recipes = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                ->join('users', 'recipes.user_id', '=', 'users.id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
 //                ->where('recipe_counts.count_total', '>', $total)

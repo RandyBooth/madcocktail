@@ -5,11 +5,15 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <ul class="list-unstyled">
-            @foreach($ingredients as $ingredient)
-                <li><a href="{{ route('ingredients.show', ['id' => $ingredient->slug]) }}">{!! $ingredient->title !!}</a></li>
-            @endforeach
-            </ul>
+            <div class="row text-center">
+                @foreach($ingredients as $ingredient)
+                    <div class="col-12 col-sm-4 mb-4">
+                        <div style="font-size: 20px;" class="card">
+                            <a class="card-block" href="{{ route('ingredients.show', ['id' => $ingredient->slug]) }}">{!! $ingredient->title !!}</a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 

@@ -34,7 +34,7 @@ class RecipeSeeder extends Seeder
                     'description' => 'Yummy!',
                     'directions'   => ['Mix ingredients together over ice in a glass.', 'Pour into a shaker and give one brisk shake.', 'Pour back into the glass and make sure there is a touch of fizz at the top.', 'Garnish with lemon.'],
                     'glass_id'    => $glasses['collins'],
-                    'user_id'     => 1,
+                    'user_id'     => 2,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
@@ -53,7 +53,7 @@ class RecipeSeeder extends Seeder
                     'description' => 'woo!',
                     'directions'   => ['Shake or serve up with ice in a highball glass.'],
                     'glass_id'    => $glasses['highball'],
-                    'user_id'     => 1,
+                    'user_id'     => 2,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
@@ -68,7 +68,7 @@ class RecipeSeeder extends Seeder
                     'description' => 'Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing! Amazing!',
                     'directions'   => ['Pour red bull into a medium sized glass.', 'Add a shot glass of jagermeister, and chug.'],
                     'glass_id'    => $glasses['old-fashioned'],
-                    'user_id'     => 1,
+                    'user_id'     => 2,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [
@@ -82,7 +82,7 @@ class RecipeSeeder extends Seeder
                     'description' => 'Testing',
                     'directions'   => ['Open the bottle.', 'Drink it up!'],
                     'glass_id'    => $glasses['beer'],
-                    'user_id'     => 1,
+                    'user_id'     => 2,
                     'is_active'   => 1,
                 ],
                 'ingredients' => [

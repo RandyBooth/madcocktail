@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Firewall;
 
 class AdminMiddleware
 {
@@ -15,6 +16,10 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
+        if (!Firewall::isWhitelisted()) {
+            abort(404);
+        }
+
         if (!$request->user()) {
             abort(404);
         }
