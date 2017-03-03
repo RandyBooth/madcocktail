@@ -103,6 +103,7 @@ return [
         ],
     ],
 
+    'display_name' => 'The :attribute may only contain letters, numbers, and spaces.',
     'least_one_letter' => 'The :attribute must be at least 1 letter.',
     'over_age' => 'The date of birth must be over 21 years old.', // You must be 21+ to join name.com
 

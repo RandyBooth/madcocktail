@@ -73,13 +73,24 @@
         </div>
 
         <div class="col-12 mb-4 col-lg-5 col-xl-6">
-        @if (!empty($recipe->title))
-            <h1>{{ $recipe->title_sup }}</h1>
-        @endif
+            <div class="row">
+                @if (!empty($recipe->title))
+                    <div class="col-12">
+                        <h1>{{ $recipe->title_sup }}</h1>
+                    </div>
+                @endif
 
-        @if (!empty($recipe->description))
-            {!! Helper::nl2p($recipe->description, false) !!}
-        @endif
+                @if (!empty($recipe->description))
+                        <div class="col-12">
+                            {!! Helper::nl2p($recipe->description, false) !!}
+                        </div>
+                @endif
+
+                <div class="col-12 mt-2">
+                    @php $author = (!empty($recipe_user->display_name)) ? $recipe_user->display_name : $recipe_user->username; @endphp
+                    Recipe by <a class="link" href="{{ route('user-profile.show', ['username' => $recipe_user->username]) }}">{{ $author }}</a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -93,7 +104,7 @@
             <ul class="list-unstyled">
                 @foreach($ingredients as $val)
                     <?php
-                        $ingredient_title = $val->title_sup;
+                        $ingredient_title = $val->title;
                         $measure_title = strtolower($val->pivot->measure_title);
                         $measure_amount = $val->pivot->measure_amount;
                         $measure_amount_fraction = $val->pivot->measure_amount_fraction;
@@ -131,7 +142,7 @@
     @endif
 
     @if (!empty($recipe->directions))
-    <div class="row mb-4">
+    <div class="row mb-2">
         <div class="col-12">
             <h3>Directions</h3>
 
@@ -146,7 +157,15 @@
     </div>
     @endif
 
-    <div class="row mb-md-4">
+    @if (!empty($recipe->glass->title))
+    <div class="row mb-5">
+        <div class="col-12">
+            Glass: {{ $recipe->glass->title }}
+        </div>
+    </div>
+    @endif
+
+    <div class="row mt-4 mb-md-4">
         <div class="col-12">
             <h3 class="hidden-sm-down">Share</h3>
 

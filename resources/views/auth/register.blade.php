@@ -39,7 +39,7 @@
 
             <form role="form" method="POST" action="{{ url('/register') }}">
                 {{ csrf_field() }}
-                {!! Honeypot::generate('name', 'my_time') !!}
+                {!! Honeypot::generate('first_name', 'my_time') !!}
 
                 <div class="row">
                     <div class="col-12 col-sm-6">
@@ -171,7 +171,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    @if ($errors->has('month'))
+                                    @if ($errors->has('day'))
                                         <span class="form-control-feedback">
                                             <strong>{{ $errors->first('day') }}</strong>
                                         </span>
@@ -179,7 +179,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    @if ($errors->has('month'))
+                                    @if ($errors->has('year'))
                                         <span class="form-control-feedback">
                                             <strong>{{ $errors->first('year') }}</strong>
                                         </span>

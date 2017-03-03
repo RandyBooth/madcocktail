@@ -28,7 +28,7 @@
                             @php $position = ($loop->iteration == 1) ? 'first' : 'last' @endphp
                             <div class="col-12 col-lg-6"><div class="list-group list-group-{{$position}}">
                         @endif
-                        <a class="list-group-item list-group-item-action" href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title_sup !!}</a>
+                        <a class="list-group-item list-group-item-action" href="{{ route('ingredients.show', $parameters) }}/{{ $val->slug }}">{!! $val->title !!}</a>
                         @if ($loop->iteration == $total || $loop->iteration == $mid)</div></div>@endif
                     @endforeach
                 {{--</div>--}}

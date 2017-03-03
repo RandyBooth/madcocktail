@@ -26,7 +26,7 @@
     @if (!empty($recipe->username))
     <div class="card-footer">
         <small class="text-muted">
-            @php $author = (!empty($recipe->name)) ? $recipe->name : $recipe->username; @endphp
+            @php $author = (!empty($recipe->display_name)) ? $recipe->display_name : $recipe->username; @endphp
             Recipe by <a href="{{ route('user-profile.show', ['username' => $recipe->username]) }}">{{ $author }}</a>
         </small>
     </div>

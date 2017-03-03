@@ -13,7 +13,7 @@
         <div class="col-12 col-md-8 col-lg-6">
             @yield('form')
                 {{ csrf_field() }}
-                {!! Honeypot::generate('name', 'my_time') !!}
+                {!! Honeypot::generate('first_name', 'my_time') !!}
 
                 <div class="form-group{{ $errors->has('title') ? ' has-danger' : '' }}">
                     <label class="form-control-label" for="title" class="">Title</label>

@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'isVerified' => \Jrean\UserVerification\Middleware\IsVerified::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'user-valid' => \App\Http\Middleware\UserValid::class,
         'xss' => \App\Http\Middleware\XSSProtection::class,
     ];
 }

@@ -153,7 +153,7 @@ class SearchController extends Controller
         }
 
         if (!empty($query_recipe)) {
-            $results_recipe = Cache::tags($cache.'_recipe')->remember(strtolower($query), 60*4, function() use ($query_recipe, $limit) {
+            $results_recipe = Cache::remember($cache.'_recipe_QUERY_'.strtolower($query), 60*4, function() use ($query_recipe, $limit) {
                 return $query_recipe->orderBy('title')->limit($limit)->get();
             });
 
@@ -163,7 +163,7 @@ class SearchController extends Controller
         }
 
         if (!empty($query_ingredient)) {
-            $results_ingredient = Cache::tags($cache.'_ingredient')->remember(strtolower($query), 60*24, function() use ($query_ingredient, $limit) {
+            $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.strtolower($query), 60*24, function() use ($query_ingredient, $limit) {
                 return $query_ingredient->withDepth()->orderBy('depth')->orderBy('title')->limit($limit)->get();
             });
 

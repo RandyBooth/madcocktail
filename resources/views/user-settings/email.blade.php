@@ -8,22 +8,29 @@
             <form method="POST" action="{{ route('user-settings.email.update') }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
-                {!! Honeypot::generate('name', 'my_time') !!}
+                {!! Honeypot::generate('first_name', 'my_time') !!}
 
-                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label for="email" class="control-label">E-Mail Address</label>
 
-                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email', $email) }}" required autofocus>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                            <label for="email" class="w-100 form-control-label">E-Mail Address</label>
 
-                    @if ($errors->has('email'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                            <input id="email" type="email" class="form-control" name="email" value="{{ old('email', $email) }}" required autofocus>
 
-                <div class="form-group">
-                    <button class="btn btn-primary" type="submit">Submit</button>
+                            @if ($errors->has('email'))
+                                <span class="form-control-feedback">
+                                    <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

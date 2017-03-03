@@ -1,12 +1,17 @@
 <?php
 namespace App\Helpers;
 
+use App\User;
+use Auth;
+use Carbon\Carbon;
+use Vinkla\Hashids\Facades\Hashids;
+
 class Helper
 {
     public static function is_admin()
     {
-        if (\Auth::check()) {
-            $user = \Auth::user();
+        if (Auth::check()) {
+            $user = Auth::user();
             return $user->role == 1;
         }
 
@@ -15,9 +20,9 @@ class Helper
 
     public static function is_owner($user_id)
     {
-        if (\Auth::check()) {
+        if (Auth::check()) {
             if (is_int($user_id)) {
-                $user = \Auth::user();
+                $user = Auth::user();
                 return self::is_admin() || $user->id == $user_id;
             }
         }
@@ -30,9 +35,9 @@ class Helper
         $age = (int) $age;
 
         if (!empty($age) && !empty($birth)) {
-            if (self::checkmydate($birth)) {
-                $birth = \Carbon\Carbon::parse($birth);
-                $now = new \Carbon\Carbon('+7 days'); // now + 7 days
+            if (self::check_my_date($birth)) {
+                $birth = Carbon::parse($birth);
+                $now = new Carbon('+7 days'); // now + 7 days
                 $now->setTime(0, 0, 0);
 
                 if ($birth->diffInYears($now, false) >= $age) {
@@ -44,7 +49,7 @@ class Helper
         return false;
     }
 
-    public static function checkmydate($date)
+    public static function check_my_date($date)
     {
         $temp = explode('-', $date);
 
@@ -53,6 +58,34 @@ class Helper
         }
 
         return false;
+    }
+
+    public static function user_valid()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            if (empty($user->username) || empty($user->birth)) {
+                $message = 'Please fill out ';
+                $message_mid = '';
+
+                if (empty($user->username)) {
+                    $message_mid .= 'username';
+                }
+
+                if (empty($user->birth)) {
+                    if (!empty($message_mid)) {
+                        $message_mid .= ' and ';
+                    }
+
+                    $message_mid .= 'date of birth';
+                }
+
+                $message .= $message_mid.' before you proceed.';
+
+                return $message;
+            }
+        }
     }
 
     public static function decimal_to_fraction($value)
@@ -194,7 +227,7 @@ class Helper
         if (!empty($value)) {
             $milliseconds = (int) round(microtime(true) * 1000);
             usleep(1000);
-            return \Hashids::connection($connection)->encode($milliseconds, $value);
+            return Hashids::connection($connection)->encode($milliseconds, $value);
         }
 
         return false;
@@ -202,7 +235,7 @@ class Helper
 
     public static function get_admin_id()
     {
-        $admin_users = \App\User::select('id')->where('role', 1)->get();
+        $admin_users = User::select('id')->where('role', 1)->get();
         if (!$admin_users->isEmpty()) {
             return array_pluck($admin_users, 'id');
         }

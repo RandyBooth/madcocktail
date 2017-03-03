@@ -20,13 +20,12 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
         });
     });
 
+    Route::get('me', ['as' => 'user-profile.index', 'uses' => 'UserProfileController@index']);
     Route::get('me/{username}', ['as' => 'user-profile.show', 'uses' => 'UserProfileController@show']);
 
     Route::group(['prefix' => 'settings'], function() {
-        Route::get('/', ['as' => 'user-settings.index', 'uses' => 'UserSettingController@index']);
-
-        Route::get('username', ['as' => 'user-settings.username.edit', 'uses' => 'UserSettingController@usernameEdit']);
-        Route::put('username', ['as' => 'user-settings.username.update', 'uses' => 'UserSettingController@usernameUpdate']);
+        Route::get('/', ['as' => 'user-settings.index.edit', 'uses' => 'UserSettingController@indexEdit']);
+        Route::put('/', ['as' => 'user-settings.index.update', 'uses' => 'UserSettingController@indexUpdate']);
 
         Route::get('email', ['as' => 'user-settings.email.edit', 'uses' => 'UserSettingController@emailEdit']);
         Route::put('email', ['as' => 'user-settings.email.update', 'uses' => 'UserSettingController@emailUpdate']);

@@ -5,7 +5,7 @@
         <div class="col-12">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link {{ active('user-settings.username.edit') }}" href="{{ route('user-settings.username.edit') }}">Username</a>
+                    <a class="nav-link {{ active('user-settings.index.edit') }}" href="{{ route('user-settings.index.edit') }}">Settings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ active('user-settings.email.edit') }}" href="{{ route('user-settings.email.edit') }}">E-mail</a>

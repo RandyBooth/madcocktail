@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Recipes')
+@php $author = (!empty($user->display_name)) ? $user->display_name : $user->username; @endphp
+@section('title', $author. '\'s Recipes')
 
 @section('script-bottom')
 @stop
 
 @section('content')
-    @php $author = (!empty($user->name)) ? $user->name : $user->username; @endphp
 
     {{--<div class="row">
         <div class="col-12">

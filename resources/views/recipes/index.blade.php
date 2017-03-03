@@ -7,7 +7,7 @@
 
 @section('content')
     @if(!empty($recipes))
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <h3>Latest Recipes</h3>
 

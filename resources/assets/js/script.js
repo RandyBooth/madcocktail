@@ -1,4 +1,7 @@
-var autocompleteOption = {
+var $formSearch = $('#form-search'),
+    $formSearchId = $('#search-id', $formSearch),
+    $formSearchGroup = $('#search-group', $formSearch),
+    autocompleteOption = {
     autoSelectFirst: true,
     dataType: 'json',
     deferRequestBy: 250,
@@ -9,12 +12,9 @@ var autocompleteOption = {
     triggerSelectOnValidInput: false,
     type: 'POST',
     onSearchStart: function() {
-        var $formSearch = $('#form-search'),
-            $formSearchId = $('#search-id', $formSearch),
-            $formSearchGroup = $('#search-group', $formSearch);
-
         $formSearchId.val('');
-        $formSearchGroup.val('');
+        $formSearchGroup.val(''),
+        $formSearch.attr('onsubmit', 'return false;');
     },
     onSelect: function (suggestion) {
         console.log(suggestion);
@@ -25,7 +25,7 @@ var autocompleteOption = {
 
             $formSearchId.val(suggestion.id);
             $formSearchGroup.val(suggestion.data.group);
-            $formSearch.submit();
+            $formSearch.attr('onsubmit', '').submit();
         }
     }
 }, myLazyLoad = new LazyLoad({

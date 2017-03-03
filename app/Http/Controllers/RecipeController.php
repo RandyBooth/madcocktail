@@ -10,6 +10,7 @@ use App\Measure;
 use App\Recipe;
 use App\RecipeCount;
 use App\RecipeImage;
+use App\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,17 +21,17 @@ class RecipeController extends Controller
 {
     public function __construct()
     {
-        Cache::flush();
-        $this->middleware(['auth', 'isVerified'], ['only' => ['create', 'edit']]);
-        $this->middleware(['auth', 'isVerified', 'xss'], ['only' => ['store', 'update']]);
-        $this->middleware(['admin', 'isVerified'], ['only' => ['destroy']]);
+//        Cache::flush();
+        $this->middleware(['auth', 'isVerified', 'user-valid'], ['only' => ['create', 'edit']]);
+        $this->middleware(['auth', 'isVerified', 'user-valid', 'xss'], ['only' => ['store', 'update']]);
+        $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['destroy']]);
     }
 
     public function home()
     {
         $total = 20;
 
-        $recipes = Cache::tags('recipe_index_latest')->remember('', 10, function () use ($total) {
+        $recipes = Cache::remember('recipes_home', 30, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->join('users', 'recipes.user_id', '=', 'users.id')
@@ -54,7 +55,7 @@ class RecipeController extends Controller
     {
         $total = 20;
 
-        $recipes = Cache::tags('recipe_index_latest')->remember('', 30, function () use ($total) {
+        $recipes = Cache::remember('recipes_latest', 60, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->join('users', 'recipes.user_id', '=', 'users.id')
@@ -67,7 +68,7 @@ class RecipeController extends Controller
                 ->get();
         });
 
-        $recipes_top = Cache::tags('recipe_index_popular')->remember('', (60*25), function () use ($total) {
+        $recipes_top = Cache::remember('recipes_popular', (60*12), function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
 //                ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
@@ -125,11 +126,11 @@ class RecipeController extends Controller
             }
         }
 
-        $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+        $glasses_data = Cache::remember('glasses', 43200, function () {
             return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
         });
 
-        $measures_data = Cache::tags('recipe_measures')->remember('', 60, function () {
+        $measures_data = Cache::remember('measures', 43200, function () {
             return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
         });
 
@@ -151,11 +152,11 @@ class RecipeController extends Controller
             $user = Auth::user();
             $data = $request->all();
 
-            $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+            $glasses_data = Cache::remember('glasses', 43200, function () {
                 return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
-            $measures_data = Cache::tags('recipe_measures')->remember('', 60, function () {
+            $measures_data = Cache::remember('measures', 43200, function () {
                 return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
@@ -168,7 +169,7 @@ class RecipeController extends Controller
                 $data['glass_id'] = $glasses[$data['glass']];
             }
 
-            $data['is_active'] = ($user->role == 1) ? 1 : 0;
+            $data['is_active'] = 1;
             $data['user_id'] = $user->id;
 
             $recipe = Recipe::create($data);
@@ -217,20 +218,25 @@ class RecipeController extends Controller
      */
     public function show($parameter = null, Request $request)
     {
-        $recipe = Cache::tags('recipe')->remember(strtolower($parameter), 60, function () use ($parameter) {
-            return Recipe::where('slug', $parameter)->with(['ingredients'])->firstOrFail();
+        $recipe = Cache::remember('recipe_SLUG_'.strtolower($parameter), 43200, function () use ($parameter) {
+            return Recipe::where('slug', $parameter)->with(['ingredients', 'glass'])->firstOrFail();
         });
 
         if ($recipe) {
+            $user_id = $recipe->user_id;
             $recipe_id = $recipe->id;
 
-            $recipe_image = Cache::tags('recipe_image')->remember($recipe_id, 60, function () use ($recipe_id) {
-                return RecipeImage::image($recipe_id)->first();
+            $user = Cache::remember('user_ID_'.$user_id, 43200, function () use ($user_id) {
+                return User::find($user_id);
+            });
+
+            $recipe_image = Cache::remember('recipe_image_ID_'.$recipe_id, 43200, function () use ($recipe_id) {
+                return RecipeImage::select('image')->firstOrCreate(['recipe_id' => $recipe_id]);
             });
 
             $ip_id = $request->ip().'_'.$recipe_id;
 
-            if (!Cache::tags('recipe_counter')->has($ip_id)) {
+            if (!Cache::has('recipe_counter_IPID_'.$ip_id)) {
                 if (empty($recipe->counts)) {
                     $recipe->counts()->create([]);
                     $recipe->load('counts');
@@ -290,7 +296,7 @@ class RecipeController extends Controller
                                ->update($counts_arr);
 
                             if ($insert_count) {
-                                Cache::tags('recipe_counter')->put($ip_id, '1', (60*12)); // 12 hours
+                                Cache::put('recipe_counter_IPID_'.$ip_id, '1', (60*12)); // 12 hours
                             }
                         }
                     }
@@ -302,19 +308,19 @@ class RecipeController extends Controller
             $ingredient_id = [];
 
             foreach ($ingredients as $ingredient) {
-                $ingredient_ancestors = Cache::tags('ingredient_ancestor')->remember($ingredient->id, 60, function () use ($ingredient) {
-                    return $ingredient->getAncestors();
+                $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                    return $ingredient->ancestors()->get();
                 });
 
                 foreach($ingredient_ancestors as $ancestor) {
-                    if (!$ancestor->is_alcoholic) {
+//                    if (!$ancestor->is_alcoholic) {
                         $ingredient_id[] = $ancestor->id;
-                    }
+//                    }
                 }
 
-                if (!$ingredient->is_alcoholic) {
+//                if (!$ingredient->is_alcoholic) {
                     $ingredient_id[] = $ingredient->id;
-                }
+//                }
 
                 $ingredient_slug[$ingredient->id] = implode('/', array_merge(array_pluck($ingredient_ancestors, 'slug'), [$ingredient->slug]));
             }
@@ -324,7 +330,7 @@ class RecipeController extends Controller
             if (!empty($ingredient_id)) {
                 $total = 20;
 
-                $recipe_similar = Cache::tags('recipe_similar')->remember($recipe_id, 60, function () use ($recipe_id, $ingredient_id) {
+                $recipe_similar = Cache::remember('recipe_similar_ID_'.$recipe_id, 43200, function () use ($recipe_id, $ingredient_id) {
                     return Recipe::
                         join('ingredient_recipe', 'recipes.id', '=', 'ingredient_recipe.recipe_id')
                         ->whereIn('ingredient_recipe.ingredient_id', array_unique(array_flatten($ingredient_id)))
@@ -342,7 +348,7 @@ class RecipeController extends Controller
                 });
             }
 
-            return view('recipes.show', compact('recipe', 'recipe_image', 'recipe_similar', 'ingredients', 'ingredient_slug'));
+            return view('recipes.show', compact('recipe', 'recipe_image', 'user', 'recipe_similar', 'ingredients', 'ingredient_slug'));
         }
     }
 
@@ -359,11 +365,11 @@ class RecipeController extends Controller
 
             if ($recipe_data) {
                 if (Helper::is_owner($recipe_data->user_id)) {
-                    $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+                    $glasses_data = Cache::remember('glasses', 43200, function () {
                         return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
                     });
 
-                    $measures_data = Cache::tags('recipe_measures')->remember('', 60, function () {
+                    $measures_data = Cache::remember('measures', 43200, function () {
                         return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
                     });
 
@@ -433,11 +439,11 @@ class RecipeController extends Controller
         if (Auth::check()) {
             $data = $request->all();
 
-            $glasses_data = Cache::tags('recipe_glasses')->remember('', 60, function () {
+            $glasses_data = Cache::remember('glasses', 43200, function () {
                 return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
-            $measures_data = Cache::tags('recipe_measures')->remember('', 60, function () {
+            $measures_data = Cache::remember('measures', 43200, function () {
                 return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\User;
 use App\Recipe;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class UserProfileController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -58,7 +59,7 @@ class UserProfileController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $recipes = Cache::tags('user-profile_recipes')->remember(strtolower($username), 60, function () use ($user) {
+        $recipes = Cache::remember('user_recipes_ID_'.$user->id, 43200, function () use ($user) {
             return Recipe
                 ::leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])

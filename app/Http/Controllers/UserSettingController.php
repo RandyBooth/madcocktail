@@ -14,37 +14,49 @@ class UserSettingController extends Controller
         $this->middleware(['auth']);
     }
 
-    public function usernameEdit()
+    public function indexEdit()
     {
         $user = Auth::user();
-        $username = $user->username;
 
-        return view('user-settings.username', compact('username'));
+        return view('user-settings.index', compact('user'));
     }
 
-    public function usernameUpdate(Request $request)
+    public function indexUpdate(Request $request)
     {
         $user = Auth::user();
         $data = $request->all();
 
+        $data['birth'] = '';
+
+        if (!empty($data['month']) && !empty($data['day']) && !empty($data['year'])) {
+            $data['birth'] = $data['year'].'-'.$data['month'].'-'.$data['day'];
+        }
+
         $validator = Validator::make($data, [
+            'display_name' => 'nullable|min:3|display_name',
             'username' => [
                 'required', 'min:3', 'max:255', 'alpha_dash',
                 Rule::unique('users')->ignore($user->id)
             ],
-            'name' => 'honeypot',
+            'birth' => 'date_format:Y-m-d|over_age:21',
+            'month' => 'required|digits:2',
+            'day' => 'required|digits:2',
+            'year' => 'required|digits:4',
+            'first_name' => 'honeypot',
             'my_time' => 'required|honeytime:1',
         ]);
 
         if ($validator->passes()) {
+            $user->display_name = $data['display_name'];
             $user->username = $data['username'];
+            $user->birth = $data['birth'];
 
             if ($user->save()) {
-                return redirect()->route('user-settings.username.edit')->with('success', 'Username has been updated successfully.');
+                return redirect()->route('user-settings.index.edit')->with('success', 'Settings has been updated successfully.');
             }
         }
 
-        return redirect()->back()->withErrors($validator)->withInput()->with('danger', 'Username update fail.');
+        return redirect()->back()->withErrors($validator)->withInput()->with('danger', 'Settings update fail.');
     }
 
     public function emailEdit()
@@ -65,7 +77,7 @@ class UserSettingController extends Controller
                 'required','email','max:255',
                 Rule::unique('users')->ignore($user->id)
             ],
-            'name' => 'honeypot',
+            'first_name' => 'honeypot',
             'my_time' => 'required|honeytime:1',
         ]);
 
@@ -98,14 +110,14 @@ class UserSettingController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'password-current' => 'required|min:6',
+            'password_current' => 'required|min:6',
             'password' => 'required|min:6|confirmed',
-            'name' => 'honeypot',
+            'first_name' => 'honeypot',
             'my_time' => 'required|honeytime:1',
         ]);
 
         if ($validator->passes()) {
-            if (\Hash::check($data['password-current'], $user->password)) {
+            if (\Hash::check($data['password_current'], $user->password)) {
                 $user->password = bcrypt($data['password']);
 
                 if ($user->save()) {
@@ -168,14 +180,6 @@ class UserSettingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
-    }
-
-    /*
-     * Edit email
-     */
-    public function editEmail($id)
     {
         //
     }

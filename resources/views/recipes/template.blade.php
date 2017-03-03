@@ -22,7 +22,7 @@
 
             @yield('form')
                 {{ csrf_field() }}
-                {!! Honeypot::generate('name', 'my_time') !!}
+                {!! Honeypot::generate('first_name', 'my_time') !!}
 
                 <div class="row">
                     <div class="col-12">
