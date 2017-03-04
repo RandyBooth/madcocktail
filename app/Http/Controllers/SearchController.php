@@ -11,7 +11,7 @@ class SearchController extends Controller
 {
     public function __construct()
     {
-        Cache::flush();
+        //Cache::flush();
     }
 
     public function search(Request $request, $type = null)

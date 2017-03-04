@@ -13,7 +13,7 @@ class IngredientController extends Controller
 {
     public function __construct()
     {
-        Cache::flush();
+//        Cache::flush();
         $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['create', 'edit', 'destroy']]);
         $this->middleware(['admin', 'isVerified', 'user-valid', 'xss'], ['only' => ['store', 'update']]);
     }
@@ -77,10 +77,14 @@ class IngredientController extends Controller
             $data['user_id'] = Auth::id();
 
             if (!empty($data['ingredients'])) {
-                $ingredient_id = Ingredient::token($data['ingredients'])->pluck('id')->first();
+                $token = $data['ingredients'];
 
-                if ($ingredient_id) {
-                    $data['parent_id'] = $ingredient_id;
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
+                    return Ingredient::token($token)->first();
+                });
+
+                if ($ingredient) {
+                    $data['parent_id'] = $ingredient->id;
                 }
             }
 
@@ -90,11 +94,16 @@ class IngredientController extends Controller
                 $ingredient_slug = $ingredient->slug;
 
                 if ($data['parent_id']) {
-                    $ingredient_ancestors = $ingredient->ancestors()->get();
+                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                        return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
+                    });
+
                     $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
                     $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
                     $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
                 }
+
+                $this->clear();
 
                 return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been created successfully.');
             }
@@ -124,7 +133,7 @@ class IngredientController extends Controller
             });
 
             $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
-                return $ingredient->ancestors()->get();
+                return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
             });
 
             $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
@@ -145,43 +154,42 @@ class IngredientController extends Controller
         }
 
         if ($count_parameters == $count_ingredient_valid) {
+            $ingredient_descendants_id = [];
+
             if ($count_ingredient_valid > 0) {
+                $recipe_month_text = 'ingredient_recipes_top_month_ID_'.$ingredient->id;
                 $ingredient_breadcrumbs = array_pluck($ingredient_ancestors_self, 'title', 'slug');
 
                 $ingredients = Cache::remember('ingredient_children_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
-                    return $ingredient->
-                        children()->
-                        orderBy('title')->
-                        get();
+                    return $ingredient->children()->orderBy('title')->get();
                 });
 
                 $ingredient_descendants = Cache::remember('ingredient_descendants_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
-                    return $ingredient->
-                        descendants()->
-                        pluck('id')->
-                        push($ingredient->id)->
-                        toArray();
+                    return $ingredient->descendants()->select('id', 'token', 'title', 'slug')->get();
                 });
+
+                if (!$ingredient_descendants->isEmpty()) {
+                    $ingredient_descendants_id[] = $ingredient_descendants->pluck('id')->push($ingredient->id)->toArray();
+                }
             } else {
-                $ingredient_descendants_arr = [];
+                $recipe_month_text = 'ingredient_recipes_top_month';
+//                $ingredient_descendants_arr = [];
 
                 foreach($ingredients as $val) {
-                    $ingredient_descendants_arr[] = Cache::remember('ingredient_descendants_ID_'.$val->id, 43200, function () use ($val) {
-                        return $val->
-                            descendants()->
-                            pluck('id')->
-                            push($val->id)->
-                            toArray();
+                    $ingredient_descendants = Cache::remember('ingredient_descendants_ID_'.$val->id, 43200, function () use ($val) {
+                        return $val->descendants()->select('id', 'token', 'title', 'slug')->get();
                     });
-                }
 
-                $ingredient_descendants = collect($ingredient_descendants_arr)->flatten()->toArray();
+                    if (!$ingredient_descendants->isEmpty()) {
+                        $ingredient_descendants_id[] = $ingredient_descendants->pluck('id')->push($val->id)->toArray();
+                    }
+                }
             }
 
-            $recipes = Cache::remember('ingredient_recipes_top_month_ID_'.$ingredient->id, (60*12), function () use ($ingredient_descendants) {
+            $recipes = Cache::remember($recipe_month_text, (60*12), function () use ($ingredient_descendants_id) {
                 return Recipe::
-                    whereHas('ingredients', function ($query) use ($ingredient_descendants) {
-                        $query->whereIn('ingredient_recipe.ingredient_id', $ingredient_descendants);
+                    whereHas('ingredients', function ($query) use ($ingredient_descendants_id) {
+                        $query->whereIn('ingredient_recipe.ingredient_id', array_unique(array_flatten($ingredient_descendants_id)));
                     })
                     ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                     ->select('title', 'slug')
@@ -191,20 +199,6 @@ class IngredientController extends Controller
                     ->take(10)
                     ->get();
             });
-
-            /*$recipes = Cache::remember('ingredient_recipes_top_day_ID_'.$ingredient->id, 60, function() use ($ingredient_descendants) {
-                return Recipe::
-                    whereHas('ingredients', function($query) use($ingredient_descendants) {
-                        $query->
-                            whereIn('ingredient_recipe.ingredient_id', $ingredient_descendants);
-                    })
-                    ->with('counts')
-                    ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
-                    ->orderBy('recipe_counts.count_day', 'DESC')
-                    ->orderby('title')
-                    ->take(10)
-                    ->get();
-            });*/
 
             return view('ingredients.show', compact('ingredient', 'ingredients', 'ingredient_breadcrumbs', 'recipes', 'parameters'));
         }
@@ -221,14 +215,20 @@ class IngredientController extends Controller
     public function edit($id)
     {
         if (Auth::check()) {
-            $ingredient_data = Ingredient::token($id)->firstOrFail();
+            $ingredient_data = Cache::remember('ingredient_TOKEN_'.$id, 43200, function () use ($id) {
+                return Ingredient::token($id)->first();
+            });
 
             if ($ingredient_data) {
                 if (Helper::is_owner($ingredient_data->user_id)) {
                     $ingredients_token = null;
 
                     if ($ingredient_data->parent_id) {
-                        $parent = Ingredient::select('token')->find($ingredient_data->parent_id);
+                        $ingredient_parent_id = $ingredient_data->parent_id;
+
+                        $parent = Cache::remember('ingredient_parent_ID_'.$ingredient_data->id, 43200, function () use ($ingredient_parent_id) {
+                            return Ingredient::select('token')->find($ingredient_parent_id);
+                        });
 
                         if ($parent) {
                             $ingredients_token = $parent->token;
@@ -240,7 +240,7 @@ class IngredientController extends Controller
                         'title' => $ingredient_data->title,
                         'ingredients' => $ingredients_token
                     ];
-                    $ingredients = ['' => ''];
+                    $ingredients = ['' => '&nbsp;'];
 
                     $nodes = Cache::remember('ingredients_tree', 43200, function () {
                         return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
@@ -274,30 +274,42 @@ class IngredientController extends Controller
             $data['parent_id'] = null;
 
             if (!empty($data['ingredients'])) {
-                $ingredient_id = Ingredient::token($data['ingredients'])->pluck('id')->first();
+                $token = $data['ingredients'];
 
-                if ($ingredient_id) {
-                    $data['parent_id'] = $ingredient_id;
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
+                    return Ingredient::token($token)->first();
+                });
+
+                if ($ingredient) {
+                    $data['parent_id'] = $ingredient->id;
                 }
             }
 
-            $ingredient = Ingredient::token($id)->firstOrFail();
+            $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 43200, function () use ($id) {
+                return Ingredient::token($id)->first();
+            });
 
-            if (Helper::is_owner($ingredient->user_id)) {
-                $ingredient->title = $data['title'];
-                $ingredient_save = $ingredient->parent()->associate($data['parent_id'])->save();
+            if ($ingredient) {
+                if (Helper::is_owner($ingredient->user_id)) {
+                    $ingredient->title = $data['title'];
 
-                if ($ingredient_save) {
-                    $ingredient_slug = $ingredient->slug;
+                    if ($ingredient->parent()->associate($data['parent_id'])->save()) {
+                        $this->clear($ingredient);
 
-                    if ($data['parent_id']) {
-                        $ingredient_ancestors = $ingredient->ancestors()->get();
-                        $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
-                        $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
-                        $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
+                        $ingredient_slug = $ingredient->slug;
+
+                        if ($data['parent_id']) {
+                            $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                                return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
+                            });
+
+                            $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
+                            $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+                            $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
+                        }
+
+                        return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been updated successfully.');
                     }
-
-                    return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been updated successfully.');
                 }
             }
         }
@@ -315,14 +327,21 @@ class IngredientController extends Controller
     {
         if (Helper::is_admin()) {
             $ingredient = Ingredient::token($id)->firstOrFail();
-            $ingredient->delete();
-            return redirect()->route('ingredients.index')->with('success', 'Ingredient ('.$ingredient->title.') has been deleted successfully.');
+
+            if ($ingredient->delete()) {
+                $this->clear($ingredient);
+
+                return redirect()->route('ingredients.index')->with('success', 'Ingredient ('.$ingredient->title.') has been deleted successfully.');
+            }
         }
     }
 
     public function tree()
     {
-        $nodes = Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+        $nodes = Cache::remember('ingredients_tree', 43200, function () {
+            return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+        });
+
         $tree = '';
         $this->buildTree($tree, $nodes, 'title', 'children', true);
         return view('ingredients.tree', compact('tree'));
@@ -350,5 +369,47 @@ class IngredientController extends Controller
 
             $tree_return .= "</ul>\n";
         }
+    }
+
+    private function clear($ingredient = null)
+    {
+        if ($ingredient) {
+            $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
+            });
+
+            if (!$ingredient_ancestors->isEmpty()) {
+                foreach($ingredient_ancestors as $val) {
+                    $this->clearGroup($val);
+                }
+            }
+
+            $ingredient_descendants = Cache::remember('ingredient_descendants_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                return $ingredient->descendants()->select('id', 'token', 'title', 'slug')->get();
+            });
+
+            if (!$ingredient_descendants->isEmpty()) {
+                foreach($ingredient_ancestors as $val) {
+                    $this->clearGroup($val);
+                }
+            }
+
+            $this->clearGroup($ingredient);
+        }
+
+        Cache::forget('ingredients_root');
+        Cache::forget('ingredients_tree');
+        Cache::forget('ingredient_recipes_top_month');
+    }
+
+    private function clearGroup($ingredient)
+    {
+        Cache::forget('ingredient_SLUG_'.$ingredient->slug);
+        Cache::forget('ingredient_TOKEN_'.$ingredient->token);
+        Cache::forget('ingredient_parent_ID_'.$ingredient->id);
+        Cache::forget('ingredient_ancestors_ID_'.$ingredient->id);
+        Cache::forget('ingredient_children_ID_'.$ingredient->id);
+        Cache::forget('ingredient_descendants_ID_'.$ingredient->id);
+        Cache::forget('ingredient_recipes_top_month_ID_'.$ingredient->id);
     }
 }

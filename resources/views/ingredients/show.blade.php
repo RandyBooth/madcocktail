@@ -17,7 +17,7 @@
             <h1 class="mb-4">{!! $title_sup !!}</h1>
 
             @if (!$ingredients->isEmpty())
-            <div class="row text-center">
+            <div class="row">
                 {{--<div class="col-12">--}}
                     @php
                         $total = count($ingredients);
@@ -44,7 +44,8 @@
     @if (!$recipes->isEmpty())
     <div class="row">
         <div class="col-12">
-            <h4>Ingredient popular recipes</h4>
+            <h3 class="mb-0">Popular recipes</h3>
+            {!! (isset($ingredient->title_sup)) ? '<h5>'.strtolower($ingredient->title_sup).'</h5>' : '' !!}
 
             <ol>
             @foreach($recipes as $recipe)

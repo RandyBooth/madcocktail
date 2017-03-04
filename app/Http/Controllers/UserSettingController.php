@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -52,6 +53,7 @@ class UserSettingController extends Controller
             $user->birth = $data['birth'];
 
             if ($user->save()) {
+                $this->clear($user->id);
                 return redirect()->route('user-settings.index.edit')->with('success', 'Settings has been updated successfully.');
             }
         }
@@ -86,6 +88,8 @@ class UserSettingController extends Controller
             $user->email = $data['email'];
 
             if ($user->save()) {
+                $this->clear($user->id);
+
                 if (strtolower($old_email) != strtolower($data['email'])) {
                     UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
                     UserVerification::generate($user);
@@ -205,5 +209,10 @@ class UserSettingController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function clear($user_id)
+    {
+        Cache::forget('recipe_author_ID_'.$user_id);
     }
 }

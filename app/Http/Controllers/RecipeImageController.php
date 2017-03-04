@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
+use App\Helpers\Helper;
 use App\Http\Requests\ImageRequest;
 use App\Recipe;
 use App\RecipeImage;
-use Illuminate\Support\Facades\File;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 use Image;
 use Validator;
 
@@ -59,50 +61,64 @@ class RecipeImageController extends Controller
 
                     if ($validator->passes()) {
                         $user = Auth::user();
-                        $token = $request->input('id');
-                        $recipe = Recipe::select('id')->token($token)->where('user_id', $user->id)->first();
+                        $id = $request->input('id');
+
+                        $recipe = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
+                            return Recipe::token($id)->with('ingredients')->firstOrFail();
+                        });
 
                         if ($recipe) {
-                            $path = 'upload/';
-                            $recipe_id = $recipe->id;
-                            $filename = '';
-                            $image = $request->file('image');
-                            $recipe_image = RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
-                            $token_valid = false;
+                            if (Helper::is_owner($recipe->user_id)) {
 
-                            do {
-                                $random = \Helper::hashids_random($recipe_id, 'image');
+//                                $path = 'upload/';
+                                $path = public_path('storage/upload_images/');
+                                $recipe_id = $recipe->id;
+                                $filename = '';
+                                $image = $request->file('image');
+                                $token_valid = false;
+                                $recipe_image = Cache::remember('recipe_image_ID_'.$recipe_id, 43200, function () use ($recipe_id) {
+                                    return RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
+                                });
 
-                                if (!empty($random)) {
-                                    $filename = $random.'.jpg';
-                                    $recipe_image_check = RecipeImage::where('image', 'LIKE BINARY', $filename)->first();
+                                do {
+                                    $random = \Helper::hashids_random($recipe_id, 'image');
 
-                                    if (!$recipe_image_check) {
-                                        $new_image = Image::make($image)->resize(1200, null, function ($constraint) {
-                                            $constraint->aspectRatio();
-                                            $constraint->upsize();
-                                        })->interlace()->save($path.$filename);
+                                    if (!empty($random)) {
+                                        $filename = $random.'.jpg';
+                                        $recipe_image_check = RecipeImage::where('image', 'LIKE BINARY', $filename)->first();
 
-                                        $old_image = $recipe_image->image;
-                                        $color = $this->getColorAverage($new_image);
-                                        $new_image->destroy();
+                                        if (!$recipe_image_check) {
+                                            $new_image = Image::make($image)->resize(1200, null, function ($constraint) {
+                                                $constraint->aspectRatio();
+                                                $constraint->upsize();
+                                            })->interlace()->save($path.$filename);
 
-                                        if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
-                                            if (!empty($old_image)) {
-                                                File::delete($path.$old_image);
+                                            $old_image = $recipe_image->image;
+                                            $color = $this->getColorAverage($new_image);
+                                            $new_image->destroy();
+
+                                            if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
+                                                if (!empty($old_image)) {
+                                                    $trash_path = public_path('storage/trash_images/');
+                                                    File::move($path.$old_image, $trash_path.$old_image);
+                                                }
+
+                                                $this->clear($recipe_id);
+
+                                                $token_valid = true;
+                                                $response['message'] = 'Recipe image updated!';
                                             }
-
-                                            $token_valid = true;
-                                            $response['message'] = 'Recipe image updated!';
                                         }
                                     }
-                                }
-                            } while(!$token_valid);
+                                } while(!$token_valid);
 
-                            $response['success'] = true;
-                            $response['image'] = route('imagecache', ['template' => 'single', 'filename' => $filename]);
+                                $response['success'] = true;
+                                $response['image'] = route('imagecache', ['template' => 'single', 'filename' => $filename]);
+                            } else {
+                                $response['message'] = 'You are not allow to do that.';
+                            }
                         } else {
-                            $response['message'] = 'You are not allow to do that.';
+                            $response['message'] = 'Recipe not found.';
                         }
                     } else {
                         $response['message'] = $validator->errors()->all();
@@ -172,5 +188,10 @@ class RecipeImageController extends Controller
         $image->destroy();
 
         return $color;
+    }
+
+    private function clear($recipe_id)
+    {
+        Cache::forget('recipe_image_ID_'.$recipe_id);
     }
 }

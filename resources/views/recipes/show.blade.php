@@ -46,25 +46,15 @@
                 </div>
                 <div id="image-edit" class="image-edit">
 
-                        <form action="{{ route('ajax_recipe_image_destroy') }}" method="post">
-                            {{ method_field('DELETE') }}
-                            {{ csrf_field() }}
-                            <div class="hidden-xs-up">
-                                <input type="text" name="id" value="{{ $recipe->token }}">
-                            </div>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                <button type="button" id="image-edit-change" class="btn btn-gray" href="#"><i class="fa fa-camera" aria-hidden="true"></i> @if(!empty($recipe_image->image)){!! '<span>Update' !!}@else{!! '<span class="image-edit__add">Add' !!}@endif</span> Image</button>
-                                {{--<button onclick="return confirm('Are you sure you want to delete?')" type="submit" class="btn btn-danger @if(empty($recipe_image->image)){{ 'hidden-xs-up' }}@endif"><i class="fa fa-trash-o" aria-hidden="true"></i></button>--}}
-                            </div>
-                        </form>
-
                     <form action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
                         {{ csrf_field() }}
 
                         <div class="hidden-xs-up">
                             <input type="text" name="id" value="{{ $recipe->token }}">
                             <input id="image-edit-file" type="file" name="image" class="form-control">
-                            <button class="btn btn-success" type="submit">Upload Image</button>
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="">
+                            <button type="button" id="image-edit-change" class="btn btn-gray" href="#"><i class="fa fa-camera" aria-hidden="true"></i> @if(!empty($recipe_image->image)){!! '<span>Update' !!}@else{!! '<span class="image-edit__add">Add' !!}@endif</span> Image</button>
                         </div>
                     </form>
                 </div>
@@ -87,8 +77,8 @@
                 @endif
 
                 <div class="col-12 mt-2">
-                    @php $author = (!empty($recipe_user->display_name)) ? $recipe_user->display_name : $recipe_user->username; @endphp
-                    Recipe by <a class="link" href="{{ route('user-profile.show', ['username' => $recipe_user->username]) }}">{{ $author }}</a>
+                    @php $author = (!empty($recipe_author->display_name)) ? $recipe_author->display_name : $recipe_author->username; @endphp
+                    Recipe by <a class="link" href="{{ route('user-profile.show', ['username' => $recipe_author->username]) }}">{{ $author }}</a>
                 </div>
             </div>
         </div>

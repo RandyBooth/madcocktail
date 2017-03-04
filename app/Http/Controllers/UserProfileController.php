@@ -12,7 +12,7 @@ class UserProfileController extends Controller
 {
     public function __construct()
     {
-        Cache::flush();
+        //Cache::flush();
 //        $this->middleware(['auth', 'isVerified'], ['only' => ['create', 'edit']]);
 //        $this->middleware(['xss', 'isVerified'], ['only' => ['store', 'update']]);
 //        $this->middleware(['admin', 'isVerified'], ['only' => ['destroy']]);

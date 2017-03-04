@@ -33,7 +33,7 @@
 
                     <select style="width: 100%;" class="form-control select2-set" name="ingredients" id="ingredients">
                         @foreach($ingredients as $key => $val)
-                            <option value="{{ $key }}"@if(old('ingredients', $ingredient['ingredients']) == $key) {{ 'selected' }} @endif>{{ $val }}</option>
+                            <option value="{{ $key }}"@if(old('ingredients', $ingredient['ingredients']) == $key){{ 'selected' }}@endif @if(isset($ingredient['token'])) @if($ingredient['token'] == $key){{ 'disabled' }}@endif @endif>{{ $val }}</option>
                         @endforeach
                     </select>
 

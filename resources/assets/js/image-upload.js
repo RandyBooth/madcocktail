@@ -25,7 +25,8 @@ $(document).ready(function() {
 
             var validImageTypes = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'];
 
-            if ($.inArray(file.type, validImageTypes) > 0) {
+            if ($.inArray(file.type, validImageTypes) != -1) {
+
                 $imageLoading.removeClass('hidden-xs-up');
 
                 $.ajax({
