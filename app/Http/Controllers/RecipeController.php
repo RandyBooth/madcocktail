@@ -220,8 +220,8 @@ class RecipeController extends Controller
             $user_id = $recipe->user_id;
             $recipe_id = $recipe->id;
 
-            $recipe_author = Cache::remember('recipe_author_ID_'.$user_id, 43200, function () use ($user_id) {
-                return User::select('display_name', 'username')->find($user_id);
+            $recipe_author = Cache::remember('user_ID_'.$user_id, 43200, function () use ($user_id) {
+                return User::find($user_id);
             });
 
             $recipe_image = Cache::remember('recipe_image_ID_'.$recipe_id, 43200, function () use ($recipe_id) {

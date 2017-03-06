@@ -36,7 +36,7 @@ class UserSettingController extends Controller
         $validator = Validator::make($data, [
             'display_name' => 'nullable|min:3|display_name',
             'username' => [
-                'required', 'min:3', 'max:255', 'alpha_dash',
+                'required', 'min:3', 'max:255', 'least_one_letter', 'alpha_dash',
                 Rule::unique('users')->ignore($user->id)
             ],
             'birth' => 'date_format:Y-m-d|over_age:21',
@@ -53,7 +53,7 @@ class UserSettingController extends Controller
             $user->birth = $data['birth'];
 
             if ($user->save()) {
-                $this->clear($user->id);
+                $this->clear($user);
                 return redirect()->route('user-settings.index.edit')->with('success', 'Settings has been updated successfully.');
             }
         }
@@ -88,7 +88,7 @@ class UserSettingController extends Controller
             $user->email = $data['email'];
 
             if ($user->save()) {
-                $this->clear($user->id);
+                $this->clear($user);
 
                 if (strtolower($old_email) != strtolower($data['email'])) {
                     UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
@@ -211,8 +211,11 @@ class UserSettingController extends Controller
         //
     }
 
-    private function clear($user_id)
+    private function clear($user)
     {
-        Cache::forget('recipe_author_ID_'.$user_id);
+        if ($user) {
+            Cache::forget('user_ID_'.$user->id);
+            Cache::forget('user_EMAIL_'.$user->email);
+        }
     }
 }

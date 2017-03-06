@@ -41,7 +41,7 @@ $(document).ready(function() {
                         if (typeof data.success !== 'undefined' && data.success !== null) {
                             if (data.success) {
                                 if (typeof data.image !== 'undefined' && data.image !== null) {
-                                    $imagePreview.attr('src', data.image);
+                                    $imagePreview.attr('src', data.image).addClass('loaded');
                                     $('span.image-edit__add', $imageEdit).text('Update');
                                     alertMessage('success', data.message);
                                 }

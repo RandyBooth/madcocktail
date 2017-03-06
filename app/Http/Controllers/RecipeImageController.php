@@ -108,7 +108,7 @@ class RecipeImageController extends Controller
                                                     }
                                                 }
 
-                                                $this->clear($recipe_id);
+                                                $this->clear($recipe);
 
                                                 $token_valid = true;
                                                 $response['message'] = 'Recipe image updated!';
@@ -195,8 +195,11 @@ class RecipeImageController extends Controller
         return $color;
     }
 
-    private function clear($recipe_id)
+    private function clear($recipe)
     {
-        Cache::forget('recipe_image_ID_'.$recipe_id);
+        if ($recipe) {
+            Cache::forget('recipe_image_ID_'.$recipe->id);
+            Cache::forget('user_recipes_ID_'.$recipe->user_id);
+        }
     }
 }

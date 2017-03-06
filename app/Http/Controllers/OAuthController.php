@@ -8,6 +8,7 @@ use App\OAuth;
 use App\User;
 use Auth;
 use Hash;
+use Illuminate\Support\Facades\Cache;
 use Socialite;
 use Jrean\UserVerification\Facades\UserVerification;
 
@@ -36,16 +37,23 @@ class OAuthController extends Controller
                 $oauth = OAuth::where('provider', '=', $this->provider)->where('provider_uid', '=', $social_user->id)->first();
 
                 if ($oauth) {
-                    $user = User::find($oauth->user_id);
+                    $user = Cache::remember('user_ID_'.$oauth->user_id, 43200, function () use ($oauth) {
+                        return User::find($oauth->user_id);
+                    });
                 } else {
-                    $user = User::where('email', $social_user->email)->first();
+                    $user = Cache::remember('user_EMAIL_'.$social_user->email, 43200, function () use ($social_user) {
+                        return User::where('email', $social_user->email)->first();
+                    });
                 }
 
+                $provider = $this->provider;
+                $social_user_id = $social_user->id;
+
                 if ($user) {
-                    $oauth = OAuth::firstOrCreate([
+                    OAuth::firstOrCreate([
                         'user_id' => $user->id,
-                        'provider' => $this->provider,
-                        'provider_uid' => $social_user->id
+                        'provider' => $provider,
+                        'provider_uid' => $social_user_id
                     ]);
 
                     Auth::login($user);
@@ -58,14 +66,15 @@ class OAuthController extends Controller
                         $user->password = Hash::make(str_random(60));
 
                         if ($user->save()) {
-                            $oauth = OAuth::firstOrCreate([
+                            OAuth::firstOrCreate([
                                 'user_id' => $user->id,
-                                'provider' => $this->provider,
-                                'provider_uid' => $social_user->id
+                                'provider' => $provider,
+                                'provider_uid' => $social_user_id
                             ]);
 
+                            UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
                             UserVerification::generate($user);
-                            UserVerification::sendQueue($user, 'Please Confirm Your Email');
+                            UserVerification::sendQueue($user);
 
                             Auth::login($user);
 

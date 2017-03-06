@@ -81,4 +81,9 @@ class GlassController extends Controller
     {
         //
     }
+
+    private function clear()
+    {
+        Cache::forget('glasses');
+    }
 }
