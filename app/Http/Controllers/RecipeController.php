@@ -29,9 +29,10 @@ class RecipeController extends Controller
 
     public function home()
     {
+        $expiresAt = Carbon::now()->minute(60)->second(0);
         $total = 20;
 
-        $recipes = Cache::remember('recipes_home', 30, function () use ($total) {
+        $recipes = Cache::remember('recipes_home', $expiresAt, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->join('users', 'recipes.user_id', '=', 'users.id')
@@ -53,9 +54,11 @@ class RecipeController extends Controller
      */
     public function index()
     {
+        $now = Carbon::now()->minute(0)->second(0);
+        $expiresAt = $now->copy()->minute(60);
         $total = 20;
 
-        $recipes = Cache::remember('recipes_latest', 60, function () use ($total) {
+        $recipes = Cache::remember('recipes_latest', $expiresAt, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->join('users', 'recipes.user_id', '=', 'users.id')
@@ -68,7 +71,15 @@ class RecipeController extends Controller
                 ->get();
         });
 
-        $recipes_top = Cache::remember('recipes_popular', (60*12), function () use ($total) {
+        $hour = 12;
+
+        if ($now->hour >= $hour) {
+            $hour += $hour;
+        }
+
+        $expiresAtTop = $now->copy()->hour($hour);
+
+        $recipes_top = Cache::remember('recipes_popular', $expiresAtTop, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
 //                ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
