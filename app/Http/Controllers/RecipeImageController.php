@@ -99,8 +99,13 @@ class RecipeImageController extends Controller
 
                                             if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
                                                 if (!empty($old_image)) {
-                                                    $trash_path = public_path('storage/trash_images/');
-                                                    File::move($path.$old_image, $trash_path.$old_image);
+                                                    if (File::exists($path.$old_image)) {
+                                                        $moved_image = public_path('storage/trash_images/'.$old_image);
+
+                                                        if (File::move($path.$old_image, $moved_image)) {
+                                                            touch($moved_image);
+                                                        }
+                                                    }
                                                 }
 
                                                 $this->clear($recipe_id);

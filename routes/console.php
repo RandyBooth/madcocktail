@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,18 @@ use Illuminate\Foundation\Inspiring;
 |
 */
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->describe('Display an inspiring quote');
+$days = 5;
+
+Artisan::command('empty-images-trash', function () use ($days) {
+    $now = Carbon::now()->startOfDay();
+    $path = public_path('storage/trash_images/');
+    $files = File::allFiles($path);
+
+    foreach($files as $file) {
+        $modify = Carbon::createFromTimestamp(File::lastModified($file))->startOfDay();
+
+        if ($modify->diffInDays($now, false) >= $days) {
+            File::delete($file);
+        }
+    }
+})->describe('Empty images trash after '.$days.' days of moved.');
