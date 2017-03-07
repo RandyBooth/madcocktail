@@ -85,10 +85,16 @@
                     </div>
 
                     <div class="col-12 col-sm-6">
-                        <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
+                        <div class="form-group{{ $errors->has('password') || $errors->has('password_confirmation') ? ' has-danger' : '' }}">
                             <label for="password-confirm" class="w-100 form-control-label">Confirm Password</label>
 
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+
+                            @if ($errors->has('password_confirmation'))
+                                <span class="form-control-feedback">
+                                    <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
 

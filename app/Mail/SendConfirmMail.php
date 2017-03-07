@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class SendConfirmMail extends Mailable
+class SendConfirmMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class SendConfirmMail extends Mailable
      */
     public function build()
     {
-        $subject = 'Please Confirm Your Email';
+        $subject = 'MadCocktail.com - Please Confirm Your Email';
 
         return $this->view('laravel-user-verification::email')
             ->to($this->user->email)

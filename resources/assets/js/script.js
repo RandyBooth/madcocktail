@@ -17,7 +17,6 @@ var $formSearch = $('#form-search'),
         $formSearch.attr('onsubmit', 'return false;');
     },
     onSelect: function (suggestion) {
-        console.log(suggestion);
         if ((typeof suggestion.id !== 'undefined' && suggestion.id !== null) && (typeof suggestion.data.group !== 'undefined' && suggestion.data.group !== null)) {
             var $formSearch = $('#form-search'),
                 $formSearchId = $('#search-id', $formSearch),

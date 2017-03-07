@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div id="alert-wrapper" class="alert-wrapper">
-                <?php if (Session::has('success') || Session::has('info') || Session::has('warning') || Session::has('danger')) : ?>
+                <?php if (Session::has('success') || Session::has('info') || Session::has('warning') || Session::has('danger') || Session::has('status')) : ?>
                     <?php
                         if (Session::has('success')) {
                             $message = Session::get('success');
@@ -16,6 +16,9 @@
                         } elseif (Session::has('danger')) {
                             $message = Session::get('danger');
                             $message_type = 'danger';
+                        } elseif (Session::has('status')) {
+                            $message = Session::get('status');
+                            $message_type = 'success';
                         }
                     ?>
                 <div class="alert alert-{{ $message_type }} alert-dismissible fade show" role="alert">
