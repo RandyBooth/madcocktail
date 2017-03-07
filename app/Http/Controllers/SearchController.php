@@ -122,12 +122,17 @@ class SearchController extends Controller
     {
         $data = [];
 
+        $query = preg_replace('/\s+/', ' ', trim($query));
+
         if (empty($query) && !is_array($type)) {
             return $data;
         }
 
-        $query_array = explode(' ', $query);
+        $query_array = array_unique(explode(' ', $query));
+        sort($query_array);
         $query_count = count($query_array);
+
+        $query = implode('_', $query_array);
 
         $has_recipe = in_array('recipes', $type);
         $has_ingredients = in_array('ingredients', $type);
