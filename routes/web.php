@@ -14,7 +14,7 @@
 Route::group(['middleware' => 'fw-allow-wl'], function () {
     Auth::routes();
 
-    Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified']], function () {
+    Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified', 'user-valid']], function () {
         Route::group(['prefix' => 'ingredients'], function () {
             Route::get('tree', 'IngredientController@tree');
         });

@@ -12,10 +12,7 @@ class UserProfileController extends Controller
 {
     public function __construct()
     {
-        //Cache::flush();
-//        $this->middleware(['auth', 'isVerified'], ['only' => ['create', 'edit']]);
-//        $this->middleware(['xss', 'isVerified'], ['only' => ['store', 'update']]);
-//        $this->middleware(['admin', 'isVerified'], ['only' => ['destroy']]);
+        $this->middleware(['auth', 'user-valid'], ['only' => ['index']]);
     }
 
     /**
@@ -25,7 +22,15 @@ class UserProfileController extends Controller
      */
     public function index()
     {
+        if (Auth::check()) {
+            $user = Auth::user();
 
+            if (!empty($user->username)) {
+                return redirect()->route('user-profile.show', $user->username);
+            }
+        }
+
+        abort(404);
     }
 
     /**
