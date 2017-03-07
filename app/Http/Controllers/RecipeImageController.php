@@ -64,7 +64,7 @@ class RecipeImageController extends Controller
                         $id = $request->input('id');
 
                         $recipe = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
-                            return Recipe::token($id)->with('ingredients')->firstOrFail();
+                            return Recipe::token($id)->with('ingredients')->first();
                         });
 
                         if ($recipe) {
@@ -73,10 +73,11 @@ class RecipeImageController extends Controller
 //                                $path = 'upload/';
                                 $path = public_path('storage/upload_images/');
                                 $recipe_id = $recipe->id;
+                                $recipe_token = $recipe->token;
                                 $filename = '';
                                 $image = $request->file('image');
                                 $token_valid = false;
-                                $recipe_image = Cache::remember('recipe_image_ID_'.$recipe_id, 43200, function () use ($recipe_id) {
+                                $recipe_image = Cache::remember('recipe_image_TOKEN_'.$recipe_token, 43200, function () use ($recipe_id) {
                                     return RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
                                 });
 
@@ -198,7 +199,7 @@ class RecipeImageController extends Controller
     private function clear($recipe)
     {
         if ($recipe) {
-            Cache::forget('recipe_image_ID_'.$recipe->id);
+            Cache::forget('recipe_image_TOKEN_'.$recipe->token);
             Cache::forget('user_recipes_ID_'.$recipe->user_id);
         }
     }

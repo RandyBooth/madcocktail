@@ -230,12 +230,13 @@ class RecipeController extends Controller
         if ($recipe) {
             $user_id = $recipe->user_id;
             $recipe_id = $recipe->id;
+            $recipe_token = $recipe->token;
 
             $recipe_author = Cache::remember('user_ID_'.$user_id, 43200, function () use ($user_id) {
                 return User::find($user_id);
             });
 
-            $recipe_image = Cache::remember('recipe_image_ID_'.$recipe_id, 43200, function () use ($recipe_id) {
+            $recipe_image = Cache::remember('recipe_image_TOKEN_'.$recipe_token, 43200, function () use ($recipe_id) {
                 return RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
             });
 
@@ -315,7 +316,7 @@ class RecipeController extends Controller
             $ingredient_id = [];
 
             foreach ($ingredients as $ingredient) {
-                $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                     return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                 });
 
@@ -338,7 +339,7 @@ class RecipeController extends Controller
                 $ingredient_id_unique = array_unique(array_flatten($ingredient_id));
                 $total = 20;
 
-                $recipe_similar = Cache::remember('recipe_similar_ID_'.$recipe_id, 43200, function () use ($recipe_id, $ingredient_id_unique) {
+                $recipe_similar = Cache::remember('recipe_similar_TOKEN_'.$recipe_token, 43200, function () use ($recipe_id, $ingredient_id_unique) {
                     return Recipe::
                         join('ingredient_recipe', 'recipes.id', '=', 'ingredient_recipe.recipe_id')
                         ->whereIn('ingredient_recipe.ingredient_id', $ingredient_id_unique)
@@ -370,7 +371,7 @@ class RecipeController extends Controller
     {
         if (Auth::check()) {
             $recipe_data = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
-                return Recipe::token($id)->with('ingredients')->firstOrFail();
+                return Recipe::token($id)->with('ingredients')->first();
             });
 
             if ($recipe_data) {
@@ -468,44 +469,46 @@ class RecipeController extends Controller
             }
 
             $recipe = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
-                return Recipe::token($id)->with('ingredients')->firstOrFail();
+                return Recipe::token($id)->with('ingredients')->first();
             });
 
-            if (Helper::is_owner($recipe->user_id)) {
-                $ingredients_data = [];
+            if ($recipe) {
+                if (Helper::is_owner($recipe->user_id)) {
+                    $ingredients_data = [];
 
-                if (!empty($data['ingredients'])) {
-                    $ingredients = $data['ingredients'];
-                    $count = 0;
+                    if (!empty($data['ingredients'])) {
+                        $ingredients = $data['ingredients'];
+                        $count = 0;
 
-                    foreach ($ingredients as $key => $token) {
-                        if (!empty($token)) {
-                            $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
-                                return Ingredient::token($token)->first();
-                            });
+                        foreach ($ingredients as $key => $token) {
+                            if (!empty($token)) {
+                                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
+                                    return Ingredient::token($token)->first();
+                                });
 
-                            if ($ingredient) {
-                                $ingredients_data[$ingredient->id] = ['order_by' => $count++];
+                                if ($ingredient) {
+                                    $ingredients_data[$ingredient->id] = ['order_by' => $count++];
 
-                                if (!empty($data['ingredients_measure'][$key])) {
-                                    if (array_key_exists($data['ingredients_measure'][$key], $measures)) {
-                                        $ingredients_data[$ingredient->id]['measure_id'] = $measures[$data['ingredients_measure'][$key]];
+                                    if (!empty($data['ingredients_measure'][$key])) {
+                                        if (array_key_exists($data['ingredients_measure'][$key], $measures)) {
+                                            $ingredients_data[$ingredient->id]['measure_id'] = $measures[$data['ingredients_measure'][$key]];
+                                        }
                                     }
-                                }
 
-                                if (!empty($data['ingredients_measure_amount'][$key])) {
-                                    $ingredients_data[$ingredient->id]['measure_amount'] = Helper::fraction_to_decimal($data['ingredients_measure_amount'][$key]);
+                                    if (!empty($data['ingredients_measure_amount'][$key])) {
+                                        $ingredients_data[$ingredient->id]['measure_amount'] = Helper::fraction_to_decimal($data['ingredients_measure_amount'][$key]);
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                if ($recipe->update($data)) {
-                    $recipe->ingredients()->sync($ingredients_data);
-                    $this->clear($recipe);
+                    if ($recipe->update($data)) {
+                        $recipe->ingredients()->sync($ingredients_data);
+                        $this->clear($recipe);
 
-                    return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe "'.$recipe->title.'" has been updated successfully.');
+                        return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe "'.$recipe->title.'" has been updated successfully.');
+                    }
                 }
             }
         }
@@ -536,7 +539,7 @@ class RecipeController extends Controller
 
     private function clear($recipe, $delete = false)
     {
-        Cache::forget('recipe_similar_ID_'.$recipe->id);
+        Cache::forget('recipe_similar_TOKEN_'.$recipe->token);
         Cache::forget('recipe_TOKEN_'.$recipe->token);
         Cache::forget('recipe_SLUG_'.$recipe->slug);
         Cache::forget('user_recipes_ID_'.$recipe->user_id);

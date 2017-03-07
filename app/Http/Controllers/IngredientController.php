@@ -94,7 +94,7 @@ class IngredientController extends Controller
                 $ingredient_slug = $ingredient->slug;
 
                 if ($data['parent_id']) {
-                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                         return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                     });
 
@@ -132,7 +132,7 @@ class IngredientController extends Controller
                 return Ingredient::where('slug', $last_parameter)->firstOrFail();
             });
 
-            $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                 return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
             });
 
@@ -157,14 +157,14 @@ class IngredientController extends Controller
             $ingredient_descendants_id = [];
 
             if ($count_ingredient_valid > 0) {
-                $recipe_month_text = 'ingredient_recipes_top_month_ID_'.$ingredient->id;
+                $recipe_month_text = 'ingredient_recipes_top_month_TOKEN_'.$ingredient->token;
                 $ingredient_breadcrumbs = array_pluck($ingredient_ancestors_self, 'title', 'slug');
 
-                $ingredients = Cache::remember('ingredient_children_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                $ingredients = Cache::remember('ingredient_children_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                     return $ingredient->children()->orderBy('title')->get();
                 });
 
-                $ingredient_descendants = Cache::remember('ingredient_descendants_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                     return $ingredient->descendants()->select('id', 'token', 'title', 'slug')->get();
                 });
 
@@ -176,7 +176,7 @@ class IngredientController extends Controller
 //                $ingredient_descendants_arr = [];
 
                 foreach($ingredients as $val) {
-                    $ingredient_descendants = Cache::remember('ingredient_descendants_ID_'.$val->id, 43200, function () use ($val) {
+                    $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$val->token, 43200, function () use ($val) {
                         return $val->descendants()->select('id', 'token', 'title', 'slug')->get();
                     });
 
@@ -226,7 +226,7 @@ class IngredientController extends Controller
                     if ($ingredient_data->parent_id) {
                         $ingredient_parent_id = $ingredient_data->parent_id;
 
-                        $parent = Cache::remember('ingredient_parent_ID_'.$ingredient_data->id, 43200, function () use ($ingredient_parent_id) {
+                        $parent = Cache::remember('ingredient_parent_TOKEN_'.$ingredient_data->token, 43200, function () use ($ingredient_parent_id) {
                             return Ingredient::select('token')->find($ingredient_parent_id);
                         });
 
@@ -299,7 +299,7 @@ class IngredientController extends Controller
                         $ingredient_slug = $ingredient->slug;
 
                         if ($data['parent_id']) {
-                            $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+                            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                                 return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                             });
 
@@ -374,7 +374,7 @@ class IngredientController extends Controller
     private function clear($ingredient = null)
     {
         if ($ingredient) {
-            $ingredient_ancestors = Cache::remember('ingredient_ancestors_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                 return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
             });
 
@@ -384,7 +384,7 @@ class IngredientController extends Controller
                 }
             }
 
-            $ingredient_descendants = Cache::remember('ingredient_descendants_ID_'.$ingredient->id, 43200, function () use ($ingredient) {
+            $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
                 return $ingredient->descendants()->select('id', 'token', 'title', 'slug')->get();
             });
 
@@ -406,10 +406,10 @@ class IngredientController extends Controller
     {
         Cache::forget('ingredient_SLUG_'.$ingredient->slug);
         Cache::forget('ingredient_TOKEN_'.$ingredient->token);
-        Cache::forget('ingredient_parent_ID_'.$ingredient->id);
-        Cache::forget('ingredient_ancestors_ID_'.$ingredient->id);
-        Cache::forget('ingredient_children_ID_'.$ingredient->id);
-        Cache::forget('ingredient_descendants_ID_'.$ingredient->id);
-        Cache::forget('ingredient_recipes_top_month_ID_'.$ingredient->id);
+        Cache::forget('ingredient_parent_TOKEN_'.$ingredient->token);
+        Cache::forget('ingredient_ancestors_TOKEN_'.$ingredient->token);
+        Cache::forget('ingredient_children_TOKEN_'.$ingredient->token);
+        Cache::forget('ingredient_descendants_TOKEN_'.$ingredient->token);
+        Cache::forget('ingredient_recipes_top_month_TOKEN_'.$ingredient->token);
     }
 }

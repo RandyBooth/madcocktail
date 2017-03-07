@@ -21,20 +21,28 @@ class SearchController extends Controller
             $group = strtolower($request->input('search-group'));
 
             if ($group == 'recipes') {
-                $recipe = Recipe::token($id)->first();
+                $recipe = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
+                    return Recipe::token($id)->with('ingredients')->first();
+                });
 
                 if ($recipe) {
                     return redirect()->route('recipes.show', $recipe->slug);
                 }
             } elseif ($group == 'ingredients') {
-                $ingredient = Ingredient::token($id)->first();
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 43200, function () use ($id) {
+                    return Ingredient::token($id)->first();
+                });
 
                 if ($ingredient) {
-                    $ingredient_ancestors = $ingredient->ancestors()->get();
+                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
+                        return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
+                    });
+
                     $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
                     $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+                    $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
 
-                    return redirect()->route('ingredients.show', implode('/', $ingredient_ancestors_self_slug));
+                    return redirect()->route('ingredients.show', $ingredient_slug);
                 }
             }
         }

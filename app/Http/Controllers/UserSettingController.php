@@ -216,6 +216,7 @@ class UserSettingController extends Controller
         if ($user) {
             Cache::forget('user_ID_'.$user->id);
             Cache::forget('user_EMAIL_'.$user->email);
+            Cache::forget('user_USERNAME_'.$user->username);
         }
     }
 }

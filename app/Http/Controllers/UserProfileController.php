@@ -57,7 +57,9 @@ class UserProfileController extends Controller
      */
     public function show($username)
     {
-        $user = User::where('username', $username)->firstOrFail();
+        $user = Cache::remember('user_USERNAME_'.$username, 43200, function () use ($username) {
+            return User::where('username', $username)->firstOrFail();
+        });
 
         $recipes = Cache::remember('user_recipes_ID_'.$user->id, 43200, function () use ($user) {
             return Recipe
