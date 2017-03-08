@@ -19,7 +19,7 @@ class CreateNestedSetIngredientsTable extends Migration
             $table->string('token')->unique();
             NestedSet::columns($table);
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->tinyInteger('is_alcoholic')->unsigned()->default(0);
             $table->tinyInteger('is_active')->unsigned()->default(0);
             $table->integer('user_id')->unsigned()->default(0);

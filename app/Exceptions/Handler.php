@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Jrean\UserVerification\Exceptions\UserNotVerifiedException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,13 +45,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-//        if ($exception instanceof ModelNotFoundException or $exception instanceof NotFoundHttpException) {
-//            if ($request->expectsJson()) {
-//                return response()->json(['error' => 'Not found'], 404);
-//            }
-//
-//            return response()->view('errors.404', [], 404);
-//        }
+        if ($exception instanceof UserNotVerifiedException) {
+            return redirect()->route('home')->with('danger', 'You received an email for confirming your registration. Please check your email. <a href="'.route('email-verification.resend').'">Click here</a> to try again.');
+        }
 
         return parent::render($request, $exception);
     }

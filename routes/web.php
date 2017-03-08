@@ -34,8 +34,9 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
         Route::put('password', ['as' => 'user-settings.password.update', 'uses' => 'UserSettingController@passwordUpdate']);
     });
 
-    Route::get('email/error', 'Auth\RegisterController@getVerificationError')->name('email-verification.error');
-    Route::get('email/activate/{token}', 'Auth\RegisterController@getVerification')->name('email-verification.check');
+    Route::get('email/error', ['as' => 'email-verification.error', 'uses' => 'Auth\RegisterController@getVerificationError']);
+    Route::get('email/activate/{token}', ['as' => 'email-verification.check', 'uses' => 'Auth\RegisterController@getVerification', 'middleware' => ['throttle:10,10', 'clearUser']]);
+    Route::get('email/resend', ['as' => 'email-verification.resend', 'uses' => 'UserSettingController@resendVerification', 'middleware' => 'throttle:5,10']);
 
     Route::group(['prefix' => 'login'], function() {
         Route::group(['prefix' => '{provider}', 'where' => ['provider' => '[a-z]+']], function() {

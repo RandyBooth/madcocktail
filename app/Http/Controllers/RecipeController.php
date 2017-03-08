@@ -208,6 +208,8 @@ class RecipeController extends Controller
                     $recipe->ingredients()->sync($ingredients_data);
                 }
 
+                $this->clear($recipe);
+
                 return redirect()->route('recipes.show', $recipe->slug)->with('success', 'Recipe "'.$recipe->title.'" has been created successfully.');
             }
         }
@@ -531,7 +533,7 @@ class RecipeController extends Controller
                 if ($recipe->delete()) {
                     $this->clear($recipe, true);
 
-                    return redirect()->route('recipes.index')->with('success', 'Recipe ('.$recipe->title.') has been deleted successfully.');
+                    return redirect()->route('recipes.index')->with('success', 'Recipe "'.$recipe->title.'" has been deleted successfully.');
                 }
             }
         }

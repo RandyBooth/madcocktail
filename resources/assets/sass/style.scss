@@ -253,6 +253,13 @@
     font-weight: $font-weight-bold;
 }
 
+.alert {
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+}
+
 a {
     @include transition(all 0.3s linear);
 

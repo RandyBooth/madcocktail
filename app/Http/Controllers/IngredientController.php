@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Requests\IngredientRequest;
 use App\Ingredient;
 use App\Recipe;
+use App\Scopes\ActiveScope;
 use Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -14,8 +15,10 @@ class IngredientController extends Controller
     public function __construct()
     {
 //        Cache::flush();
-        $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['create', 'edit', 'destroy']]);
-        $this->middleware(['admin', 'isVerified', 'user-valid', 'xss'], ['only' => ['store', 'update']]);
+        $this->middleware(['auth', 'isVerified', 'user-valid'], ['only' => ['create']]);
+        $this->middleware(['auth', 'isVerified', 'user-valid', 'xss'], ['only' => ['store']]);
+        $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['edit', 'destroy']]);
+        $this->middleware(['admin', 'isVerified', 'user-valid', 'xss'], ['only' => ['update']]);
     }
     /**
      * Display a listing of the resource.
@@ -45,12 +48,13 @@ class IngredientController extends Controller
         $ingredients = ['' => '&nbsp;'];
 
         $nodes = Cache::remember('ingredients_tree', 43200, function () {
-            return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+            return Ingredient::withoutGlobalScope(ActiveScope::class)->orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         });
 
         $traverse = function ($ingredients_arr, $prefix = '-') use (&$traverse, &$ingredients) {
             foreach ($ingredients_arr as $val) {
-                $ingredients[$val->token] = $prefix.' '.$val->title;
+                $pending = (!$val->is_active) ? ' (pending)': '';
+                $ingredients[$val->token] = $prefix.' '.$val->title.$pending;
                 $traverse($val->children, $prefix.'-');
             }
         };
@@ -88,24 +92,28 @@ class IngredientController extends Controller
                 }
             }
 
-            $ingredient = Ingredient::create($data);
+            $ingredient = Ingredient::withoutGlobalScope(ActiveScope::class)->create($data);
 
             if (!empty($ingredient)) {
-                $ingredient_slug = $ingredient->slug;
+                $this->clear($ingredient);
 
-                if ($data['parent_id']) {
-                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
-                        return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
-                    });
+                if ($data['is_active']) {
+                    $ingredient_slug = $ingredient->slug;
 
-                    $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
-                    $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
-                    $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
+                    if ($data['parent_id']) {
+                        $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
+                            return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
+                        });
+
+                        $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
+                        $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+                        $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
+                    }
+
+                    return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient "'.$ingredient->title.'" has been created successfully.');
                 }
 
-                $this->clear();
-
-                return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been created successfully.');
+                return redirect()->route('ingredients.create')->with('success', 'Ingredient "'.$ingredient->title.'" has been created successfully.');
             }
         }
 
@@ -243,12 +251,13 @@ class IngredientController extends Controller
                     $ingredients = ['' => '&nbsp;'];
 
                     $nodes = Cache::remember('ingredients_tree', 43200, function () {
-                        return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+                        return Ingredient::withoutGlobalScope(ActiveScope::class)->orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
                     });
 
                     $traverse = function ($ingredients_arr, $prefix = '-') use (&$traverse, &$ingredients) {
                         foreach ($ingredients_arr as $val) {
-                            $ingredients[$val->token] = $prefix.' '.$val->title;
+                            $pending = (!$val->is_active) ? ' (pending)': '';
+                            $ingredients[$val->token] = $prefix.' '.$val->title.$pending;
                             $traverse($val->children, $prefix.'-');
                         }
                     };
@@ -308,7 +317,7 @@ class IngredientController extends Controller
                             $ingredient_slug = implode('/', $ingredient_ancestors_self_slug);
                         }
 
-                        return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient ('.$ingredient->title.') has been updated successfully.');
+                        return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient "'.$ingredient->title.'" has been updated successfully.');
                     }
                 }
             }
@@ -331,7 +340,7 @@ class IngredientController extends Controller
             if ($ingredient->delete()) {
                 $this->clear($ingredient);
 
-                return redirect()->route('ingredients.index')->with('success', 'Ingredient ('.$ingredient->title.') has been deleted successfully.');
+                return redirect()->route('ingredients.index')->with('success', 'Ingredient "'.$ingredient->title.'" has been deleted successfully.');
             }
         }
     }
@@ -339,7 +348,7 @@ class IngredientController extends Controller
     public function tree()
     {
         $nodes = Cache::remember('ingredients_tree', 43200, function () {
-            return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+            return Ingredient::withoutGlobalScope(ActiveScope::class)->orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         });
 
         $tree = '';
@@ -355,8 +364,10 @@ class IngredientController extends Controller
             $tree_return .= "<ul>\n";
 
             foreach ($tree_array as $row) {
+                $pending = (!$row['is_active']) ? ' (pending)': '';
                 $tree_return .= "<li>\n";
-                $tree_return .= ($link) ? "<a href=\"".route('ingredients.show', $slug.$row['slug'].'/')."\">" . $row[$display_field] . "</a>\n" : $row[$display_field] . "\n";
+
+                $tree_return .= ($link) ? "<a href=\"".route('ingredients.show', $slug.$row['slug'].'/')."\">" . $row[$display_field] . $pending . "</a>\n" : $row[$display_field] . $pending . "\n";
 
                 if (isset($row[$children_field])) {
                     if (!empty($row[$children_field])) {

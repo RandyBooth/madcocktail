@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Helpers\Helper;
-use App\RecipeCount;
 use App\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;

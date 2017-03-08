@@ -2,9 +2,6 @@
 
 @section('title', 'Recipes')
 
-@section('script-bottom')
-@stop
-
 @section('content')
     @if(!empty($recipes))
     <div class="row mb-4">
@@ -32,21 +29,6 @@
     <div class="row">
         <div class="col-12">
             <h3>Popular Recipes</h3>
-
-            {{--<div class="row">
-            @foreach($recipes_top as $recipe)
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-3">
-                            <img class="card-img-top img-fluid" data-original="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'lists', 'filename' => $recipe->image])}}@endif" src="@if(!empty($recipe->image)){{route('imagecache', ['template' => 'tiny', 'filename' => $recipe->image])}}@endif" alt="">
-                        </div>
-                        <div class="col-9">
-                            <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">{{ $recipe->title }}</a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-            </div>--}}
 
             <ol>
             @foreach($recipes_top as $recipe)

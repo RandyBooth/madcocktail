@@ -109,7 +109,7 @@ class RegisterController extends Controller
             UserVerification::sendQueue($user);
 
             return $this->registered($request, $user)
-            ?: redirect($this->redirectPath())->with('success', 'Confirm email sent!');
+            ?: redirect($this->redirectPath())->with('success', 'You received an email for confirming your registration. Please check your email.');
         }
 
         return false;

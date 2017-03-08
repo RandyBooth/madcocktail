@@ -47,27 +47,6 @@ class SearchController extends Controller
             }
         }
 
-//        if ($request->has('search')) {
-//            $query = preg_replace('/\s+/', ' ', trim($request->input('search')));
-//
-//            if (strlen($query) >= 3) {
-//                $type_arr = $this->_searchType($type);
-//                $data = $this->_search($query, $type_arr, 'search', 20);
-//
-//                foreach ($type_arr as $data_single) {
-//                    if (isset($data[$data_single])) {
-//                        $arr = $data[$data_single];
-//                        $arr_title = array_pluck($arr, 'title', 'token');
-//                        $arr_unique = array_unique($arr_title);
-//
-//                        foreach($arr_unique as $key => $val) {
-//                            $suggestions[] = ['value' => $val, 'id' => $key, 'data' => ['group' => title_case($data_single)]];
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         return redirect()->route('home');
     }
 
@@ -128,7 +107,7 @@ class SearchController extends Controller
             return $data;
         }
 
-        $query_array = array_unique(explode(' ', $query));
+        $query_array = array_unique(array_map('strtolower', explode(' ', $query)));
         sort($query_array);
         $query_count = count($query_array);
 
@@ -166,7 +145,7 @@ class SearchController extends Controller
         }
 
         if (!empty($query_recipe)) {
-            $results_recipe = Cache::remember($cache.'_recipe_QUERY_'.strtolower($query), 60*4, function() use ($query_recipe, $limit) {
+            $results_recipe = Cache::remember($cache.'_recipe_QUERY_'.$query, 60*1, function() use ($query_recipe, $limit) {
                 return $query_recipe->orderBy('title')->limit($limit)->get();
             });
 
@@ -176,7 +155,7 @@ class SearchController extends Controller
         }
 
         if (!empty($query_ingredient)) {
-            $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.strtolower($query), 60*24, function() use ($query_ingredient, $limit) {
+            $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.$query, 60*1, function() use ($query_ingredient, $limit) {
                 return $query_ingredient->withDepth()->orderBy('depth')->orderBy('title')->limit($limit)->get();
             });
 

@@ -78,7 +78,7 @@ class OAuthController extends Controller
 
                             Auth::login($user);
 
-                            return redirect('/')->with('success', 'Confirm email sent!');
+                            return redirect()->route('user-settings.index.edit')->with('success', 'You received an email for confirming your registration. Please check your email.');
                         }
                     }
                 }

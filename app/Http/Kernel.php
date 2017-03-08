@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'clearUser' => \App\Http\Middleware\ClearUser::class,
         'fw-block-bl' => \PragmaRX\Firewall\Middleware\FirewallBlacklist::class,
         'fw-allow-wl' => \PragmaRX\Firewall\Middleware\FirewallWhitelist::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,

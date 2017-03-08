@@ -2,8 +2,6 @@
 
 @section('content')
 
-    {{--@include('ingredients.subheader')--}}
-
     <style>
         .tree, .tree ul {
             font-size: 14px;
