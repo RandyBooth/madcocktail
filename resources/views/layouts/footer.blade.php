@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-6">
-                &copy; {{ date('Y') }} <span class="navbar-brand">{{ config('app.name') }}</span>
+                &copy; {{ date('Y') }} <a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name') }}</a>
             </div>
 
             <div class="col-12 mt-3 col-md-6 mt-md-0">

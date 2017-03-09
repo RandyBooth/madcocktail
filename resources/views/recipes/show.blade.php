@@ -169,14 +169,14 @@
 @stop
 
 @section('sidebar-right')
-    @if ($recipe_similar)
+    @if (!$recipe_similar->isEmpty())
     <div class="row mb-4">
         <div class="col-12">
             <h3>Similar Recipes</h3>
 
             <ul class="list-unstyled">
                 @foreach($recipe_similar as $val)
-                    <li><a href="{{ route('recipes.show', ['id' => $val->slug]) }}">{{ $val->title }}</a></li>
+                    <li><a class="link" href="{{ route('recipes.show', ['id' => $val->slug]) }}">{{ $val->title }}</a></li>
                 @endforeach
             </ul>
         </div>

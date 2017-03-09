@@ -5,7 +5,7 @@
 @import "mixins";
 
 .navbar-brand {
-    color: $navbar-inverse-active-color;
+    color: $navbar-inverse-active-color !important;
     font-family: $font-family-sans-serif-headings;
     font-weight: $font-weight-bold;
     letter-spacing: 0.020em;
@@ -724,6 +724,7 @@ body {
                 margin-right: 0.50rem;
                 padding-top: 5px;
                 padding-bottom: 5px;
+                margin-bottom: 10px;
 
                 @include hover-focus {
                     background-color: lighten($color-gray-dark, 5%);
@@ -745,7 +746,7 @@ body {
 
 .footer {
     padding-top: 40px;
-    padding-bottom: 80px;
+    padding-bottom: 40px;
 
     .navbar-brand {
         font-size: 1rem;

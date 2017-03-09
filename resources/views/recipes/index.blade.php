@@ -3,7 +3,7 @@
 @section('title', 'Recipes')
 
 @section('content')
-    @if(!empty($recipes))
+    @if(!$recipes->isEmpty())
     <div class="row mb-4">
         <div class="col-12">
             <h3>Latest Recipes</h3>
@@ -25,7 +25,7 @@
 @stop
 
 @section('sidebar-right')
-    @if(!empty($recipes_top))
+    @if(!$recipes_top->isEmpty())
     <div class="row">
         <div class="col-12">
             <h3>Popular Recipes</h3>
