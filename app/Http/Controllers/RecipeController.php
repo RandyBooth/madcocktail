@@ -31,7 +31,7 @@ class RecipeController extends Controller
     public function home()
     {
         $expiresAt = Carbon::now()->minute(60)->second(0);
-        $total = 20;
+        $total = 5;
 
         $recipes = Cache::remember('recipes_home', $expiresAt, function () use ($total) {
             return Recipe
@@ -39,9 +39,9 @@ class RecipeController extends Controller
                 ->join('users', 'recipes.user_id', '=', 'users.id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
-//                ->where('recipe_counts.count_total', '>', $total)
+                ->where('recipe_counts.count_total', '>', $total)
                 ->inRandomOrder()
-                ->take(20)
+                ->take(24)
                 ->get();
         });
 
@@ -57,7 +57,7 @@ class RecipeController extends Controller
     {
         $now = Carbon::now()->minute(0)->second(0);
         $expiresAt = $now->copy()->minute(60);
-        $total = 20;
+        $total = 5;
 
         $recipes = Cache::remember('recipes_latest', $expiresAt, function () use ($total) {
             return Recipe
@@ -65,27 +65,26 @@ class RecipeController extends Controller
                 ->join('users', 'recipes.user_id', '=', 'users.id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
-//                ->where('recipe_counts.count_total', '>', $total)
+                ->where('recipe_counts.count_total', '>', $total)
                 ->orderby('recipes.created_at', 'DESC')
                 ->orderby('recipes.title')
-                ->take(20)
+                ->take(24)
                 ->get();
         });
 
-        $hour = 12;
+//        $hour = 12;
+//
+//        if ($now->hour >= $hour) {
+//            $hour += $hour;
+//        }
+//
+//        $expiresAtTop = $now->copy()->hour($hour);
 
-        if ($now->hour >= $hour) {
-            $hour += $hour;
-        }
-
-        $expiresAtTop = $now->copy()->hour($hour);
-
-        $recipes_top = Cache::remember('recipes_popular', $expiresAtTop, function () use ($total) {
+        $recipes_top = Cache::remember('recipes_popular', $expiresAt, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
-//                ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
-//                ->where('recipe_counts.count_total', '>', $total)
+                ->where('recipe_counts.count_total', '>', $total)
                 ->orderBy('recipe_counts.count_total', 'DESC')
                 ->orderby('recipes.title')
                 ->take(10)
@@ -179,6 +178,8 @@ class RecipeController extends Controller
             $recipe = Recipe::create($data);
 
             if (!empty($recipe)) {
+                $recipe->counts()->create([]);
+
                 if (!empty($data['ingredients'])) {
                     $ingredients_data = [];
                     $ingredients = $data['ingredients'];
@@ -250,6 +251,7 @@ class RecipeController extends Controller
                     if (empty($recipe->counts)) {
                         $recipe->counts()->create([]);
                         $recipe->load('counts');
+                        Cache::forget('recipe_SLUG_'.strtolower($parameter));
                     }
 
                     if (!empty($recipe->counts)) {
@@ -339,18 +341,20 @@ class RecipeController extends Controller
             $recipe_similar = [];
 
             if (!empty($ingredient_id)) {
+                $now = Carbon::now()->minute(0)->second(0);
+                $expiresAt = $now->copy()->minute(60);
                 $ingredient_id_unique = array_unique(array_flatten($ingredient_id));
-                $total = 20;
+                $total = 5;
 
-                $recipe_similar = Cache::remember('recipe_similar_TOKEN_'.$recipe_token, 43200, function () use ($recipe_id, $ingredient_id_unique) {
-                    return Recipe::
-                        join('ingredient_recipe', 'recipes.id', '=', 'ingredient_recipe.recipe_id')
+                $recipe_similar = Cache::remember('recipe_similar_TOKEN_'.$recipe_token, $expiresAt, function () use ($recipe_id, $ingredient_id_unique, $total) {
+                    return Recipe
+                        ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                        ->join('ingredient_recipe', 'recipes.id', '=', 'ingredient_recipe.recipe_id')
                         ->whereIn('ingredient_recipe.ingredient_id', $ingredient_id_unique)
-                        ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
     //                    ->select('title', 'slug')
                         ->select(DB::raw('count(recipes.id) as recipe_count, recipes.*'))
                         ->where('recipes.id', '<>', $recipe_id)
-    //                    ->where('recipe_counts.count_total', '>', $total)
+                        ->where('recipe_counts.count_total', '>', $total)
                         ->orderby('recipe_count', 'DESC')
                         ->orderby('recipe_counts.count_total', 'DESC')
                         ->orderby('recipes.title')
@@ -540,17 +544,60 @@ class RecipeController extends Controller
         }
     }
 
-    private function clear($recipe, $delete = false)
+    private function clear($recipe = null, $delete = false)
     {
-        Cache::forget('recipe_similar_TOKEN_'.$recipe->token);
-        Cache::forget('recipe_TOKEN_'.$recipe->token);
-        Cache::forget('recipe_SLUG_'.$recipe->slug);
-        Cache::forget('user_recipes_ID_'.$recipe->user_id);
+        if ($recipe) {
+            Cache::forget('recipe_similar_TOKEN_'.$recipe->token);
+            Cache::forget('recipe_TOKEN_'.$recipe->token);
+            Cache::forget('recipe_SLUG_'.$recipe->slug);
+            Cache::forget('user_recipes_ID_'.$recipe->user_id);
 
-        if ($delete) {
-            Cache::forget('recipes_home');
-            Cache::forget('recipes_latest');
-            Cache::forget('recipes_popular');
+            if (Cache::has('recipes_latest')) {
+                $data = Cache::get('recipes_latest');
+
+                $data_test = $data
+                    ->pluck('recipe_id')
+                    ->filter(function ($value) {
+                        return $value != null;
+                    })
+                    ->contains($recipe->id);
+
+                if ($data_test) {
+                    Cache::forget('recipes_latest');
+                }
+            }
+
+            if (Cache::has('recipes_popular')) {
+                $data = Cache::get('recipes_popular');
+
+                $data_test = $data
+                    ->pluck('recipe_id')
+                    ->filter(function ($value) {
+                        return $value != null;
+                    })
+                    ->contains($recipe->id);
+
+                if ($data_test) {
+                    Cache::forget('recipes_popular');
+                }
+            }
+
+            if ($delete) {
+                if (Cache::has('recipes_home')) {
+                    $data = Cache::get('recipes_home');
+
+                    $data_test = $data
+                        ->pluck('recipe_id')
+                        ->filter(function ($value) {
+                            return $value != null;
+                        })
+                        ->contains($recipe->id);
+
+                    if ($data_test) {
+                        Cache::forget('recipes_home');
+                    }
+                }
+            }
         }
     }
 }

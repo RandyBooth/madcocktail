@@ -20,6 +20,11 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
         });
     });
 
+    Route::get('{path}', function($filename) {
+        return Bust::css($filename);
+    })->where('path', '.*\.css$');
+    App::make('cachebuster.StripSessionCookiesFilter')->addPattern('|\.css$|');
+
     Route::get('me', ['as' => 'user-profile.index', 'uses' => 'UserProfileController@index']);
     Route::get('me/{username}', ['as' => 'user-profile.show', 'uses' => 'UserProfileController@show']);
 

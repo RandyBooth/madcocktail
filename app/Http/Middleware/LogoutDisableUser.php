@@ -23,7 +23,7 @@ class LogoutDisableUser
             if (!$user->is_active) {
                 Auth::logout();
                 CacheableEloquentUserProvider::clearCache($user);
-                return redirect()->to('/')->with('danger', 'Your session has expired because your account is deactivated.');
+                return redirect()->to('/')->with('danger', 'Your account is deactivated.');
             }
         }
 

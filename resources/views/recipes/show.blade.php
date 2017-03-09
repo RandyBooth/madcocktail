@@ -4,7 +4,7 @@
 @section('title', $title . 'Recipe')
 
 @php
-    $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'blank.gif';
+    $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'mad-cocktail.gif';
     $social_title = $recipe->title. ' Recipe';
     $social_description = Helper::nl2empty($recipe->description);
     $social_image = route('imagecache', ['template' => 'share', 'filename' => $image]);
@@ -16,7 +16,7 @@
 
 @if(Helper::is_owner($recipe->user_id))
 @section('script-bottom')
-    <script src="{{ asset('js/image-upload-min.js') }}"></script>
+    <script src="{{ Bust::url('/js/image-upload-min.js', true) }}"></script>
 @stop
 @endif
 

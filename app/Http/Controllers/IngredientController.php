@@ -7,6 +7,7 @@ use App\Http\Requests\IngredientRequest;
 use App\Ingredient;
 use App\Recipe;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class IngredientController extends Controller
@@ -112,7 +113,7 @@ class IngredientController extends Controller
                     return redirect()->route('ingredients.show', $ingredient_slug)->with('success', 'Ingredient "'.$ingredient->title.'" has been created successfully.');
                 }
 
-                return redirect()->route('ingredients.create')->with('success', 'Ingredient "'.$ingredient->title.'" has been created successfully.');
+                return redirect()->route('ingredients.create')->with('success', 'Ingredient "'.$ingredient->title.'" has been created successfully. Waiting on approval from admin.');
             }
         }
 
@@ -193,15 +194,19 @@ class IngredientController extends Controller
                 }
             }
 
-            $recipes = Cache::remember($recipe_month_text, (60*12), function () use ($ingredient_descendants_id) {
-                return Recipe::
-                    whereHas('ingredients', function ($query) use ($ingredient_descendants_id) {
+            $now = Carbon::now()->minute(0)->second(0);
+            $expiresAt = $now->copy()->minute(60);
+            $total = 5;
+
+            $recipes = Cache::remember($recipe_month_text, $expiresAt, function () use ($ingredient_descendants_id, $total) {
+                return Recipe
+                    ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
+                    ->select('title', 'slug')
+                    ->whereHas('ingredients', function ($query) use ($ingredient_descendants_id) {
                         $query->whereIn('ingredient_recipe.ingredient_id', array_unique(array_flatten($ingredient_descendants_id)));
                     })
-                    ->join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
-                    ->select('title', 'slug')
-//                    ->where('recipe_counts.count_month', '>=', 5)
-                    ->orderBy('recipe_counts.count_month', 'DESC')
+                    ->where('recipe_counts.count_total', '>', $total)
+                    ->orderBy('recipe_counts.count_total', 'DESC')
                     ->orderby('recipes.title')
                     ->take(10)
                     ->get();

@@ -175,6 +175,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Msurguy\Honeypot\HoneypotServiceProvider::class,
         PragmaRX\Firewall\Vendor\Laravel\ServiceProvider::class,
+        Themonkeys\Cachebuster\CachebusterServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
         Watson\Active\ActiveServiceProvider::class,
 
@@ -237,6 +238,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Active' => Watson\Active\Facades\Active::class,
+        'Bust' => Themonkeys\Cachebuster\Cachebuster::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Firewall' => PragmaRX\Firewall\Vendor\Laravel\Facade::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class,

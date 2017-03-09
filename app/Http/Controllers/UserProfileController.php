@@ -73,7 +73,7 @@ class UserProfileController extends Controller
                 ->where('user_id', $user->id)
                 ->orderby('recipes.created_at', 'DESC')
                 ->orderby('recipes.title')
-//                ->take(20)
+//                ->take(24)
                 ->get();
         });
 

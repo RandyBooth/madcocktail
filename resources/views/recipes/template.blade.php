@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('style')
-    <link rel="stylesheet" href="{{ asset('css/vendor/select2-bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ Bust::url('/css/vendor/select2-bootstrap.css', true) }}">
 @stop
 
 @section('script-bottom')
-    <script src="{{ asset('js/vendor/select2.min.js') }}"></script>
-    <script src="{{ asset('js/select-ingredients-min.js') }}"></script>
+    <script src="{{ Bust::url('/js/vendor/select2.min.js', true) }}"></script>
+    <script src="{{ Bust::url('/js/select-ingredients-min.js', true) }}"></script>
 @stop
 
 @section('content')

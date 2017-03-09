@@ -196,11 +196,26 @@ class RecipeImageController extends Controller
         return $color;
     }
 
-    private function clear($recipe)
+    private function clear($recipe = null)
     {
         if ($recipe) {
             Cache::forget('recipe_image_TOKEN_'.$recipe->token);
             Cache::forget('user_recipes_ID_'.$recipe->user_id);
+
+            if (Cache::has('recipes_latest')) {
+                $data = Cache::get('recipes_latest');
+
+                $data_test = $data
+                    ->pluck('recipe_id')
+                    ->filter(function ($value) {
+                        return $value != null;
+                    })
+                    ->contains($recipe->id);
+
+                if ($data_test) {
+                    Cache::forget('recipes_latest');
+                }
+            }
         }
     }
 }

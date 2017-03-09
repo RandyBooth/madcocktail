@@ -151,7 +151,7 @@ class UserSettingController extends Controller
         abort(404);
     }
 
-    private function clear($user)
+    private function clear($user = null)
     {
         if ($user) {
             Cache::forget('user_ID_'.$user->id);
