@@ -156,7 +156,7 @@ class SearchController extends Controller
 
         if (!empty($query_ingredient)) {
             $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.$query, 60*1, function() use ($query_ingredient, $limit) {
-                return $query_ingredient->withDepth()->orderBy('depth')->orderBy('title')->limit($limit)->get();
+                return $query_ingredient->withDepth()->isActive()->orderBy('depth')->orderBy('title')->limit($limit)->get();
             });
 
             if (!$results_ingredient->isEmpty()) {

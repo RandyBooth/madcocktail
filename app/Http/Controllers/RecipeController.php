@@ -10,6 +10,7 @@ use App\Measure;
 use App\Recipe;
 use App\RecipeCount;
 use App\RecipeImage;
+use App\Scopes\ActiveScope;
 use App\User;
 use Auth;
 use Carbon\Carbon;
@@ -23,7 +24,7 @@ class RecipeController extends Controller
     {
 //        Cache::flush();
         $this->middleware(['auth', 'isVerified', 'user-valid'], ['only' => ['create', 'edit']]);
-        $this->middleware(['auth', 'isVerified', 'user-valid', 'xss'], ['only' => ['store', 'update']]);
+        $this->middleware(['auth', 'isVerified', 'user-valid', 'throttle:15,5', 'xss'], ['only' => ['store', 'update']]);
         $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['destroy']]);
     }
 
@@ -527,7 +528,7 @@ class RecipeController extends Controller
     public function destroy($id)
     {
         if (Helper::is_admin()) {
-            $recipe = Recipe::token($id)->firstOrFail();
+            $recipe = Recipe::withoutGlobalScope(ActiveScope::class)->token($id)->firstOrFail();
 
             if (Helper::is_owner($recipe->user_id)) {
                 if ($recipe->delete()) {

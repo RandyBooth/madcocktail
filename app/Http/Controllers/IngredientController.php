@@ -6,7 +6,6 @@ use App\Helpers\Helper;
 use App\Http\Requests\IngredientRequest;
 use App\Ingredient;
 use App\Recipe;
-use App\Scopes\ActiveScope;
 use Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -16,7 +15,7 @@ class IngredientController extends Controller
     {
 //        Cache::flush();
         $this->middleware(['auth', 'isVerified', 'user-valid'], ['only' => ['create']]);
-        $this->middleware(['auth', 'isVerified', 'user-valid', 'xss'], ['only' => ['store']]);
+        $this->middleware(['auth', 'isVerified', 'user-valid', 'throttle:20,5', 'xss'], ['only' => ['store']]);
         $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['edit', 'destroy']]);
         $this->middleware(['admin', 'isVerified', 'user-valid', 'xss'], ['only' => ['update']]);
     }
@@ -28,7 +27,7 @@ class IngredientController extends Controller
     public function index()
     {
         $ingredients = Cache::remember('ingredients_root', 43200, function () {
-            return Ingredient::whereIsRoot()->isAlcoholic()->defaultOrder()->get();
+            return Ingredient::whereIsRoot()->isActive()->isAlcoholic()->defaultOrder()->get();
         });
 
         return view('ingredients.index', compact('ingredients'));
@@ -48,7 +47,7 @@ class IngredientController extends Controller
         $ingredients = ['' => '&nbsp;'];
 
         $nodes = Cache::remember('ingredients_tree', 43200, function () {
-            return Ingredient::withoutGlobalScope(ActiveScope::class)->orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+            return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         });
 
         $traverse = function ($ingredients_arr, $prefix = '-') use (&$traverse, &$ingredients) {
@@ -92,7 +91,7 @@ class IngredientController extends Controller
                 }
             }
 
-            $ingredient = Ingredient::withoutGlobalScope(ActiveScope::class)->create($data);
+            $ingredient = Ingredient::create($data);
 
             if (!empty($ingredient)) {
                 $this->clear($ingredient);
@@ -137,7 +136,7 @@ class IngredientController extends Controller
             $last_parameter = last($parameters_explode);
 
             $ingredient = Cache::remember('ingredient_SLUG_'.strtolower($last_parameter), 43200, function () use ($last_parameter) {
-                return Ingredient::where('slug', $last_parameter)->firstOrFail();
+                return Ingredient::where('slug', $last_parameter)->isActive()->firstOrFail();
             });
 
             $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
@@ -157,7 +156,7 @@ class IngredientController extends Controller
             }
         } else {
             $ingredients = Cache::remember('ingredients_root', 43200, function () {
-                return Ingredient::whereIsRoot()->isAlcoholic()->defaultOrder()->get();
+                return Ingredient::whereIsRoot()->isActive()->isAlcoholic()->defaultOrder()->get();
             });
         }
 
@@ -251,7 +250,7 @@ class IngredientController extends Controller
                     $ingredients = ['' => '&nbsp;'];
 
                     $nodes = Cache::remember('ingredients_tree', 43200, function () {
-                        return Ingredient::withoutGlobalScope(ActiveScope::class)->orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+                        return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
                     });
 
                     $traverse = function ($ingredients_arr, $prefix = '-') use (&$traverse, &$ingredients) {
@@ -279,7 +278,10 @@ class IngredientController extends Controller
     public function update(IngredientRequest $request, $id)
     {
         if (Auth::check()) {
+            $user = Auth::user();
             $data = $request->all();
+
+            $data['is_active'] = ($user->role == 1) ? 1 : 0;
             $data['parent_id'] = null;
 
             if (!empty($data['ingredients'])) {
@@ -301,6 +303,7 @@ class IngredientController extends Controller
             if ($ingredient) {
                 if (Helper::is_owner($ingredient->user_id)) {
                     $ingredient->title = $data['title'];
+                    $ingredient->is_active = $data['is_active'];
 
                     if ($ingredient->parent()->associate($data['parent_id'])->save()) {
                         $this->clear($ingredient);
@@ -348,7 +351,7 @@ class IngredientController extends Controller
     public function tree()
     {
         $nodes = Cache::remember('ingredients_tree', 43200, function () {
-            return Ingredient::withoutGlobalScope(ActiveScope::class)->orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
+            return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         });
 
         $tree = '';

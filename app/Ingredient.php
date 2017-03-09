@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Helpers\Helper;
-use App\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,8 +24,6 @@ class Ingredient extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::addGlobalScope(new ActiveScope);
 
         static::created(function ($model) {
             if ($model->id && empty($model->token)) {
@@ -69,14 +66,19 @@ class Ingredient extends Model
         }
     }
 
-    public function scopeToken($query, $type)
+    public function scopeIsActive($query)
     {
-        return $query->where('token', 'LIKE BINARY', $type);
+        return $query->where('is_active', 1);
     }
 
     public function scopeIsAlcoholic($query)
     {
         return $query->where('is_alcoholic', 1);
+    }
+
+    public function scopeToken($query, $type)
+    {
+        return $query->where('token', 'LIKE BINARY', $type);
     }
 
     public function recipes()
