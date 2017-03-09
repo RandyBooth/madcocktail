@@ -63,13 +63,13 @@ Route::group(['middleware' => 'fw-allow-wl'], function () {
     Route::resource('recipes', 'RecipeController');
 
     Route::group(['prefix' => 'ajax'], function() {
-        Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:25,1', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax'])->where('type', '[A-Za-z]+');
+        Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:30,5', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax'])->where('type', '[A-Za-z]+');
 
-        Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
+        Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,5', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
 //        Route::delete('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image_destroy', 'uses' => 'RecipeImageController@destroy']);
     });
 
-    Route::post('search/{type?}', ['middleware' => 'throttle:20,1', 'as' => 'search', 'uses' => 'SearchController@search'])->where('type', '[A-Za-z]+');
+    Route::post('search/{type?}', ['middleware' => 'throttle:30,5', 'as' => 'search', 'uses' => 'SearchController@search'])->where('type', '[A-Za-z]+');
 
 //    Route::resource('occasions', 'OccasionController');
 
