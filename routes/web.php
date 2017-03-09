@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => 'fw-allow-wl'], function () {
+Route::group(['middleware' => 'fw-block-bl'], function () {
     Auth::routes();
 
     Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified', 'user-valid']], function () {
