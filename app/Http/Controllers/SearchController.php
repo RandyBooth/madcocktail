@@ -21,7 +21,7 @@ class SearchController extends Controller
             $group = strtolower($request->input('search-group'));
 
             if ($group == 'recipes') {
-                $recipe = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
+                $recipe = Cache::remember('recipe_TOKEN_'.$id, 10080, function () use ($id) {
                     return Recipe::token($id)->with('ingredients')->first();
                 });
 
@@ -29,12 +29,12 @@ class SearchController extends Controller
                     return redirect()->route('recipes.show', $recipe->slug);
                 }
             } elseif ($group == 'ingredients') {
-                $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 43200, function () use ($id) {
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 10080, function () use ($id) {
                     return Ingredient::token($id)->first();
                 });
 
                 if ($ingredient) {
-                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
+                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
                         return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                     });
 

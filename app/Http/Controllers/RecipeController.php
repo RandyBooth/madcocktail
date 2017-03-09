@@ -119,7 +119,7 @@ class RecipeController extends Controller
             $count = 0;
 
             foreach ($ingredients_id as $token) {
-                $ingredient[] = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
+                $ingredient[] = Cache::remember('ingredient_TOKEN_'.$token, 10080, function () use ($token) {
                     return Ingredient::token($token)->first();
                 });
             }
@@ -129,11 +129,11 @@ class RecipeController extends Controller
             }
         }
 
-        $glasses_data = Cache::remember('glasses', 43200, function () {
+        $glasses_data = Cache::remember('glasses', 10080, function () {
             return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
         });
 
-        $measures_data = Cache::remember('measures', 43200, function () {
+        $measures_data = Cache::remember('measures', 10080, function () {
             return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
         });
 
@@ -155,11 +155,11 @@ class RecipeController extends Controller
             $user = Auth::user();
             $data = $request->all();
 
-            $glasses_data = Cache::remember('glasses', 43200, function () {
+            $glasses_data = Cache::remember('glasses', 10080, function () {
                 return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
-            $measures_data = Cache::remember('measures', 43200, function () {
+            $measures_data = Cache::remember('measures', 10080, function () {
                 return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
@@ -187,7 +187,7 @@ class RecipeController extends Controller
 
                     foreach ($ingredients as $key => $token) {
                         if (!empty($token)) {
-                            $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
+                            $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 10080, function () use ($token) {
                                 return Ingredient::token($token)->first();
                             });
 
@@ -227,7 +227,7 @@ class RecipeController extends Controller
      */
     public function show($parameter = null, Request $request)
     {
-        $recipe = Cache::remember('recipe_SLUG_'.strtolower($parameter), 43200, function () use ($parameter) {
+        $recipe = Cache::remember('recipe_SLUG_'.strtolower($parameter), 10080, function () use ($parameter) {
             return Recipe::where('slug', $parameter)->with(['ingredients', 'glass', 'counts'])->firstOrFail();
         });
 
@@ -236,11 +236,11 @@ class RecipeController extends Controller
             $recipe_id = $recipe->id;
             $recipe_token = $recipe->token;
 
-            $recipe_author = Cache::remember('user_ID_'.$user_id, 43200, function () use ($user_id) {
+            $recipe_author = Cache::remember('user_ID_'.$user_id, 10080, function () use ($user_id) {
                 return User::find($user_id);
             });
 
-            $recipe_image = Cache::remember('recipe_image_TOKEN_'.$recipe_token, 43200, function () use ($recipe_id) {
+            $recipe_image = Cache::remember('recipe_image_TOKEN_'.$recipe_token, 10080, function () use ($recipe_id) {
                 return RecipeImage::firstOrCreate(['recipe_id' => $recipe_id]);
             });
 
@@ -321,7 +321,7 @@ class RecipeController extends Controller
             $ingredient_id = [];
 
             foreach ($ingredients as $ingredient) {
-                $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 43200, function () use ($ingredient) {
+                $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
                     return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                 });
 
@@ -377,17 +377,17 @@ class RecipeController extends Controller
     public function edit($id)
     {
         if (Auth::check()) {
-            $recipe_data = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
+            $recipe_data = Cache::remember('recipe_TOKEN_'.$id, 10080, function () use ($id) {
                 return Recipe::token($id)->with('ingredients')->first();
             });
 
             if ($recipe_data) {
                 if (Helper::is_owner($recipe_data->user_id)) {
-                    $glasses_data = Cache::remember('glasses', 43200, function () {
+                    $glasses_data = Cache::remember('glasses', 10080, function () {
                         return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
                     });
 
-                    $measures_data = Cache::remember('measures', 43200, function () {
+                    $measures_data = Cache::remember('measures', 10080, function () {
                         return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
                     });
 
@@ -457,11 +457,11 @@ class RecipeController extends Controller
         if (Auth::check()) {
             $data = $request->all();
 
-            $glasses_data = Cache::remember('glasses', 43200, function () {
+            $glasses_data = Cache::remember('glasses', 10080, function () {
                 return Glass::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
-            $measures_data = Cache::remember('measures', 43200, function () {
+            $measures_data = Cache::remember('measures', 10080, function () {
                 return Measure::select('id', 'title', 'slug')->orderBy('title')->get();
             });
 
@@ -475,7 +475,7 @@ class RecipeController extends Controller
                 $data['glass_id'] = $glasses[$data['glass']];
             }
 
-            $recipe = Cache::remember('recipe_TOKEN_'.$id, 43200, function () use ($id) {
+            $recipe = Cache::remember('recipe_TOKEN_'.$id, 10080, function () use ($id) {
                 return Recipe::token($id)->with('ingredients')->first();
             });
 
@@ -489,7 +489,7 @@ class RecipeController extends Controller
 
                         foreach ($ingredients as $key => $token) {
                             if (!empty($token)) {
-                                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 43200, function () use ($token) {
+                                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 10080, function () use ($token) {
                                     return Ingredient::token($token)->first();
                                 });
 
