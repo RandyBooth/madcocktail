@@ -156,8 +156,12 @@ class Helper
         return (strpos($num, '.') !== false) ? rtrim(rtrim($num, '0'), '.') : $num;
     }
 
-    public static function nl2empty($text) {
-        return trim(preg_replace('/\s+/', ' ', $text));
+    public static function nl2empty($string) {
+        if (is_array($string)) {
+            $string = implode(' ', $string);
+        }
+
+        return trim(preg_replace('/\s+/', ' ', $string));
     }
 
     public static function html_sup($string)
@@ -165,9 +169,9 @@ class Helper
         return preg_replace('/(™|®|©|&trade;|&reg;|&copy;|&#8482;|&#174;|&#169;)/', '<sup>$1</sup>', $string);
     }
 
-    public static function textarea_to_array($text)
+    public static function textarea_to_array($string)
     {
-        return array_values(array_filter(array_map('trim', preg_split('/\r\n|\n|\r/', $text, -1, PREG_SPLIT_NO_EMPTY))));
+        return array_values(array_filter(array_map('trim', preg_split('/\r\n|\n|\r/', $string, -1, PREG_SPLIT_NO_EMPTY))));
     }
 
     public static function nl2p($string, $line_breaks = true, $xml = true)

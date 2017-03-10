@@ -7,11 +7,12 @@
     $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'mad-cocktail.gif';
     $social_title = $recipe->title. ' Recipe';
     $social_description = Helper::nl2empty($recipe->description);
+    $social_directions = Helper::nl2empty($recipe->directions);
     $social_image = route('imagecache', ['template' => 'share', 'filename' => $image]);
 @endphp
 
 @section('og-title', $social_title)
-@section('og-description', $social_description)
+@section('og-description', $social_directions)
 @section('og-image', $social_image)
 
 @if(Helper::is_owner($recipe->user_id))
@@ -165,7 +166,7 @@
 
             <hr class="hidden-sm-down">
 
-            {!! Helper::share($social_title, $social_description, $social_image) !!}
+            {!! Helper::share($social_title, $social_description.' '.$social_directions, $social_image) !!}
         </div>
     </div>
 
