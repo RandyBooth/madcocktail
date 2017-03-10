@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Ingredient;
 use App\Recipe;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
@@ -101,7 +102,7 @@ class SearchController extends Controller
     {
         $data = [];
 
-        $query = preg_replace('/\s+/', ' ', trim($query));
+        $query = preg_replace('/\s+/', ' ', trim(Str::ascii($query)));
 
         if (empty($query) && !is_array($type)) {
             return $data;
