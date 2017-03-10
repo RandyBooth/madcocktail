@@ -338,7 +338,7 @@ class RecipeController extends Controller
                 $ingredient_slug[$ingredient->id] = implode('/', array_merge(array_pluck($ingredient_ancestors, 'slug'), [$ingredient->slug]));
             }
 
-            $recipe_similar = [];
+            $recipe_similar = collect([]);
 
             if (!empty($ingredient_id)) {
                 $now = Carbon::now()->minute(0)->second(0);
