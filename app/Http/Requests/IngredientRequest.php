@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\Rule;
 
 class IngredientRequest extends FormRequest
 {
@@ -36,11 +38,23 @@ class IngredientRequest extends FormRequest
                     return [];
                 }
                 case 'POST':
+                {
+                    return [
+                        'title' => 'required|least_one_letter|min:3|unique:ingredients',
+                        'first_name' => 'honeypot',
+                        'my_time' => 'required|honeytime:1',
+                    ];
+                }
                 case 'PUT':
                 case 'PATCH':
                 {
+                    $token = $this->route('token');
+                    $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 10080, function () use ($token) {
+                        return Ingredient::token($token)->first();
+                    });
+
                     return [
-                        'title' => 'required|least_one_letter|min:3',
+                        'title' => ['required', 'least_one_letter', 'min:3', Rule::unique('ingredients')->ignore($ingredient->id)],
                         'first_name' => 'honeypot',
                         'my_time' => 'required|honeytime:1',
                     ];

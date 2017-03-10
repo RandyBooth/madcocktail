@@ -55,6 +55,7 @@ class Ingredient extends Model
             'slug' => [
                 'source' => 'title',
                 'unique' => true,
+                'onUpdate' => true
             ]
         ];
     }
