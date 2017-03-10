@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=5.6.4",
+        "askedio/laravel5-profanity-filter": "^1.0",
         "barryvdh/laravel-debugbar": "^2.3",
         "cviebrock/eloquent-sluggable": "^4.2",
         "graham-campbell/htmlmin": "^4.5",
@@ -27,7 +28,7 @@
         "msurguy/honeypot": "^1.0",
         "pragmarx/firewall": "^1.0",
         "predis/predis": "^1.1",
-        "themonkeys/cachebuster" :"2.*",
+        "themonkeys/cachebuster": "2.*",
         "vinkla/hashids": "^3.1",
         "watson/active": "^2.0"
     },

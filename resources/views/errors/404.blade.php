@@ -5,11 +5,11 @@
 @section('content')
     <div class="row mb-4">
         <div class="col-12">
-            <h3>Verification failed</h3>
+            <h3>404 Not Found</h3>
 
             <hr>
 
-            <p>Your account could not be verified.</p>
+            <p></p>
         </div>
     </div>
 @endsection

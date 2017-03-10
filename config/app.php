@@ -166,6 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Askedio\Laravel5ProfanityFilter\Providers\ProfanityFilterServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         GrahamCampbell\HTMLMin\HTMLMinServiceProvider::class,

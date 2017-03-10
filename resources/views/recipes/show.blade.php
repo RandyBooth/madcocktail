@@ -107,6 +107,10 @@
                                 if (!empty($measure_title)) {
                                     $string .= ($measure_amount > 1 ) ? str_plural($measure_title) : str_singular($measure_title);
                                     $string .= ' ';
+                                } else {
+                                    if ($measure_amount > 1) {
+                                        $ingredient_title = str_plural($ingredient_title);
+                                    }
                                 }
                             } else {
                                 if (!empty($measure_title)) {

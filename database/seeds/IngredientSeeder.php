@@ -54,30 +54,16 @@ class IngredientSeeder extends Seeder
                         'title'     => 'Lager',
                         'is_active' => 1,
                         'children'  => [
-                            [
-                                'title'     => 'Pale ale',
-                                'is_active' => 1,
-                                'children'  => [
-                                    [ 'title' => 'Bock', 'is_active' => 1 ],
-                                    [ 'title' => 'Oktoberfest', 'is_active' => 1 ],
-                                    [ 'title' => 'Pilsener', 'is_active' => 1 ],
-                                    [ 'title' => 'Dortmunder Export', 'is_active' => 1 ],
-                                    [ 'title' => 'Helles', 'is_active' => 1 ],
-                                    [ 'title' => 'American lager', 'is_active' => 1 ],
-                                    [ 'title' => 'Dry beer', 'is_active' => 1 ],
-                                    [ 'title' => 'Premium lager', 'is_active' => 1 ],
-                                    [ 'title' => 'Malt liquor', 'is_active' => 1 ],
-                                    [ 'title' => 'Märzen', 'is_active' => 1 ],
-                                ]
-                            ],
-                            [
-                                'title'     => 'Pale ale',
-                                'is_active' => 1,
-                                'children'  => [
-                                    [ 'title' => 'Scotch ale', 'is_active' => 1 ],
-                                ]
-                            ],
-                            [ 'title' => 'Scotch ale', 'is_active' => 1 ],
+                            [ 'title' => 'Bock', 'is_active' => 1 ],
+                            [ 'title' => 'Oktoberfest', 'is_active' => 1 ],
+                            [ 'title' => 'Pilsener', 'is_active' => 1 ],
+                            [ 'title' => 'Dortmunder Export', 'is_active' => 1 ],
+                            [ 'title' => 'Helles', 'is_active' => 1 ],
+                            [ 'title' => 'American lager', 'is_active' => 1 ],
+                            [ 'title' => 'Dry beer', 'is_active' => 1 ],
+                            [ 'title' => 'Premium lager', 'is_active' => 1 ],
+                            [ 'title' => 'Malt liquor', 'is_active' => 1 ],
+                            [ 'title' => 'Märzen', 'is_active' => 1 ],
                         ]
                     ],
                     [
@@ -146,7 +132,6 @@ class IngredientSeeder extends Seeder
                     [ 'title' => 'Neutral grain spirit', 'is_active' => 1 ],
                     [ 'title' => 'Ogogoro', 'is_active' => 1 ],
                     [ 'title' => 'Palinka', 'is_active' => 1 ],
-                    [ 'title' => 'Pisco', 'is_active' => 1 ],
                     [ 'title' => 'Poitín', 'is_active' => 1 ],
                     [ 'title' => 'Rakı', 'is_active' => 1 ],
                     [ 'title' => 'Rakia', 'is_active' => 1 ],
@@ -255,9 +240,6 @@ class IngredientSeeder extends Seeder
                             [ 'title' => 'Swedish whisky', 'is_active' => 1 ],
                             [ 'title' => 'Taiwanese whisky', 'is_active' => 1 ],
                             [ 'title' => 'Welsh whisky', 'is_active' => 1 ],
-                            [ 'title' => 'Australian whisky', 'is_active' => 1 ],
-                            [ 'title' => 'Australian whisky', 'is_active' => 1 ],
-
                         ]
                     ],
                     [

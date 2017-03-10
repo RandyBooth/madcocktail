@@ -9,8 +9,7 @@
 
             <hr>
 
-            <div class="row">
-            </div>
+            <p></p>
         </div>
     </div>
 @endsection

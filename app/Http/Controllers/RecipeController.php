@@ -544,6 +544,17 @@ class RecipeController extends Controller
         }
     }
 
+    public function admin_lists()
+    {
+        $recipes = Recipe
+        ::leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
+        ->orderBy('recipes.updated_at', 'DESC')
+        ->orderby('recipes.title')
+        ->get();
+
+        return view('recipes.admin-lists', compact('recipes'));
+    }
+
     private function clear($recipe = null, $delete = false)
     {
         if ($recipe) {

@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+@section('title', 'Tree - Ingredients')
+
 @section('content')
 
     <style>

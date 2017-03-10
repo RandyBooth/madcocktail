@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6ab9fff0f28e5442dda12f5cd44b722e",
-    "content-hash": "37caf043641bf691573a48b557424130",
+    "hash": "45fe9af03fedd443a7979a23b46a677c",
+    "content-hash": "d48ba12fda9256d2b4b6708e7a131385",
     "packages": [
+        {
+            "name": "askedio/laravel5-profanity-filter",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Askedio/Laravel5-Profanity-Filter.git",
+                "reference": "eeea82bfe4bb25e5b487536142be364e66f62d73"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Askedio/Laravel5-Profanity-Filter/zipball/eeea82bfe4bb25e5b487536142be364e66f62d73",
+                "reference": "eeea82bfe4bb25e5b487536142be364e66f62d73",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "laravel/laravel": "5.*",
+                "phpunit/phpunit": "~5.0",
+                "symfony/css-selector": "3.1.*",
+                "symfony/dom-crawler": "3.1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Askedio\\Laravel5ProfanityFilter\\": "app/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AGPL-3.0"
+            ],
+            "description": "A Vendor Package Example",
+            "keywords": [
+                "laravel"
+            ],
+            "time": "2016-11-23 16:52:13"
+        },
         {
             "name": "barryvdh/laravel-debugbar",
             "version": "v2.3.2",

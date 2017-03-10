@@ -181,7 +181,6 @@ class IngredientController extends Controller
                 }
             } else {
                 $recipe_month_text = 'ingredient_recipes_top_month';
-//                $ingredient_descendants_arr = [];
 
                 foreach($ingredients as $val) {
                     $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$val->token, 10080, function () use ($val) {
@@ -362,6 +361,24 @@ class IngredientController extends Controller
         $tree = '';
         $this->buildTree($tree, $nodes, 'title', 'children', true);
         return view('ingredients.tree', compact('tree'));
+    }
+
+    public function pending()
+    {
+        $ingredients = Ingredient::isActive(0)->orderBy('is_alcoholic', 'desc')->orderBy('created_at')->orderBy('title')->get();
+        $ingredients_slug = [];
+
+        if (!$ingredients->isEmpty()) {
+            foreach($ingredients as $ingredient) {
+                $ingredient_ancestors = $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
+
+                $ingredient_ancestors_self = array_merge($ingredient_ancestors->toArray(), [$ingredient->toArray()]);
+                $ingredient_ancestors_self_slug = array_pluck($ingredient_ancestors_self, 'slug');
+                $ingredients_slug[$ingredient->id] = implode('/', $ingredient_ancestors_self_slug);
+            }
+        }
+
+        return view('ingredients.pending', compact('ingredients', 'ingredients_slug'));
     }
 
     private function buildTree(&$tree_return = '', $tree_array, $display_field, $children_field, $link = false, $slug = '', $recursionDepth = 0, $maxDepth = false)

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Jrean\UserVerification\Exceptions\UserNotVerifiedException;
+use Illuminate\Session\TokenMismatchException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,8 +46,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->back()->withInput()->with('danger', 'Your session was expired. Please try again.');
+        }
+
         if ($exception instanceof UserNotVerifiedException) {
             return redirect()->route('home')->with('danger', 'You received an email for confirming your registration. Please check your email. <a href="'.route('email-verification.resend').'">Click here</a> to try again.');
+        }
+
+        if ($this->isHttpException($exception)) {
+            return $this->toIlluminateResponse($this->renderHttpException($exception), $exception);
+        } else {
+            return response()->view("errors.500", ['exception' => $exception]);
         }
 
         return parent::render($request, $exception);

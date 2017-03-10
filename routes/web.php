@@ -17,6 +17,16 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
     Route::group(['prefix' => 'admin', 'middleware' => ['admin', 'isVerified', 'user-valid']], function () {
         Route::group(['prefix' => 'ingredients'], function () {
             Route::get('tree', 'IngredientController@tree');
+            Route::get('pending', 'IngredientController@pending');
+        });
+
+        Route::group(['prefix' => 'recipes'], function () {
+            Route::get('lists', 'RecipeController@admin_lists');
+        });
+
+        Route::group(['prefix' => 'clear'], function () {
+            Route::get('glasses', 'ClearCacheController@glasses');
+            Route::get('measures', 'ClearCacheController@measures');
         });
     });
 

@@ -1,16 +1,15 @@
 @extends('layouts.master')
 
-@section('title', '404 Not Found')
+@section('title', '500 Internal Server Error')
 
 @section('content')
     <div class="row mb-4">
         <div class="col-12">
-            <h3>404 Not Found</h3>
+            <h3>500 Internal Server Error</h3>
 
             <hr>
 
-            <div class="row">
-            </div>
+            <p></p>
         </div>
     </div>
 @endsection

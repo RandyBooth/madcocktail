@@ -66,9 +66,9 @@ class Ingredient extends Model
         }
     }
 
-    public function scopeIsActive($query)
+    public function scopeIsActive($query, $type = 1)
     {
-        return $query->where('is_active', 1);
+        return $query->where('is_active', $type);
     }
 
     public function scopeIsAlcoholic($query)
