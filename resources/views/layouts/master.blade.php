@@ -1,3 +1,6 @@
+@php
+    $social_image = route('imagecache', ['template' => 'share', 'filename' => 'mad-cocktail.gif']);
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,15 +13,19 @@
     <meta property="fb:app_id" content="{{ config('services.facebook.client_id') }}" />
     <meta property="og:url" content="@yield('og-url', url()->full())" />
     {{--<meta property="og:type" content="@yield('og-type')" />--}}
-    <meta property="og:title" content="@yield('og-title')" />
+    <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('og-description')" />
-    <meta property="og:image" content="@yield('og-image')" />
+    <meta property="og:image" content="@yield('og-image', $social_image)" />
+    <meta property="og:image:secure_url" content="@yield('og-image', $social_image)" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
 
     <meta name="twitter:card" content="summary">
-    {{--<meta name="twitter:site" content="@MadCocktail" />--}}
+    <meta name="twitter:site" content="{{ '@'.config('services.twitter.via') }}" />
     <meta name="twitter:url" content="@yield('og-url', url()->full())">
+    <meta name="twitter:title" content="@yield('title')">
     <meta name="twitter:description" content="@yield('og-description')">
-    <meta name="twitter:image" content="@yield('og-image')">
+    <meta name="twitter:image" content="@yield('og-image', $social_image)">
 
     <title>@yield('title') | {{ config('app.name') }}</title>
 

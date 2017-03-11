@@ -1,19 +1,20 @@
 @extends('layouts.master')
 
-@php $title = (!empty($recipe->title)) ? $recipe->title . ' - ': ''; @endphp
-@section('title', $title . 'Recipe')
-
 @php
+    $title = (!empty($recipe->title)) ? $recipe->title . ' ': '';
+    $title = $title . 'Recipe';
     $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'mad-cocktail.gif';
-    $social_title = $recipe->title. ' Recipe';
+    $social_title = $title;
     $social_description = Helper::nl2empty($recipe->description);
     $social_directions = Helper::nl2empty($recipe->directions);
     $social_image = route('imagecache', ['template' => 'share', 'filename' => $image]);
 @endphp
 
-@section('og-title', $social_title)
+@section('title', $title)
+
 @section('og-description', $social_directions)
 @section('og-image', $social_image)
+@section('og-description', $social_directions)
 
 @if(Helper::is_owner($recipe->user_id))
 @section('script-bottom')

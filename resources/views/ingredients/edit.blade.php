@@ -1,6 +1,6 @@
 @extends('ingredients.template')
 
-@section('title', 'Edit Ingredient')
+@section('title', $ingredient['title'] . ' - Edit Ingredient')
 
 @section('form')
 <form role="form" method="POST" action="{{ route('ingredients.update', $ingredient['token']) }}">

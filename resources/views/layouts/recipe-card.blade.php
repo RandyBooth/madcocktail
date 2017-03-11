@@ -21,7 +21,7 @@
         <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
             <h4 class="card-title">{{ $recipe->title }}</h4>
         </a>
-        <p class="card-text">{{ Helper::nl2empty($recipe->description) }}</p>
+        <p class="card-text">{{ Helper::nl2empty($recipe->description).' '.Helper::nl2empty($recipe->directions) }}</p>
     </div>
     @if (!empty($recipe->username))
     <div class="card-footer">
