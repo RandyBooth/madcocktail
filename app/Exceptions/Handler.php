@@ -46,8 +46,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-
         if ($exception instanceof TokenMismatchException) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Token Mismatch Exception'], 401);
+            }
+
             return redirect()->back()->withInput()->with('danger', 'Your session was expired. Please try again.');
         }
 
@@ -55,10 +58,20 @@ class Handler extends ExceptionHandler
             return redirect()->route('home')->with('danger', 'You received an email for confirming your registration. Please check your email. <a href="'.route('email-verification.resend').'">Click here</a> to try again.');
         }
 
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->view('errors.404', [], 404);
+        }
+
         if ($this->isHttpException($exception)) {
-            return $this->toIlluminateResponse($this->renderHttpException($exception), $exception);
-        } else {
-            return response()->view("errors.500", ['exception' => $exception]);
+            if (! \Auth::check()) {
+                return redirect()->route('login');
+            }
+
+            $statusCode = $exception->getStatusCode($exception);
+
+            if (in_array($statusCode, array(403, 404, 500, 503))){
+                return response()->view('errors.' . $statusCode, [], $statusCode);
+            }
         }
 
         return parent::render($request, $exception);
@@ -74,7 +87,7 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
         }
 
         return redirect()->guest('login');
