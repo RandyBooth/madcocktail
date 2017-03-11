@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Ingredient;
 use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Cache;

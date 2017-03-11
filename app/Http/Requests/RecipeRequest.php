@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Recipe;
 use Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\Rule;
 
 class RecipeRequest extends FormRequest
 {
@@ -36,11 +39,23 @@ class RecipeRequest extends FormRequest
                     return [];
                 }
                 case 'POST':
+                {
+                    return [
+                        'title' => 'required|least_one_letter|min:3|unique:recipes',
+                        'first_name' => 'honeypot',
+                        'my_time' => 'required|honeytime:2',
+                    ];
+                }
                 case 'PUT':
                 case 'PATCH':
                 {
+                    $token = $this->route('recipe');
+                    $recipe = Cache::remember('recipe_TOKEN_'.$token, 10080, function () use ($token) {
+                        return Recipe::token($token)->with('ingredients')->first();
+                    });
+
                     return [
-                        'title' => 'required|least_one_letter|min:3',
+                        'title' => ['required', 'least_one_letter', 'min:3', Rule::unique('recipes')->ignore($recipe->id)],
                         'first_name' => 'honeypot',
                         'my_time' => 'required|honeytime:2',
                     ];
