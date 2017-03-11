@@ -37,11 +37,11 @@ class OAuthController extends Controller
                 $oauth = OAuth::where('provider', '=', $this->provider)->where('provider_uid', '=', $social_user->id)->first();
 
                 if ($oauth) {
-                    $user = Cache::remember('user_ID_'.$oauth->user_id, 10080, function () use ($oauth) {
+                    $user = Cache::remember('user_ID_'.$oauth->user_id, 1440, function () use ($oauth) {
                         return User::find($oauth->user_id);
                     });
                 } else {
-                    $user = Cache::remember('user_EMAIL_'.$social_user->email, 10080, function () use ($social_user) {
+                    $user = Cache::remember('user_EMAIL_'.$social_user->email, 1440, function () use ($social_user) {
                         return User::where('email', $social_user->email)->first();
                     });
                 }

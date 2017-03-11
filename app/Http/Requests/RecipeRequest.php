@@ -50,7 +50,7 @@ class RecipeRequest extends FormRequest
                 case 'PATCH':
                 {
                     $token = $this->route('recipe');
-                    $recipe = Cache::remember('recipe_TOKEN_'.$token, 10080, function () use ($token) {
+                    $recipe = Cache::remember('recipe_TOKEN_'.$token, 1440, function () use ($token) {
                         return Recipe::token($token)->with('ingredients')->first();
                     });
 

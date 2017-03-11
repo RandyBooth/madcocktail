@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Ingredient;
 use App\Recipe;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class SearchController extends Controller
             $group = strtolower($request->input('search-group'));
 
             if ($group == 'recipes') {
-                $recipe = Cache::remember('recipe_TOKEN_'.$id, 10080, function () use ($id) {
+                $recipe = Cache::remember('recipe_TOKEN_'.$id, 1440, function () use ($id) {
                     return Recipe::token($id)->with('ingredients')->first();
                 });
 
@@ -30,12 +31,12 @@ class SearchController extends Controller
                     return redirect()->route('recipes.show', $recipe->slug);
                 }
             } elseif ($group == 'ingredients') {
-                $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 10080, function () use ($id) {
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 1440, function () use ($id) {
                     return Ingredient::token($id)->first();
                 });
 
                 if ($ingredient) {
-                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+                    $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                         return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                     });
 
@@ -145,8 +146,10 @@ class SearchController extends Controller
             }
         }
 
+        $expiresAt = Carbon::now()->minute(60)->second(0);
+
         if (!empty($query_recipe)) {
-            $results_recipe = Cache::remember($cache.'_recipe_QUERY_'.$query, 60*1, function() use ($query_recipe, $limit) {
+            $results_recipe = Cache::remember($cache.'_recipe_QUERY_'.$query, $expiresAt, function() use ($query_recipe, $limit) {
                 return $query_recipe->orderBy(DB::raw('CHAR_LENGTH(title)'))->orderBy('title')->limit($limit)->get();
             });
 
@@ -156,7 +159,7 @@ class SearchController extends Controller
         }
 
         if (!empty($query_ingredient)) {
-            $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.$query, 60*1, function() use ($query_ingredient, $limit) {
+            $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.$query, $expiresAt, function() use ($query_ingredient, $limit) {
                 return $query_ingredient->withDepth()->isActive()->orderBy('depth')->orderBy(DB::raw('CHAR_LENGTH(title)'))->orderBy('title')->limit($limit)->get();
             });
 

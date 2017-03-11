@@ -26,7 +26,7 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $ingredients = Cache::remember('ingredients_root', 10080, function () {
+        $ingredients = Cache::remember('ingredients_root', 1440, function () {
             return Ingredient::whereIsRoot()->isActive()->isAlcoholic()->defaultOrder()->get();
         });
 
@@ -46,7 +46,7 @@ class IngredientController extends Controller
         ];
         $ingredients = ['' => '&nbsp;'];
 
-        $nodes = Cache::remember('ingredients_tree', 10080, function () {
+        $nodes = Cache::remember('ingredients_tree', 1440, function () {
             return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         });
 
@@ -82,7 +82,7 @@ class IngredientController extends Controller
             if (!empty($data['ingredients'])) {
                 $token = $data['ingredients'];
 
-                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 10080, function () use ($token) {
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 1440, function () use ($token) {
                     return Ingredient::token($token)->first();
                 });
 
@@ -100,7 +100,7 @@ class IngredientController extends Controller
                     $ingredient_slug = $ingredient->slug;
 
                     if ($data['parent_id']) {
-                        $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+                        $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                             return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                         });
 
@@ -135,11 +135,11 @@ class IngredientController extends Controller
             $count_parameters = count($parameters_explode);
             $last_parameter = last($parameters_explode);
 
-            $ingredient = Cache::remember('ingredient_SLUG_'.strtolower($last_parameter), 10080, function () use ($last_parameter) {
+            $ingredient = Cache::remember('ingredient_SLUG_'.strtolower($last_parameter), 1440, function () use ($last_parameter) {
                 return Ingredient::where('slug', $last_parameter)->isActive()->firstOrFail();
             });
 
-            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                 return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
             });
 
@@ -155,7 +155,7 @@ class IngredientController extends Controller
                 }
             }
         } else {
-            $ingredients = Cache::remember('ingredients_root', 10080, function () {
+            $ingredients = Cache::remember('ingredients_root', 1440, function () {
                 return Ingredient::whereIsRoot()->isActive()->isAlcoholic()->defaultOrder()->get();
             });
         }
@@ -167,11 +167,11 @@ class IngredientController extends Controller
                 $recipe_month_text = 'ingredient_recipes_top_month_TOKEN_'.$ingredient->token;
                 $ingredient_breadcrumbs = array_pluck($ingredient_ancestors_self, 'title', 'slug');
 
-                $ingredients = Cache::remember('ingredient_children_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+                $ingredients = Cache::remember('ingredient_children_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                     return $ingredient->children()->orderBy('title')->get();
                 });
 
-                $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+                $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                     return $ingredient->descendants()->select('id', 'token', 'title', 'slug')->get();
                 });
 
@@ -182,7 +182,7 @@ class IngredientController extends Controller
                 $recipe_month_text = 'ingredient_recipes_top_month';
 
                 foreach($ingredients as $val) {
-                    $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$val->token, 10080, function () use ($val) {
+                    $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$val->token, 1440, function () use ($val) {
                         return $val->descendants()->select('id', 'token', 'title', 'slug')->get();
                     });
 
@@ -225,7 +225,7 @@ class IngredientController extends Controller
     public function edit($id)
     {
         if (Auth::check()) {
-            $ingredient_data = Cache::remember('ingredient_TOKEN_'.$id, 10080, function () use ($id) {
+            $ingredient_data = Cache::remember('ingredient_TOKEN_'.$id, 1440, function () use ($id) {
                 return Ingredient::token($id)->first();
             });
 
@@ -236,7 +236,7 @@ class IngredientController extends Controller
                     if ($ingredient_data->parent_id) {
                         $ingredient_parent_id = $ingredient_data->parent_id;
 
-                        $parent = Cache::remember('ingredient_parent_TOKEN_'.$ingredient_data->token, 10080, function () use ($ingredient_parent_id) {
+                        $parent = Cache::remember('ingredient_parent_TOKEN_'.$ingredient_data->token, 1440, function () use ($ingredient_parent_id) {
                             return Ingredient::select('token')->find($ingredient_parent_id);
                         });
 
@@ -252,7 +252,7 @@ class IngredientController extends Controller
                     ];
                     $ingredients = ['' => '&nbsp;'];
 
-                    $nodes = Cache::remember('ingredients_tree', 10080, function () {
+                    $nodes = Cache::remember('ingredients_tree', 1440, function () {
                         return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
                     });
 
@@ -290,7 +290,7 @@ class IngredientController extends Controller
             if (!empty($data['ingredients'])) {
                 $token = $data['ingredients'];
 
-                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 10080, function () use ($token) {
+                $ingredient = Cache::remember('ingredient_TOKEN_'.$token, 1440, function () use ($token) {
                     return Ingredient::token($token)->first();
                 });
 
@@ -299,7 +299,7 @@ class IngredientController extends Controller
                 }
             }
 
-            $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 10080, function () use ($id) {
+            $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 1440, function () use ($id) {
                 return Ingredient::token($id)->first();
             });
 
@@ -314,7 +314,7 @@ class IngredientController extends Controller
                         $ingredient_slug = $ingredient->slug;
 
                         if ($data['parent_id']) {
-                            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+                            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                                 return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
                             });
 
@@ -353,7 +353,7 @@ class IngredientController extends Controller
 
     public function tree()
     {
-        $nodes = Cache::remember('ingredients_tree', 10080, function () {
+        $nodes = Cache::remember('ingredients_tree', 1440, function () {
             return Ingredient::orderBy('is_alcoholic', 'desc')->orderBy('title')->get()->toTree();
         });
 
@@ -409,7 +409,7 @@ class IngredientController extends Controller
     private function clear($ingredient = null)
     {
         if ($ingredient) {
-            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+            $ingredient_ancestors = Cache::remember('ingredient_ancestors_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                 return $ingredient->ancestors()->select('id', 'token', 'title', 'slug')->get();
             });
 
@@ -419,7 +419,7 @@ class IngredientController extends Controller
                 }
             }
 
-            $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$ingredient->token, 10080, function () use ($ingredient) {
+            $ingredient_descendants = Cache::remember('ingredient_descendants_TOKEN_'.$ingredient->token, 1440, function () use ($ingredient) {
                 return $ingredient->descendants()->select('id', 'token', 'title', 'slug')->get();
             });
 

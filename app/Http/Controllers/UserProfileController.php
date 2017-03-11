@@ -62,11 +62,11 @@ class UserProfileController extends Controller
      */
     public function show($username)
     {
-        $user = Cache::remember('user_USERNAME_'.$username, 10080, function () use ($username) {
+        $user = Cache::remember('user_USERNAME_'.$username, 1440, function () use ($username) {
             return User::where('username', $username)->firstOrFail();
         });
 
-        $recipes = Cache::remember('user_recipes_ID_'.$user->id, 10080, function () use ($user) {
+        $recipes = Cache::remember('user_recipes_ID_'.$user->id, 1440, function () use ($user) {
             return Recipe
                 ::leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
 //                ->select(['title', 'slug'])
