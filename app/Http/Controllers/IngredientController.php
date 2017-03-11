@@ -14,7 +14,6 @@ class IngredientController extends Controller
 {
     public function __construct()
     {
-//        Cache::flush();
         $this->middleware(['auth', 'isVerified', 'user-valid'], ['only' => ['create']]);
         $this->middleware(['auth', 'isVerified', 'user-valid', 'throttle:20,5', 'xss'], ['only' => ['store']]);
         $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['edit', 'destroy']]);

@@ -22,7 +22,6 @@ class RecipeController extends Controller
 {
     public function __construct()
     {
-//        Cache::flush();
         $this->middleware(['auth', 'isVerified', 'user-valid'], ['only' => ['create', 'edit']]);
         $this->middleware(['auth', 'isVerified', 'user-valid', 'throttle:15,5', 'xss'], ['only' => ['store', 'update']]);
         $this->middleware(['admin', 'isVerified', 'user-valid'], ['only' => ['destroy']]);

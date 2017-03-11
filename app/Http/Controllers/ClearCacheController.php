@@ -11,6 +11,12 @@ class ClearCacheController extends Controller
         $this->middleware(['admin', 'isVerified', 'user-valid']);
     }
 
+    public function all()
+    {
+        Cache::flush();
+        echo 'Clear!';
+    }
+
     public function glasses()
     {
         Cache::forget('glasses');

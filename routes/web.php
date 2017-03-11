@@ -25,6 +25,7 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
         });
 
         Route::group(['prefix' => 'clear'], function () {
+            Route::get('all', 'ClearCacheController@all');
             Route::get('glasses', 'ClearCacheController@glasses');
             Route::get('measures', 'ClearCacheController@measures');
         });
