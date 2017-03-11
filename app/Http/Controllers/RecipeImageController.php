@@ -130,7 +130,7 @@ class RecipeImageController extends Controller
                         $response['message'] = $validator->errors()->all();
                     }
                 } else {
-                    $response['message'] = 'Could not create image.';
+                    $response['message'] = 'Could not upload image.';
                 }
             } else {
                 $response['message'] = 'Is not ajax request.';
