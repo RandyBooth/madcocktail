@@ -12,7 +12,7 @@
 
             <div class="row">
                 @foreach($recipes as $recipe)
-                <div class="col-12 mb-3 col-md-6">
+                <div class="col-12 mb-5 col-lg-6 mb-lg-4">
                     @include('layouts.recipe-card')
                 </div>
                 @endforeach
