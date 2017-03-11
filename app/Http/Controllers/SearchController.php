@@ -147,7 +147,7 @@ class SearchController extends Controller
 
         if (!empty($query_recipe)) {
             $results_recipe = Cache::remember($cache.'_recipe_QUERY_'.$query, 60*1, function() use ($query_recipe, $limit) {
-                return $query_recipe->orderBy('title')->limit($limit)->get();
+                return $query_recipe->orderBy(DB::raw('CHAR_LENGTH(title)'))->orderBy('title')->limit($limit)->get();
             });
 
             if (!$results_recipe->isEmpty()) {
@@ -157,7 +157,7 @@ class SearchController extends Controller
 
         if (!empty($query_ingredient)) {
             $results_ingredient = Cache::remember($cache.'_ingredient_QUERY_'.$query, 60*1, function() use ($query_ingredient, $limit) {
-                return $query_ingredient->withDepth()->isActive()->orderBy('depth')->orderBy('title')->limit($limit)->get();
+                return $query_ingredient->withDepth()->isActive()->orderBy('depth')->orderBy(DB::raw('CHAR_LENGTH(title)'))->orderBy('title')->limit($limit)->get();
             });
 
             if (!$results_ingredient->isEmpty()) {
