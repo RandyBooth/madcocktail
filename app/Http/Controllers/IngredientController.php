@@ -199,7 +199,7 @@ class IngredientController extends Controller
             $recipes = Cache::remember($recipe_month_text, $expiresAt, function () use ($ingredient_descendants_id, $total) {
                 return Recipe
                     ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
-                    ->select('title', 'slug')
+                    ->select('token', 'title', 'slug')
                     ->whereHas('ingredients', function ($query) use ($ingredient_descendants_id) {
                         $query->whereIn('ingredient_recipe.ingredient_id', array_unique(array_flatten($ingredient_descendants_id)));
                     })

@@ -28,7 +28,7 @@ class SearchController extends Controller
                 });
 
                 if ($recipe) {
-                    return redirect()->route('recipes.show', $recipe->slug);
+                    return redirect()->route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]);
                 }
             } elseif ($group == 'ingredients') {
                 $ingredient = Cache::remember('ingredient_TOKEN_'.$id, 1440, function () use ($id) {

@@ -13,12 +13,12 @@
 @endphp
 <div class="recipe card">
     <div class="image">
-        <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
+        <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}">
             <img {!! $image_color !!}class="card-img-top img-fluid{{$class_blur}}" data-original="{{ route('imagecache', ['template' => 'lists', 'filename' => $image]) }}" src="{{ route('imagecache', ['template' => 'lists-tiny', 'filename' => $image]) }}" alt="">
         </a>
     </div>
     <div class="card-block">
-        <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">
+        <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}">
             <h4 class="card-title">{{ $recipe->title }}</h4>
         </a>
         <p class="card-text">{{ Helper::nl2empty($recipe->description).' '.Helper::nl2empty($recipe->directions) }}</p>

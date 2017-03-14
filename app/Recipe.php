@@ -59,7 +59,7 @@ class Recipe extends Model
         return [
             'slug' => [
                 'source' => 'title',
-                'unique' => true,
+                'unique' => false,
             ]
         ];
     }

@@ -76,7 +76,8 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
     Route::get('ingredients', ['as' => 'ingredients.index', 'uses' => 'IngredientController@show']);
     Route::get('ingredients/{parameters?}', ['as' => 'ingredients.show', 'uses' => 'IngredientController@show'])->where('parameters', '(.*)');
 
-    Route::resource('recipes', 'RecipeController');
+    Route::resource('recipes', 'RecipeController', ['except' => ['show']]);
+    Route::get('recipes/{token}/{slug?}', ['as' => 'recipes.show', 'uses' => 'RecipeController@show'])->where('token', '[a-zA-Z0-9-]+')->where('slug', '[a-z0-9-]+');
 
     Route::group(['prefix' => 'ajax'], function() {
         Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:30,5', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax'])->where('type', '[A-Za-z]+');

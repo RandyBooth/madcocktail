@@ -187,7 +187,7 @@
 
             <ul class="list-unstyled">
                 @foreach($recipe_similar as $val)
-                    <li><a class="link" href="{{ route('recipes.show', ['id' => $val->slug]) }}">{{ $val->title }}</a></li>
+                    <li><a class="link" href="{{ route('recipes.show', ['token' => $val->token, 'slug' => $val->slug]) }}">{{ $val->title }}</a></li>
                 @endforeach
             </ul>
         </div>

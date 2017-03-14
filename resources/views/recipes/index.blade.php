@@ -33,7 +33,7 @@
             <ol>
             @foreach($recipes_top as $recipe)
                 <li>
-                    <a href="{{ route('recipes.show', ['id' => $recipe->slug]) }}">{{ $recipe->title }}</a>
+                    <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}">{{ $recipe->title }}</a>
                 </li>
             @endforeach
             </ol>

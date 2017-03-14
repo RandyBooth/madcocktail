@@ -11,7 +11,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-2">
-                            <a href="{{ route('recipes.show', $recipe->slug) }}" target="_blank">{!! $recipe->title !!}</a>
+                            <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}" target="_blank">{!! $recipe->title !!}</a>
                             @php
                                 $test = app('profanityFilter')->replaceWith('#')->replaceFullWords(false)->filter($recipe->slug, true);
 

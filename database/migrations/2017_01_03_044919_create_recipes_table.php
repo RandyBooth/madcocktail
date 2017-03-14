@@ -19,7 +19,7 @@ class CreateRecipesTable extends Migration
             $table->string('token')->unique();
             $table->string('title');
             $table->string('title_first_letter', 1);
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->text('description');
             $table->text('directions');
             $table->tinyInteger('glass_id')->unsigned()->default(0);
