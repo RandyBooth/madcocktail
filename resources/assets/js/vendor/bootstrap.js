@@ -1007,13 +1007,13 @@ var Button = function ($) {
  * --------------------------------------------------------------------------
  */
 
-/*var Collapse = function ($) {
+var Collapse = function ($) {
 
-  /!**
+  /**
    * ------------------------------------------------------------------------
    * Constants
    * ------------------------------------------------------------------------
-   *!/
+   */
 
   var NAME = 'collapse';
   var VERSION = '4.0.0-alpha.6';
@@ -1058,11 +1058,11 @@ var Button = function ($) {
     DATA_TOGGLE: '[data-toggle="collapse"]'
   };
 
-  /!**
+  /**
    * ------------------------------------------------------------------------
    * Class Definition
    * ------------------------------------------------------------------------
-   *!/
+   */
 
   var Collapse = function () {
     function Collapse(element, config) {
@@ -1320,11 +1320,11 @@ var Button = function ($) {
     return Collapse;
   }();
 
-  /!**
+  /**
    * ------------------------------------------------------------------------
    * Data Api implementation
    * ------------------------------------------------------------------------
-   *!/
+   */
 
   $(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
     event.preventDefault();
@@ -1336,11 +1336,11 @@ var Button = function ($) {
     Collapse._jQueryInterface.call($(target), config);
   });
 
-  /!**
+  /**
    * ------------------------------------------------------------------------
    * jQuery
    * ------------------------------------------------------------------------
-   *!/
+   */
 
   $.fn[NAME] = Collapse._jQueryInterface;
   $.fn[NAME].Constructor = Collapse;
@@ -1350,7 +1350,7 @@ var Button = function ($) {
   };
 
   return Collapse;
-}(jQuery);*/
+}(jQuery);
 
 /**
  * --------------------------------------------------------------------------
