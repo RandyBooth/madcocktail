@@ -5,11 +5,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="content-language" content="en" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <meta property="og:site_name" content="{{ config('app.name') }}" />
     <meta property="fb:app_id" content="{{ config('services.facebook.client_id') }}" />
     <meta property="og:url" content="@yield('og-url', url()->full())" />
     {{--<meta property="og:type" content="@yield('og-type')" />--}}
