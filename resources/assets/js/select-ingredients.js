@@ -68,5 +68,7 @@ $(document).ready(function() {
             e.preventDefault();
             select2Insert();
         });
+
+        select2Insert();
     }
 });

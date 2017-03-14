@@ -11,6 +11,23 @@
     letter-spacing: 0.020em;
 }
 
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   80% { transform: rotate(0deg); }
+   85% { transform: rotate(3deg); }
+   95% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wiggle {
+  display: inline-block;
+  animation: wiggle 2.5s infinite;
+}
+
+.wiggle:hover {
+  animation: none;
+}
+
 .color {
     &- {
         &background {
@@ -40,42 +57,42 @@
         &link {
             &- {
                 &white {
-                    color: $color-white;
+                    color: $color-white !important;
 
                     @include hover-focus {
-                        color: $color-white;
+                        color: $color-white !important;
                     }
                 }
 
                 &gray-light {
-                    color: $color-gray-light;
+                    color: $color-gray-light !important;
 
                     @include hover-focus {
-                        color: $color-gray-light;
+                        color: $color-gray-light !important;
                     }
                 }
 
                 &gray-dark {
-                    color: $color-gray-dark;
+                    color: $color-gray-dark !important;
 
                     @include hover-focus {
-                        color: $color-gray-dark;
+                        color: $color-gray-dark !important;
                     }
                 }
 
                 &black {
-                    color: $color-black;
+                    color: $color-black !important;
 
                     @include hover-focus {
-                        color: $color-black;
+                        color: $color-black !important;
                     }
                 }
 
                 &orange {
-                    color: $color-orange;
+                    color: $color-orange !important;
 
                     @include hover-focus {
-                        color: $color-orange;
+                        color: $color-orange !important;
                     }
                 }
 
@@ -96,10 +113,10 @@
                 //}
 
                 &facebook {
-                    color: $color-facebook;
+                    color: $color-facebook !important;
 
                     @include hover-focus {
-                        color: lighten($color-facebook, 10%);
+                        color: lighten($color-facebook, 10%) !important;
                     }
                 }
 
@@ -128,10 +145,10 @@
                 //}
 
                 &googleplus {
-                    color: $color-googleplus;
+                    color: $color-googleplus !important;
 
                     @include hover-focus {
-                        color: lighten($color-googleplus, 10%);
+                        color: lighten($color-googleplus, 10%) !important;
                     }
                 }
 
@@ -152,10 +169,10 @@
                 //}
 
                 &pinterest {
-                    color: $color-pinterest;
+                    color: $color-pinterest !important;
 
                     @include hover-focus {
-                        color: lighten($color-pinterest, 10%);
+                        color: lighten($color-pinterest, 10%) !important;
                     }
                 }
 
@@ -168,10 +185,10 @@
                 //}
 
                 &reddit {
-                    color: $color-reddit;
+                    color: $color-reddit !important;
 
                     @include hover-focus {
-                        color: lighten($color-reddit, 10%);
+                        color: lighten($color-reddit, 10%) !important;
                     }
                 }
 
@@ -192,18 +209,18 @@
                 //}
 
                 &tumblr {
-                    color: $color-tumblr;
+                    color: $color-tumblr !important;
 
                     @include hover-focus {
-                        color: lighten($color-tumblr, 10%);
+                        color: lighten($color-tumblr, 10%) !important;
                     }
                 }
 
                 &twitter {
-                    color: $color-twitter;
+                    color: $color-twitter !important;
 
                     @include hover-focus {
-                        color: lighten($color-twitter, 10%);
+                        color: lighten($color-twitter, 10%) !important;
                     }
                 }
 
@@ -303,6 +320,13 @@ a {
 
 img {
     &:not([src]) {
+        visibility: hidden;
+    }
+}
+
+/* Fixes Firefox anomaly */
+@-moz-document url-prefix() {
+    img:-moz-loading {
         visibility: hidden;
     }
 }

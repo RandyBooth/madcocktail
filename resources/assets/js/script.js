@@ -28,8 +28,6 @@ var $formSearch = $('#form-search'),
         }
     }
 }, myLazyLoad = new LazyLoad({
-    container: document.getElementById('content'),
-    skip_invisible: false
 }), alertRun = function() {
     $('.alert').alert();
 }, alertMessage = function(type, message) {

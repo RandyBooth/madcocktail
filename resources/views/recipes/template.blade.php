@@ -118,7 +118,9 @@
                                 @endif
                                 </div>
 
-                                <button id="create-ingredients-button" class="btn btn-primary" type="button"><i class="fa fa-plus" aria-hidden="true"></i> Add Ingredient</button>
+                                <div class="col-12 p-0">
+                                    <button id="create-ingredients-button" class="btn btn-primary" type="button"><i class="fa fa-plus" aria-hidden="true"></i> Add Ingredient</button>
+                                </div>
                             </div>
 
                             @if ($errors->has('ingredients'))

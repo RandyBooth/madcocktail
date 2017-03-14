@@ -22,9 +22,6 @@
                     <a href="https://www.reddit.com/user/MadCocktail/" target="_blank">
                         <i class="fa fa-reddit-alien" aria-hidden="true"></i>
                     </a>
-                    <a href="https://plus.google.com/u/0/113446523547504154172" target="_blank">
-                        <i class="fa fa-google-plus" aria-hidden="true"></i>
-                    </a>
                 </div>
             </div>
         </div>

@@ -15,6 +15,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('recipes.index') }}">Recipes</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('recipes.create') }}">Add Cocktail</a>
+                            </li>
                         </ul>
 
                         <ul class="navbar-nav order-last ml-lg-2">
