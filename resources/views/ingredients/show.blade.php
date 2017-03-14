@@ -44,8 +44,12 @@
     @if (!$recipes->isEmpty())
     <div class="row">
         <div class="col-12">
-            <h3 class="mb-0">Popular recipes</h3>
-            {!! (isset($ingredient->title_sup)) ? '<h5>'.strtolower($ingredient->title_sup).'</h5>' : '' !!}
+            @if (isset($ingredient->title_sup))
+                <h3 class="mb-0">Popular recipes</h3>
+                {!! (isset($ingredient->title_sup)) ? '<h5>'.strtolower($ingredient->title_sup).'</h5>' : '' !!}
+            @else
+                <h3>Popular recipes</h3>
+            @endif
 
             <ol>
             @foreach($recipes as $recipe)
