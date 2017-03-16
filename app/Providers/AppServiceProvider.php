@@ -31,7 +31,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('domain_contains', function ($attribute, $value, $parameters, $validator) {
-            return \App\Helpers\Helper::get_domain($value) == $parameters[0];
+            $strict = true;
+
+            if (isset($parameters[1])) {
+                $strict = filter_var($parameters[1], FILTER_VALIDATE_BOOLEAN);
+            }
+
+            return \App\Helpers\Helper::get_domain($value, $strict) == $parameters[0];
         });
 
         Validator::replacer('domain_contains', function ($message, $attribute, $rule, $parameters) {

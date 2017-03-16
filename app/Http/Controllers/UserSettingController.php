@@ -158,7 +158,7 @@ class UserSettingController extends Controller
             'about' => 'present|nullable',
             'link' => 'present|nullable|url|active_url',
             'facebook_link' => 'present|nullable|url|active_url|domain_contains:facebook.com',
-            'google_plus_link' => 'present|nullable|url|active_url|domain_contains:google.com',
+            'google_plus_link' => 'present|nullable|url|active_url|domain_contains:plus.google.com,false',
             'pinterest_link' => 'present|nullable|url|active_url|domain_contains:pinterest.com',
             'twitter_link' => 'present|nullable|url|active_url|domain_contains:twitter.com',
             'first_name' => 'honeypot',
