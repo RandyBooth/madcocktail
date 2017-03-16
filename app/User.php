@@ -14,7 +14,7 @@ class User extends Authenticatable
     use SoftDeletes;
     use UserVerification;
 
-    protected $fillable = ['username', 'email', 'password', 'birth'];
+    protected $fillable = ['display_name', 'username', 'image', 'email', 'password', 'birth'];
     protected $hidden = ['password', 'remember_token'];
 
     protected static function boot()
@@ -38,5 +38,10 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function settings()
+    {
+        return $this->hasOne('App\UserSetting');
     }
 }

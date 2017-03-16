@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\Helpers\HelperImage;
 use App\OAuth;
 use App\User;
 use Auth;
+use Cache;
+use File;
 use Hash;
-use Illuminate\Support\Facades\Cache;
+use Helper;
+use Image;
 use Socialite;
 use Jrean\UserVerification\Facades\UserVerification;
 
@@ -71,6 +73,12 @@ class OAuthController extends Controller
                                 'provider' => $provider,
                                 'provider_uid' => $social_user_id
                             ]);
+
+                            $image = (!empty($social_user->avatar_original))
+                                ? $social_user->avatar_original
+                                : HelperImage::get_gravatar($social_user->email);
+
+                            HelperImage::upload_user_image($image, $user);
 
                             UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
                             UserVerification::generate($user);

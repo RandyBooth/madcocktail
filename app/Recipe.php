@@ -14,7 +14,7 @@ class Recipe extends Model
     use Sluggable;
 
     protected $appends = ['title_sup'];
-    protected $casts = ['directions' => 'array'];
+    protected $casts = ['description' => 'array', 'directions' => 'array'];
     protected $dates = ['deleted_at'];
     protected $fillable = ['title', 'description', 'directions', 'glass_id', 'user_id', 'is_active'];
     protected $hidden = ['id'];

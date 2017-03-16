@@ -88,6 +88,18 @@ class Helper
         }
     }
 
+    public static function get_domain($url)
+    {
+        $pieces = parse_url($url);
+        $domain = isset($pieces['host']) ? $pieces['host'] : '';
+
+        if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+            return $regs['domain'];
+        }
+
+        return false;
+    }
+
     public static function decimal_to_fraction($value)
     {
         $value = (float)$value;
@@ -176,6 +188,10 @@ class Helper
 
     public static function nl2p($string, $line_breaks = true, $xml = true)
     {
+        if (is_array($string)) {
+            $string = implode(PHP_EOL.''.PHP_EOL, $string);
+        }
+
         $string = str_replace(array('<p>', '</p>', '<br>', '<br />'), '', $string);
 
         if ($line_breaks == true) {

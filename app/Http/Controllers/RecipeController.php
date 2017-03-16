@@ -15,8 +15,8 @@ use App\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use Cache;
+use DB;
 
 class RecipeController extends Controller
 {
@@ -165,6 +165,7 @@ class RecipeController extends Controller
             $glasses = $glasses_data->pluck('id', 'slug')->all();
             $measures = $measures_data->pluck('id', 'slug')->all();
 
+            $data['description'] = Helper::textarea_to_array($data['description']);
             $data['directions'] = Helper::textarea_to_array($data['directions']);
 
             if (array_key_exists($data['glass'], $glasses)) {
@@ -441,12 +442,20 @@ class RecipeController extends Controller
                         'token' => $recipe_data->token,
                         'title' => $recipe_data->title,
                         'description' => $recipe_data->description,
-                        'directions' => implode("\n", $recipe_data->directions),
+                        'directions' => $recipe_data->directions,
                         'ingredients' => $old_ingredients,
                         'ingredients_measure' => $old_ingredients_measure,
                         'ingredients_measure_amount' => $old_ingredients_measure_amount,
                         'glass' => $glass,
                     ];
+
+                    if (is_array($recipe_data->description)) {
+                        $recipe['description'] = implode("\n\n", $recipe_data->description);
+                    }
+
+                    if (is_array($recipe_data->directions)) {
+                        $recipe['directions'] = implode("\n", $recipe_data->directions);
+                    }
 
                     $glasses = $glasses_data->pluck('title', 'slug')->all();
                     $measures = $measures_data->pluck('title', 'slug')->all();
@@ -480,6 +489,7 @@ class RecipeController extends Controller
             $glasses = $glasses_data->pluck('id', 'slug')->all();
             $measures = $measures_data->pluck('id', 'slug')->all();
 
+            $data['description'] = Helper::textarea_to_array($data['description']);
             $data['directions'] = Helper::textarea_to_array($data['directions']);
             $data['glass_id'] = '';
 

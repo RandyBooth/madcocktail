@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Ingredient;
 use App\Recipe;
+use Cache;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SearchController extends Controller

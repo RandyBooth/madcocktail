@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
+use Cache;
 
 class ClearCacheController extends Controller
 {

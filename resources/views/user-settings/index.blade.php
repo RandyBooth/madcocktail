@@ -34,20 +34,6 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
-                        <div class="form-group{{ $errors->has('display_name') ? ' has-danger' : '' }}">
-                            <label for="display-name" class="w-100 form-control-label">Display Name</label>
-
-                            <input id="display-name" type="text" class="form-control" name="display_name" value="{{ old('display_name', $user->display_name) }}">
-
-                            @if ($errors->has('display_name'))
-                                <span class="form-control-feedback">
-                                    <strong>{{ $errors->first('display_name') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
                     @php
                         $year = '';
                         $month = '';

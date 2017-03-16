@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use App\Http\Requests\ImageRequest;
 use App\Recipe;
 use App\RecipeImage;
 use Auth;
+use Cache;
+use File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
 use Image;
 use Validator;
 
@@ -60,7 +59,6 @@ class RecipeImageController extends Controller
                     ]);
 
                     if ($validator->passes()) {
-                        $user = Auth::user();
                         $id = $request->input('id');
 
                         $recipe = Cache::remember('recipe_TOKEN_'.$id, 1440, function () use ($id) {
@@ -69,8 +67,6 @@ class RecipeImageController extends Controller
 
                         if ($recipe) {
                             if (Helper::is_owner($recipe->user_id)) {
-
-//                                $path = 'upload/';
                                 $path = public_path('storage/upload_images/');
                                 $recipe_id = $recipe->id;
                                 $recipe_token = $recipe->token;
@@ -98,22 +94,24 @@ class RecipeImageController extends Controller
                                             $color = $this->getColorAverage($new_image);
                                             $new_image->destroy();
 
-                                            if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
-                                                if (!empty($old_image)) {
-                                                    if (File::exists($path.$old_image)) {
-                                                        $moved_image = public_path('storage/trash_images/'.$old_image);
+                                            if (File::exists($path.$filename)) {
+                                                if ($recipe_image->update(['image' => $filename, 'color' => $color])) {
+                                                    if (!empty($old_image)) {
+                                                        if (File::exists($path.$old_image)) {
+                                                            $moved_image = public_path('storage/trash_images/'.$old_image);
 
-                                                        if (File::move($path.$old_image, $moved_image)) {
-                                                            touch($moved_image);
+                                                            if (File::move($path.$old_image, $moved_image)) {
+                                                                touch($moved_image);
+                                                            }
                                                         }
                                                     }
                                                 }
-
-                                                $this->clear($recipe);
-
-                                                $token_valid = true;
-                                                $response['message'] = 'Recipe image updated!';
                                             }
+
+                                            $this->clear($recipe);
+
+                                            $token_valid = true;
+                                            $response['message'] = 'Recipe image updated!';
                                         }
                                     }
                                 } while(!$token_valid);

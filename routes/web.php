@@ -48,6 +48,9 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
 
         Route::get('password', ['as' => 'user-settings.password.edit', 'uses' => 'UserSettingController@passwordEdit']);
         Route::put('password', ['as' => 'user-settings.password.update', 'uses' => 'UserSettingController@passwordUpdate']);
+
+        Route::get('profile', ['as' => 'user-settings.profile.edit', 'uses' => 'UserSettingController@profileEdit']);
+        Route::put('profile', ['as' => 'user-settings.profile.update', 'uses' => 'UserSettingController@profileUpdate']);
     });
 
     Route::get('email/error', ['as' => 'email-verification.error', 'uses' => 'Auth\RegisterController@getVerificationError']);

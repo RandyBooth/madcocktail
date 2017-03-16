@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\User;
 use App\Recipe;
+use App\User;
+use Auth;
+use Cache;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class UserProfileController extends Controller
 {

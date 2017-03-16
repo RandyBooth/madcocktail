@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OAuth extends Model
 {
-    protected $fillable = ['user_id', 'provider', 'provider_uid', 'token'];
+    protected $fillable = ['user_id', 'provider', 'provider_uid'];
     protected $table    = 'oauth';
 
     public function user()

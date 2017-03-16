@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Cache;
+use Helper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
-use Validator;
 use Jrean\UserVerification\Facades\UserVerification;
+use Validator;
 
 class UserSettingController extends Controller
 {
@@ -35,7 +36,6 @@ class UserSettingController extends Controller
         }
 
         $validator = Validator::make($data, [
-            'display_name' => 'nullable|min:3|display_name',
             'username' => [
                 'required', 'min:3', 'max:255', 'least_one_letter', 'alpha_dash',
                 Rule::unique('users')->ignore($user->id)
@@ -49,7 +49,6 @@ class UserSettingController extends Controller
         ]);
 
         if ($validator->passes()) {
-            $user->display_name = $data['display_name'];
             $user->username = $data['username'];
             $user->birth = $data['birth'];
 
@@ -134,6 +133,55 @@ class UserSettingController extends Controller
         }
 
         return redirect()->back()->withErrors($validator)->withInput()->with('danger', 'Password update fail.');
+    }
+
+    public function profileEdit()
+    {
+        $user = Auth::user();
+        $user_settings = $user->settings()->firstOrCreate([]);
+
+        if (is_array($user_settings->about)) {
+            $user_settings->about = implode("\n\n", $user_settings->about);
+        }
+
+        return view('user-settings.profile', compact('user', 'user_settings'));
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $user = Auth::user();
+        $user_settings = $user->settings()->firstOrFail();
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'display_name' => 'present|nullable|min:3|display_name',
+            'about' => 'present|nullable',
+            'link' => 'present|nullable|url|active_url',
+            'facebook_link' => 'present|nullable|url|active_url|domain_contains:facebook.com',
+            'google_plus_link' => 'present|nullable|url|active_url|domain_contains:google.com',
+            'pinterest_link' => 'present|nullable|url|active_url|domain_contains:pinterest.com',
+            'twitter_link' => 'present|nullable|url|active_url|domain_contains:twitter.com',
+            'first_name' => 'honeypot',
+            'my_time' => 'required|honeytime:1',
+        ]);
+
+        if ($validator->passes()) {
+            $user->display_name = $data['display_name'];
+            $user_settings->about = Helper::textarea_to_array($data['about']);
+            $user_settings->link = $data['link'];
+            $user_settings->facebook_link= $data['facebook_link'];
+            $user_settings->google_plus_link= $data['google_plus_link'];
+            $user_settings->pinterest_link= $data['pinterest_link'];
+            $user_settings->twitter_link= $data['twitter_link'];
+
+            if ($user->save()) {
+                if ($user_settings->save()) {
+                    return redirect()->route('user-settings.profile.edit')->with('success', 'Profile setting has been updated successfully.');
+                }
+            }
+        }
+
+        return redirect()->back()->withErrors($validator)->withInput()->with('danger', 'Profile setting update fail.');
     }
 
     public function resendVerification()

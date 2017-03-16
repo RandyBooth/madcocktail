@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Helpers\HelperImage;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
-
-use Illuminate\Http\Request;
+use App\User;
+use File;
 use Illuminate\Auth\Events\Registered;
-
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Image;
 use Jrean\UserVerification\Traits\VerifiesUsers;
 use Jrean\UserVerification\Facades\UserVerification;
+use Validator;
 
 class RegisterController extends Controller
 {
@@ -80,6 +81,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'birth' => $data['birth'],
         ]);
     }
 
@@ -104,6 +106,13 @@ class RegisterController extends Controller
 
         if ($user) {
 //            $this->guard()->login($user);
+
+            $image = HelperImage::get_gravatar($data['email']);
+
+            if (!empty($image)) {
+                HelperImage::upload_user_image($image, $user);
+            }
+
             UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
             UserVerification::generate($user);
             UserVerification::sendQueue($user);

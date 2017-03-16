@@ -8,6 +8,9 @@
                     <a class="nav-link {{ active('user-settings.index.edit') }}" href="{{ route('user-settings.index.edit') }}">Settings</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ active('user-settings.profile.edit') }}" href="{{ route('user-settings.profile.edit') }}">Profile Settings</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ active('user-settings.email.edit') }}" href="{{ route('user-settings.email.edit') }}">E-mail</a>
                 </li>
                 <li class="nav-item">

@@ -25,6 +25,18 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('over_age', function ($attribute, $value, $parameters, $validator) {
             return \App\Helpers\Helper::is_age_over($parameters[0], $value);
         });
+
+        Validator::replacer('over_age', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':age', $parameters[0], $message);
+        });
+
+        Validator::extend('domain_contains', function ($attribute, $value, $parameters, $validator) {
+            return \App\Helpers\Helper::get_domain($value) == $parameters[0];
+        });
+
+        Validator::replacer('domain_contains', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':domain', $parameters[0], $message);
+        });
     }
 
     /**

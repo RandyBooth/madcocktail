@@ -7,8 +7,8 @@ use App\Http\Requests\IngredientRequest;
 use App\Ingredient;
 use App\Recipe;
 use Auth;
+use Cache;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class IngredientController extends Controller
 {

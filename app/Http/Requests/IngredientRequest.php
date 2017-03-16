@@ -42,6 +42,7 @@ class IngredientRequest extends FormRequest
                 {
                     return [
                         'title' => 'required|least_one_letter|min:3|unique:ingredients',
+                        'ingredients' => 'present|nullable',
                         'first_name' => 'honeypot',
                         'my_time' => 'required|honeytime:1',
                     ];
