@@ -3,6 +3,7 @@ namespace App\Helpers;
 
 use App\User;
 use Auth;
+use Cache;
 use Carbon\Carbon;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -275,28 +276,51 @@ class Helper
         return '
         <div class="social-media">
             <a class="color-link-facebook px-md-2" href="https://www.facebook.com/dialog/share?app_id='.config('services.facebook.client_id').'&display=page&href='.$url.'" target="_blank">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
+                <i class="fa fa-facebook" title="Facebook" aria-hidden="true"></i>
             </a>
             
             <a class="color-link-twitter px-md-2" href="https://twitter.com/intent/tweet?url='.$url.'&text='.$title.'&via='.config('services.twitter.via').'" target="_blank">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
+                <i class="fa fa-twitter" title="Twitter" aria-hidden="true"></i>
             </a>
             
             <a class="color-link-pinterest px-md-2" href="https://pinterest.com/pin/create/bookmarklet/?media='.$img.'&url='.$url.'&description='.$title.'" target="_blank">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
+                <i class="fa fa-pinterest" title="Pinterest" aria-hidden="true"></i>
             </a>
             
             <a class="color-link-tumblr px-md-2" href="https://www.tumblr.com/widgets/share/tool?canonicalUrl='.$url.'&title='.$title.'&caption='.$desc.'" target="_blank">
-                <i class="fa fa-tumblr" aria-hidden="true"></i>
+                <i class="fa fa-tumblr" title="Tumblr" aria-hidden="true"></i>
             </a>
             
             <a class="color-link-reddit px-md-2" href="https://reddit.com/submit?url='.$url.'&title='.$title.'" target="_blank">
-                <i class="fa fa-reddit" aria-hidden="true"></i>
+                <i class="fa fa-reddit" title="Reddit" aria-hidden="true"></i>
             </a>
             
             <a class="color-link-googleplus px-md-2" href="https://plus.google.com/share?url='.$url.'" target="_blank">
-                <i class="fa fa-google-plus" aria-hidden="true"></i>
+                <i class="fa fa-google-plus" title="Google+" aria-hidden="true"></i>
             </a>
         </div>';
+    }
+
+    public static function random_color($type = 'hex')
+    {
+        switch (strtolower($type)) {
+            case 'hex':
+                return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        }
+    }
+
+    public static function get_cache_random_color($username)
+    {
+        if (!empty($username)) {
+            $str = 'color_USER_'.strtolower($username);
+
+            if (!Cache::has($str)) {
+                Cache::put($str, self::random_color(), 60);
+            }
+
+            return Cache::get($str);
+        }
+
+        return false;
     }
 }

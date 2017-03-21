@@ -176,8 +176,11 @@ class UserSettingController extends Controller
 
             if ($user->save()) {
                 if ($user_settings->save()) {
+                    $this->clear($user, true);
                     return redirect()->route('user-settings.profile.edit')->with('success', 'Profile setting has been updated successfully.');
                 }
+
+                $this->clear($user);
             }
         }
 
@@ -199,12 +202,16 @@ class UserSettingController extends Controller
         abort(404);
     }
 
-    private function clear($user = null)
+    private function clear($user = null, $settings = false)
     {
         if ($user) {
             Cache::forget('user_ID_'.$user->id);
-            Cache::forget('user_EMAIL_'.$user->email);
-            Cache::forget('user_USERNAME_'.$user->username);
+            Cache::forget('user_EMAIL_'.strtolower($user->email));
+            Cache::forget('user_USERNAME_'.strtolower($user->username));
+
+            if ($settings) {
+                Cache::forget('usersettings_ID_'.$user->id);
+            }
         }
     }
 }

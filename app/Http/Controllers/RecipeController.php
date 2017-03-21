@@ -37,7 +37,7 @@ class RecipeController extends Controller
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->join('users', 'recipes.user_id', '=', 'users.id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
-//                ->select(['title', 'slug'])
+                ->select(['recipes.id', 'recipes.token', 'recipes.title', 'recipes.slug', 'recipes.description', 'recipes.directions', 'recipe_counts.count_total as count_total', 'recipe_images.image', 'users.id as user_id', 'users.image as user_image', 'users.display_name as user_display_name', 'users.username as username'])
                 ->where('recipe_counts.count_total', '>', $total)
                 ->inRandomOrder()
                 ->take(24)
@@ -63,7 +63,7 @@ class RecipeController extends Controller
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                 ->join('users', 'recipes.user_id', '=', 'users.id')
                 ->leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
-//                ->select(['title', 'slug'])
+                ->select(['recipes.id', 'recipes.token', 'recipes.title', 'recipes.slug', 'recipes.description', 'recipes.directions', 'recipe_counts.count_total as count_total', 'recipe_images.image', 'users.id as user_id', 'users.image as user_image', 'users.display_name as user_display_name', 'users.username as username'])
                 ->where('recipe_counts.count_total', '>', $total)
                 ->orderby('recipes.created_at', 'DESC')
                 ->orderby('recipes.title')
@@ -82,7 +82,7 @@ class RecipeController extends Controller
         $recipes_top = Cache::remember('recipes_popular', $expiresAt, function () use ($total) {
             return Recipe
                 ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
-//                ->select(['title', 'slug'])
+                ->select(['recipes.id', 'recipes.token', 'recipes.title', 'recipes.slug', 'recipe_counts.count_total as count_total'])
                 ->where('recipe_counts.count_total', '>', $total)
                 ->orderBy('recipe_counts.count_total', 'DESC')
                 ->orderby('recipes.title')
@@ -246,7 +246,7 @@ class RecipeController extends Controller
                 $recipe_id = $recipe->id;
                 $recipe_token = $recipe->token;
 
-                $recipe_author = Cache::remember('user_ID_'.$user_id, 1440, function () use ($user_id) {
+                $user = Cache::remember('user_ID_'.$user_id, 1440, function () use ($user_id) {
                     return User::find($user_id);
                 });
 
@@ -361,7 +361,6 @@ class RecipeController extends Controller
                             ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
                             ->join('ingredient_recipe', 'recipes.id', '=', 'ingredient_recipe.recipe_id')
                             ->whereIn('ingredient_recipe.ingredient_id', $ingredient_id_unique)
-        //                    ->select('title', 'slug')
                             ->select(DB::raw('count(recipes.id) as recipe_count, recipes.*'))
                             ->where('recipes.id', '<>', $recipe_id)
                             ->where('recipe_counts.count_total', '>', $total)
@@ -374,7 +373,7 @@ class RecipeController extends Controller
                     });
                 }
 
-                return view('recipes.show', compact('recipe', 'recipe_image', 'recipe_author', 'recipe_similar', 'ingredients', 'ingredient_slug'));
+                return view('recipes.show', compact('recipe', 'recipe_image', 'user', 'recipe_similar', 'ingredients', 'ingredient_slug'));
             }
         }
 
@@ -582,8 +581,8 @@ class RecipeController extends Controller
         if ($recipe) {
             Cache::forget('recipe_similar_TOKEN_'.$recipe->token);
             Cache::forget('recipe_TOKEN_'.$recipe->token);
-            Cache::forget('recipe_SLUG_'.$recipe->slug);
-            Cache::forget('recipe_TOKENSLUG_'.$recipe->token.'_'.$recipe->slug);
+            Cache::forget('recipe_SLUG_'.strtolower($recipe->slug));
+            Cache::forget('recipe_TOKENSLUG_'.$recipe->token.'_'.strtolower($recipe->slug));
             Cache::forget('user_recipes_ID_'.$recipe->user_id);
 
             if (Cache::has('recipes_latest')) {

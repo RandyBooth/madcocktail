@@ -82,8 +82,16 @@
                         @endif
 
                         <div class="col-12 mt-2">
-                            @php $author = (!empty($recipe_author->display_name)) ? $recipe_author->display_name : $recipe_author->username; @endphp
-                            Recipe by <a class="link" href="{{ route('user-profile.show', ['username' => $recipe_author->username]) }}">{{ $author }}</a>
+                            @php $author = (!empty($user->display_name)) ? $user->display_name : $user->username; @endphp
+                            <div class="d-flex align-items-center">
+                                <span class="mr-2">Recipe by <a href="{{ route('user-profile.show', ['username' => $user->username]) }}">{{ $author }}</a></span>
+
+                                @if (!empty($user->image))
+                                <a class="d-flex" href="{{ route('user-profile.show', ['username' => $user->username]) }}">
+                                    <img class="image-icon image-icon-small d-inline-block" src="{{ route('imagecache', ['template' => 'user-small', 'filename' => $user->image]) }}" alt="">
+                                </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

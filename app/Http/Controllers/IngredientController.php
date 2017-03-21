@@ -199,7 +199,7 @@ class IngredientController extends Controller
             $recipes = Cache::remember($recipe_month_text, $expiresAt, function () use ($ingredient_descendants_id, $total) {
                 return Recipe
                     ::join('recipe_counts', 'recipes.id', '=', 'recipe_counts.recipe_id')
-                    ->select('token', 'title', 'slug')
+                    ->select(['token', 'title', 'slug', 'recipe_counts.count_total as count_total'])
                     ->whereHas('ingredients', function ($query) use ($ingredient_descendants_id) {
                         $query->whereIn('ingredient_recipe.ingredient_id', array_unique(array_flatten($ingredient_descendants_id)));
                     })
@@ -439,7 +439,7 @@ class IngredientController extends Controller
 
     private function clearGroup($ingredient)
     {
-        Cache::forget('ingredient_SLUG_'.$ingredient->slug);
+        Cache::forget('ingredient_SLUG_'.strtolower($ingredient->slug));
         Cache::forget('ingredient_TOKEN_'.$ingredient->token);
         Cache::forget('ingredient_parent_TOKEN_'.$ingredient->token);
         Cache::forget('ingredient_ancestors_TOKEN_'.$ingredient->token);

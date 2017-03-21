@@ -1,16 +1,16 @@
 @if (!empty($recipe))
-@php
-    $class_blur = '';
+    @php
+        $class_blur = '';
 
-    if (!empty($recipe->image)) {
-        $image = $recipe->image;
-        $class_blur = ' image-blur';
-    } else {
-        $image = 'blank.gif';
-    }
+        if (!empty($recipe->image)) {
+            $image = $recipe->image;
+            $class_blur = ' image-blur';
+        } else {
+            $image = 'blank.gif';
+        }
 
-    $image_color = (!empty($recipe->color)) ? 'style="background-color:'.$recipe->color.';" ' : '';
-@endphp
+        $image_color = (!empty($recipe->color)) ? 'style="background-color:'.$recipe->color.';" ' : '';
+    @endphp
 <div class="recipe card">
     <div class="image">
         <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}">
@@ -26,8 +26,18 @@
     @if (!empty($recipe->username))
     <div class="card-footer">
         <small class="text-muted">
-            @php $author = (!empty($recipe->display_name)) ? $recipe->display_name : $recipe->username; @endphp
-            Recipe by <a href="{{ route('user-profile.show', ['username' => $recipe->username]) }}">{{ $author }}</a>
+            @php $author = (!empty($recipe->user_display_name)) ? $recipe->user_display_name : $recipe->username; @endphp
+            <div class="d-flex align-items-center">
+                <a class="d-flex" href="{{ route('user-profile.show', ['username' => $recipe->username]) }}">
+                @if (!empty($recipe->user_image))
+                    <img class="image-icon image-icon-small d-inline-block" src="{{ route('imagecache', ['template' => 'user-small', 'filename' => $recipe->user_image]) }}" alt="">
+                @else
+                    <span style="background-color: {{ $random_color[$recipe->username] }};" class="image-icon image-icon-small d-inline-block"></span>
+                @endif
+                </a>
+
+                <span class="ml-2">Recipe by <a href="{{ route('user-profile.show', ['username' => $recipe->username]) }}">{{ $author }}</a></span>
+            </div>
         </small>
     </div>
     @endif

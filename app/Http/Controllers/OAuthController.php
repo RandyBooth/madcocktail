@@ -43,7 +43,7 @@ class OAuthController extends Controller
                         return User::find($oauth->user_id);
                     });
                 } else {
-                    $user = Cache::remember('user_EMAIL_'.$social_user->email, 1440, function () use ($social_user) {
+                    $user = Cache::remember('user_EMAIL_'.strtolower($social_user->email), 1440, function () use ($social_user) {
                         return User::where('email', $social_user->email)->first();
                     });
                 }

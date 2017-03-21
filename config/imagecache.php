@@ -58,6 +58,8 @@ return array(
         'share' => 'App\Filters\Image\Share',
         'single' => 'App\Filters\Image\Single',
         'single-tiny' => 'App\Filters\Image\SingleTiny',
+        'user-profile' => 'App\Filters\Image\UserProfile',
+        'user-small' => 'App\Filters\Image\UserSmall',
 //        'small' => 'App\Filters\Image\Small',
 //        'medium' => 'App\Filters\Image\Medium',
 //        'large' => 'App\Filters\Image\Large',

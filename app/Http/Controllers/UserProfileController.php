@@ -6,13 +6,14 @@ use App\Recipe;
 use App\User;
 use Auth;
 use Cache;
+use Helper;
 use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'user-valid'], ['only' => ['index']]);
+//        $this->middleware(['auth', 'user-valid'], ['only' => ['index']]);
     }
 
     /**
@@ -25,9 +26,15 @@ class UserProfileController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
-            if (!empty($user->username)) {
-                return redirect()->route('user-profile.show', $user->username);
+            if (empty($user->username)) {
+                return redirect()->route('user-settings.index.edit')->with('danger', Helper::user_valid());
             }
+        }
+
+        $user = User::inRandomOrder()->where('username', '<>', '')->where('role', 0)->first();
+
+        if (!empty($user->username)) {
+            return redirect()->route('user-profile.show', $user->username);
         }
 
         abort(404);
@@ -62,14 +69,19 @@ class UserProfileController extends Controller
      */
     public function show($username)
     {
-        $user = Cache::remember('user_USERNAME_'.$username, 1440, function () use ($username) {
+        $user = Cache::remember('user_USERNAME_'.strtolower($username), 1440, function () use ($username) {
             return User::where('username', $username)->firstOrFail();
+        });
+
+        $user_settings = Cache::remember('usersettings_ID_'.$user->id, 1440, function () use ($user) {
+            return $user->settings()->firstOrCreate([]);
         });
 
         $recipes = Cache::remember('user_recipes_ID_'.$user->id, 1440, function () use ($user) {
             return Recipe
                 ::leftJoin('recipe_images', 'recipes.id', '=', 'recipe_images.recipe_id')
-//                ->select(['title', 'slug'])
+                ->join('users', 'recipes.user_id', '=', 'users.id')
+                ->select(['recipes.id', 'recipes.token', 'recipes.title', 'recipes.slug', 'recipes.description', 'recipes.directions', 'recipe_images.image', 'users.id as user_id', 'users.image as user_image', 'users.display_name as user_display_name', 'users.username as username'])
                 ->where('user_id', $user->id)
                 ->orderby('recipes.created_at', 'DESC')
                 ->orderby('recipes.title')
@@ -77,7 +89,7 @@ class UserProfileController extends Controller
                 ->get();
         });
 
-        return view('user-profiles.show', compact('user', 'recipes'));
+        return view('user-profiles.show', compact('user', 'user_settings', 'recipes'));
     }
 
     /**
