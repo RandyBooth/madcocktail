@@ -10,7 +10,7 @@ class ListsTiny implements FilterInterface
     public function applyFilter(Image $image)
     {
         $width = 30;
-        $height = ceil($width / 1.2);
+        $height = ceil($width / 1.6);
         if ($height % 2 == 1) $height++;
 
         return $image->fit($width, $height, function ($constraint) {
