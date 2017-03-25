@@ -36,7 +36,7 @@ $(document).ready(function() {
                     data: new FormData(this),
                     contentType: false,
                     cache: false,
-                    processData:false,
+                    processData: false,
                     success: function(data) {
                         if (typeof data.success !== 'undefined' && data.success !== null) {
                             if (data.success) {

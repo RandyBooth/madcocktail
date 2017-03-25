@@ -12,6 +12,7 @@ use App\RecipeCount;
 use App\RecipeImage;
 use App\Scopes\ActiveScope;
 use App\User;
+use App\UserFavoriteRecipe;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,7 +30,9 @@ class RecipeController extends Controller
 
     public function home()
     {
-        $expiresAt = Carbon::now()->minute(60)->second(0);
+        $now = Carbon::now()->second(0);
+        $expiresAt = $now->copy()->minute(60);
+        $expiresAtMinute = $now->copy()->addMinute();
         $total = 5;
 
         $recipes = Cache::remember('recipes_home', $expiresAt, function () use ($total) {
@@ -44,7 +47,20 @@ class RecipeController extends Controller
                 ->get();
         });
 
-        return view('recipes.home', compact('recipes'));
+        $favorite_recipes = collect([]);
+
+        if (!$recipes->isEmpty()) {
+            if (Auth::check()) {
+                $user_id = Auth::id();
+                $recipe_id = array_pluck($recipes, 'id');
+
+                $favorite_recipes = Cache::remember('recipes_home_favorite_USERID_'.$user_id, $expiresAtMinute, function () use ($user_id, $recipe_id) {
+                    return UserFavoriteRecipe::select('recipe_id')->where('user_id', $user_id)->whereIn('recipe_id', $recipe_id)->take(24)->pluck(null, 'recipe_id');
+                });
+            }
+        }
+
+        return view('recipes.home', compact('recipes', 'favorite_recipes'));
     }
 
     /**
@@ -54,8 +70,9 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $now = Carbon::now()->minute(0)->second(0);
+        $now = Carbon::now()->second(0);
         $expiresAt = $now->copy()->minute(60);
+        $expiresAtMinute = $now->copy()->addMinute();
         $total = 5;
 
         $recipes = Cache::remember('recipes_latest', $expiresAt, function () use ($total) {
@@ -71,13 +88,18 @@ class RecipeController extends Controller
                 ->get();
         });
 
-//        $hour = 12;
-//
-//        if ($now->hour >= $hour) {
-//            $hour += $hour;
-//        }
-//
-//        $expiresAtTop = $now->copy()->hour($hour);
+        $favorite_recipes = collect([]);
+
+        if (!$recipes->isEmpty()) {
+            if (Auth::check()) {
+                $user_id = Auth::id();
+                $recipe_id = array_pluck($recipes, 'id');
+
+                $favorite_recipes = Cache::remember('recipes_latest_favorite_USERID_'.$user_id, $expiresAtMinute, function () use ($user_id, $recipe_id) {
+                    return UserFavoriteRecipe::select('recipe_id')->where('user_id', $user_id)->whereIn('recipe_id', $recipe_id)->take(24)->pluck(null, 'recipe_id');
+                });
+            }
+        }
 
         $recipes_top = Cache::remember('recipes_popular', $expiresAt, function () use ($total) {
             return Recipe
@@ -90,7 +112,7 @@ class RecipeController extends Controller
                 ->get();
         });
 
-        return view('recipes.index', compact('recipes', 'recipes_top'));
+        return view('recipes.index', compact('recipes', 'favorite_recipes', 'recipes_top'));
     }
 
     /**
@@ -242,12 +264,24 @@ class RecipeController extends Controller
             });
 
             if ($recipe) {
-                $user_id = $recipe->user_id;
+                $recipe_user_id = $recipe->user_id;
                 $recipe_id = $recipe->id;
                 $recipe_token = $recipe->token;
 
-                $user = Cache::remember('user_ID_'.$user_id, 1440, function () use ($user_id) {
-                    return User::find($user_id);
+                $favorite_recipes = collect([]);
+
+                if (Auth::check()) {
+                    $user_id = Auth::id();
+                    $now = Carbon::now()->second(0);
+                    $expiresAtMinute = $now->copy()->addMinute();
+
+                    $favorite_recipes = Cache::remember('recipe_show_favorite_RECIPE_USER_'.$recipe_id.'_'.$user_id, $expiresAtMinute, function () use ($user_id, $recipe_id) {
+                        return UserFavoriteRecipe::select('recipe_id')->where('user_id', $user_id)->where('recipe_id', $recipe_id)->take(1)->pluck(null, 'recipe_id');
+                    });
+                }
+
+                $user = Cache::remember('user_ID_'.$recipe_user_id, 1440, function () use ($recipe_user_id) {
+                    return User::find($recipe_user_id);
                 });
 
                 $recipe_image = Cache::remember('recipe_image_TOKEN_'.$recipe_token, 1440, function () use ($recipe_id) {
@@ -351,7 +385,7 @@ class RecipeController extends Controller
                 $recipe_similar = collect([]);
 
                 if (!empty($ingredient_id)) {
-                    $now = Carbon::now()->minute(0)->second(0);
+                    $now = Carbon::now()->second(0);
                     $expiresAt = $now->copy()->minute(60);
                     $ingredient_id_unique = array_unique(array_flatten($ingredient_id));
                     $total = 5;
@@ -373,7 +407,7 @@ class RecipeController extends Controller
                     });
                 }
 
-                return view('recipes.show', compact('recipe', 'recipe_image', 'user', 'recipe_similar', 'ingredients', 'ingredient_slug'));
+                return view('recipes.show', compact('recipe', 'favorite_recipes', 'recipe_image', 'user', 'recipe_similar', 'ingredients', 'ingredient_slug'));
             }
         }
 
@@ -588,14 +622,14 @@ class RecipeController extends Controller
             if (Cache::has('recipes_latest')) {
                 $data = Cache::get('recipes_latest');
 
-                $data_test = $data
-                    ->pluck('recipe_id')
+                $has_recipe = $data
+                    ->pluck('id')
                     ->filter(function ($value) {
                         return $value != null;
                     })
                     ->contains($recipe->id);
 
-                if ($data_test) {
+                if ($has_recipe) {
                     Cache::forget('recipes_latest');
                 }
             }
@@ -603,14 +637,14 @@ class RecipeController extends Controller
             if (Cache::has('recipes_popular')) {
                 $data = Cache::get('recipes_popular');
 
-                $data_test = $data
-                    ->pluck('recipe_id')
+                $has_recipe = $data
+                    ->pluck('id')
                     ->filter(function ($value) {
                         return $value != null;
                     })
                     ->contains($recipe->id);
 
-                if ($data_test) {
+                if ($has_recipe) {
                     Cache::forget('recipes_popular');
                 }
             }
@@ -619,14 +653,14 @@ class RecipeController extends Controller
                 if (Cache::has('recipes_home')) {
                     $data = Cache::get('recipes_home');
 
-                    $data_test = $data
-                        ->pluck('recipe_id')
+                    $has_recipe = $data
+                        ->pluck('id')
                         ->filter(function ($value) {
                             return $value != null;
                         })
                         ->contains($recipe->id);
 
-                    if ($data_test) {
+                    if ($has_recipe) {
                         Cache::forget('recipes_home');
                     }
                 }

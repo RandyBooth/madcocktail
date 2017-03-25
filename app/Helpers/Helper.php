@@ -245,12 +245,14 @@ class Helper
 
     public static function hashids_random($value = '', $connection = 'main')
     {
-        $value = (int) $value;
+        if (!is_array($value)) {
+            $value = (int) $value;
+        }
 
         if (!empty($value)) {
             $milliseconds = (int) round(microtime(true) * 1000);
             usleep(1000);
-            return Hashids::connection($connection)->encode($milliseconds, $value);
+            return Hashids::connection($connection)->encode(array_flatten([$milliseconds, $value]));
         }
 
         return false;

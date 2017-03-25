@@ -86,7 +86,8 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
         Route::post('search/{type?}', ['before' => 'csrf', 'middleware' => 'throttle:30,5', 'as' => 'search-ajax', 'uses' => 'SearchController@ajax'])->where('type', '[A-Za-z]+');
 
         Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,5', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
-//        Route::delete('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,1', 'as' => 'ajax_recipe_image_destroy', 'uses' => 'RecipeImageController@destroy']);
+
+        Route::post('recipe-favorite', ['before' => 'csrf', 'middleware' => 'throttle:50,5', 'as' => 'ajax_recipe_favorite', 'uses' => 'UserFavoriteRecipeController@store']);
     });
 
     Route::post('search/{type?}', ['middleware' => 'throttle:30,5', 'as' => 'search', 'uses' => 'SearchController@search'])->where('type', '[A-Za-z]+');

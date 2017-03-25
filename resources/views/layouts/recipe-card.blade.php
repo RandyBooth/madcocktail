@@ -16,6 +16,15 @@
         <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}">
             <img {!! $image_color !!}class="card-img-top img-fluid{{$class_blur}}" data-original="{{ route('imagecache', ['template' => 'lists', 'filename' => $image]) }}" src="{{ route('imagecache', ['template' => 'lists-tiny', 'filename' => $image]) }}" alt="">
         </a>
+        <form role="form" @if(Auth::check()) class="recipe-favorite login-recipe-favorite" method="POST" @else class="recipe-favorite" method="GET" @endif action="{{ route('login') }}">
+
+            @if(Auth::check())
+            <div class="hidden-xs-up">
+                <input type="text" name="id" value="{{ $recipe->token }}">
+            </div>
+            @endif
+            <button type="submit" class="btn-reset recipe-favorite-btn @if(!empty($favorite_recipes)){{ isset($favorite_recipes[$recipe->id]) ? 'recipe-favorite-btn-on' : '' }}@endif"><i class="fa fa-heart-o" aria-hidden="true"></i></button>
+        </form>
     </div>
     <div class="card-block">
         <a href="{{ route('recipes.show', ['token' => $recipe->token, 'slug' => $recipe->slug]) }}">

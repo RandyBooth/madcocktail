@@ -40,6 +40,16 @@
                         @endphp
                         <img id="image-preview" class="image-preview card-img-top img-fluid{{$class_blur}} u-photo" data-original="{{ route('imagecache', ['template' => 'single', 'filename' => $image]) }}" src="{{ route('imagecache', ['template' => 'single-tiny', 'filename' => $image]) }}" alt="">
 
+                        <form role="form" @if(Auth::check()) class="recipe-favorite login-recipe-favorite" method="POST" @else class="recipe-favorite" method="GET" @endif action="{{ route('login') }}">
+
+                            @if(Auth::check())
+                            <div class="hidden-xs-up">
+                                <input type="text" name="id" value="{{ $recipe->token }}">
+                            </div>
+                            @endif
+                            <button type="submit" class="btn-reset recipe-favorite-btn @if(!empty($favorite_recipes)){{ isset($favorite_recipes[$recipe->id]) ? 'recipe-favorite-btn-on' : '' }}@endif"><i class="fa fa-heart-o" aria-hidden="true"></i></button>
+                        </form>
+
                         @if(Helper::is_owner($recipe->user_id))
                         <div id="image-loading" class="image-loading hidden-xs-up">
                             <div class="image-loading-parent">
@@ -58,7 +68,7 @@
                                     <input id="image-edit-file" type="file" name="image" class="form-control">
                                 </div>
                                 <div class="btn-group btn-group-sm" role="group" aria-label="">
-                                    <button type="button" id="image-edit-change" class="btn btn-gray" href="#"><i class="fa fa-camera" aria-hidden="true"></i> @if(!empty($recipe_image->image)){!! '<span>Update' !!}@else{!! '<span class="image-edit__add">Add' !!}@endif</span> Image</button>
+                                    <button type="submit" id="image-edit-change" class="btn btn-gray"><i class="fa fa-camera" aria-hidden="true"></i> @if(!empty($recipe_image->image)){!! '<span>Update' !!}@else{!! '<span class="image-edit__add">Add' !!}@endif</span> Image</button>
                                 </div>
                             </form>
                         </div>

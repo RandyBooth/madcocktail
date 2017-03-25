@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Recipe;
 use App\User;
+use App\UserFavoriteRecipe;
 use Auth;
 use Cache;
+use Carbon\Carbon;
 use Helper;
 use Illuminate\Http\Request;
 
@@ -89,7 +91,22 @@ class UserProfileController extends Controller
                 ->get();
         });
 
-        return view('user-profiles.show', compact('user', 'user_settings', 'recipes'));
+        $favorite_recipes = collect([]);
+
+        if (!$recipes->isEmpty()) {
+            if (Auth::check()) {
+                $user_id = Auth::id();
+                $recipe_id = array_pluck($recipes, 'id');
+                $now = Carbon::now()->second(0);
+                $expiresAtMinute = $now->copy()->addMinute();
+
+                $favorite_recipes = Cache::remember('recipes_profile_favorite_USERID_'.$user_id, $expiresAtMinute, function () use ($user_id, $recipe_id) {
+                    return UserFavoriteRecipe::select('recipe_id')->where('user_id', $user_id)->whereIn('recipe_id', $recipe_id)/*->take(24)*/->pluck(null, 'recipe_id');
+                });
+            }
+        }
+
+        return view('user-profiles.show', compact('user', 'user_settings', 'recipes', 'favorite_recipes'));
     }
 
     /**

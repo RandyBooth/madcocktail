@@ -203,14 +203,14 @@ class RecipeImageController extends Controller
             if (Cache::has('recipes_latest')) {
                 $data = Cache::get('recipes_latest');
 
-                $data_test = $data
-                    ->pluck('recipe_id')
+                $has_recipe = $data
+                    ->pluck('id')
                     ->filter(function ($value) {
                         return $value != null;
                     })
                     ->contains($recipe->id);
 
-                if ($data_test) {
+                if ($has_recipe) {
                     Cache::forget('recipes_latest');
                 }
             }

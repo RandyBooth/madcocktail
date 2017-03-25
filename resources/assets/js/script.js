@@ -92,6 +92,46 @@ $(document).ready(function() {
         }
     });
 
+    $('form.login-recipe-favorite').on('click', function(e) {
+        e.preventDefault();
+        var $self_button = $('.recipe-favorite-btn', this);
+        $self_button.addClass('recipe-favorite-btn-on')
+
+        $.ajax({
+            url: '/ajax/recipe-favorite',
+            type: 'POST',
+            dataType: 'json',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if (typeof data.success !== 'undefined' && data.success !== null) {
+                    if (data.success) {
+                        if (typeof data.on !== 'undefined') {
+                            if (!data.on) {
+                                $self_button.removeClass('recipe-favorite-btn-on')
+                            }
+                        }
+                    } else {
+                        if (typeof data.message !== 'undefined' && data.message !== null) {
+                            alertMessage('danger', data.message);
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    // $('.recipe-favorite-btn').hover(
+    //     function() {
+    //         $('i', this).addClass('fa-heart').removeClass('fa-heart-o');
+    //     },
+    //     function() {
+    //         $('i', this).addClass('fa-heart-o').removeClass('fa-heart');
+    //     }
+    // );
+
     if ($select2Set.length) {
         $select2Set.each(function() {
             $(this).select2({theme: 'bootstrap'});
