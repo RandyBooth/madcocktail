@@ -80,9 +80,8 @@ class OAuthController extends Controller
 
                             HelperImage::upload_user_image($image, $user);
 
-                            UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
                             UserVerification::generate($user);
-                            UserVerification::sendQueue($user);
+                            UserVerification::sendQueue($user, 'MadCocktail.com - Please Confirm Your Email');
 
                             Auth::login($user);
 

@@ -94,9 +94,8 @@ class UserSettingController extends Controller
                 $this->clear($user);
 
                 if (strtolower($old_email) != strtolower($data['email'])) {
-                    UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
                     UserVerification::generate($user);
-                    UserVerification::sendQueue($user);
+                    UserVerification::sendQueue($user, 'MadCocktail.com - Please Confirm Your Email');
                 }
 
                 return redirect()->route('user-settings.email.edit')->with('success', 'E-mail address has been updated successfully.');
@@ -195,9 +194,8 @@ class UserSettingController extends Controller
         $user = Auth::user();
 
         if (!$user->verified) {
-            UserVerification::emailView(new \App\Mail\SendConfirmMail($user));
             UserVerification::generate($user);
-            UserVerification::sendQueue($user);
+            UserVerification::sendQueue($user, 'MadCocktail.com - Please Confirm Your Email');
 
             return redirect()->route('home')->with('success', 'You received an email for confirming your registration. Please check your email.');
         }
