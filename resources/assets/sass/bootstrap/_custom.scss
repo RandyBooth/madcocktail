@@ -44,6 +44,10 @@ $headings-font-weight: 700; //500
 
 $input-border-focus: lighten($brand-primary, 25%);
 
+
+$nav-tabs-active-link-hover-color: $color-white;
+$nav-tabs-active-link-hover-bg: $color-orange;
+
 $navbar-inverse-color: $color-gray-light; //rgba($white,.5);
 $navbar-inverse-hover-color: rgba($color-gray-light, 0.75); //rgba($white,.75);
 $navbar-inverse-active-color: $color-orange; //rgba($white,1);

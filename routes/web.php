@@ -36,8 +36,15 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
     })->where('path', '.*\.css$');
     App::make('cachebuster.StripSessionCookiesFilter')->addPattern('|\.css$|');
 
-    Route::get('me', ['as' => 'user-profile.index', 'uses' => 'UserProfileController@index']);
-    Route::get('me/{username}', ['as' => 'user-profile.show', 'uses' => 'UserProfileController@show']);
+    Route::group(['prefix' => 'me'], function() {
+        Route::get('/', ['as' => 'user-profile.index', 'uses' => 'UserProfileController@index']);
+
+        Route::group(['prefix' => '{username}'], function() {
+            Route::get('/', ['as' => 'user-profile.show', 'uses' => 'UserProfileController@favorites']);
+            Route::get('favorites', ['as' => 'user-profile.favorites', 'uses' => 'UserProfileController@favorites']);
+            Route::get('recipes', ['as' => 'user-profile.recipes', 'uses' => 'UserProfileController@recipes']);
+        });
+    });
 
     Route::group(['prefix' => 'settings'], function() {
         Route::get('/', ['as' => 'user-settings.index.edit', 'uses' => 'UserSettingController@indexEdit']);

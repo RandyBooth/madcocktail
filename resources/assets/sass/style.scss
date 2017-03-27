@@ -290,6 +290,13 @@ a {
         }
     }
 
+    &.nav-link.active {
+        //text-decoration: underline;
+        background-color: $color-orange;
+        color: $color-white;
+        border-radius: 4px;
+    }
+
 //    &,
 //    &:focus,
 //    &:hover {

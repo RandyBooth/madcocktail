@@ -2,6 +2,12 @@
 
 @section('title', 'Settings')
 
+@section('content-top')
+    <h1>Settings</h1>
+
+    <hr>
+@stop
+
 @section('style')
     <link rel="stylesheet" href="{{ Bust::url('/css/vendor/select2-bootstrap.css', true) }}">
 @stop

@@ -83,6 +83,7 @@ class UserFavoriteRecipeController extends Controller
 
                 Cache::forget('recipe_show_favorite_RECIPE_USER_'.$id.'_'.$user_id);
                 Cache::forget('recipes_profile_favorite_USERID_'.$user_id);
+                Cache::forget('user_favorites_ID_'.$user_id);
 
                 if (Cache::has('recipes_latest')) {
                     $data = Cache::get('recipes_latest');

@@ -2,7 +2,7 @@
 
 @php $author = (!empty($user->display_name)) ? $user->display_name : $user->username; @endphp
 
-@section('title', $author. '\'s Recipes')
+@section('title', $author. '\'s '. $type)
 
 @php $random_color[$user->username] = Helper::get_cache_random_color($user->username); @endphp
 
@@ -19,6 +19,13 @@
                 <h1 class="ml-2">{{ $author }}</h1>
             </div>
         </div>
+        @if (Helper::is_owner($user->id))
+        <div class="col-12 mt-3">
+            <div class="btn-group btn-group-sm" role="group" aria-label="">
+                <a class="btn btn-secondary" href="{{ route('user-settings.profile.edit') }}"><i class="fa fa-pencil mr-1" aria-hidden="true"></i> Profile Settings</a>
+            </div>
+        </div>
+        @endif
     </div>
 @stop
 
@@ -32,9 +39,12 @@
     @php $size = 'col-12 mb-5 col-lg-6 mb-lg-4'; @endphp
 
     @section('sidebar-left')
-        <div class="row mb-4 py-3 mb-md-0 color-background-gray-light">
+        <div class="row mb-4 p-3 mb-md-0 color-background-white no-gutters">
             @if($has_about)
             <div class="col-12">
+                <div>
+
+                </div>
                 <h4>About Me</h4>
 
                 {!! Helper::nl2p($user_settings->about, false) !!}
@@ -86,23 +96,32 @@
 @endif
 
 @section('content')
-    @if(!empty($recipes))
     <div class="row">
         <div class="col-12">
-            <h3>Recipes</h3>
-
-            <hr>
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link {{ active(['user-profile.show', 'user-profile.favorites']) }}" href="{{ route('user-profile.favorites', $user->username) }}">Favorites</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ active(['user-profile.recipes']) }}" href="{{ route('user-profile.recipes', $user->username) }}">Personal Recipes</a>
+                </li>
+            </ul>
 
             <div class="row">
+            @if(!$recipes->isEmpty())
                 @foreach($recipes as $recipe)
                 <div class="{{ $size }}">
                     @include('layouts.recipe-card', compact('random_color'))
                 </div>
                 @endforeach
+            @else
+                <div class="col-12">
+                    No {{ $type }}
+                </div>
+            @endif
             </div>
         </div>
     </div>
-    @endif
 
     @include('recipes.footer-option')
 @stop

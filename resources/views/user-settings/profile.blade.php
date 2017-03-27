@@ -2,6 +2,12 @@
 
 @section('title', 'Profile Settings - Settings')
 
+@section('content-top')
+    <h1>Profile Settings</h1>
+
+    <hr>
+@stop
+
 @section('content')
     <div class="row">
         <div class="col-12 col-md-8 col-lg-9 col-xl-7">
@@ -43,7 +49,7 @@
                         <div class="form-group{{ $errors->has('link') ? ' has-danger' : '' }}">
                             <label for="link" class="w-100 form-control-label">Website</label>
 
-                            <input id="link" type="text" class="form-control" name="link" value="{{ old('link', $user_settings->link) }}" placeholder="http://www.madcocktail.com">
+                            <input id="link" type="text" class="form-control" name="link" value="{{ old('link', $user_settings->link) }}" placeholder="{{ route('home') }}">
 
                             @if ($errors->has('link'))
                                 <span class="form-control-feedback">

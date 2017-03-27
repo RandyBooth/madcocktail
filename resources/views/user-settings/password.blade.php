@@ -2,6 +2,12 @@
 
 @section('title', 'Password - Settings')
 
+@section('content-top')
+    <h1>Password</h1>
+
+    <hr>
+@stop
+
 @section('content')
     <div class="row">
         <div class="col-12 col-md-8 col-lg-9 col-xl-7">

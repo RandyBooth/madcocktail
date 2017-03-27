@@ -618,6 +618,7 @@ class RecipeController extends Controller
             Cache::forget('recipe_SLUG_'.strtolower($recipe->slug));
             Cache::forget('recipe_TOKENSLUG_'.$recipe->token.'_'.strtolower($recipe->slug));
             Cache::forget('user_recipes_ID_'.$recipe->user_id);
+            Cache::forget('user_favorites_ID_'.$recipe->user_id);
 
             if (Cache::has('recipes_latest')) {
                 $data = Cache::get('recipes_latest');
