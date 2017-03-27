@@ -39,7 +39,7 @@
     @php $size = 'col-12 mb-5 col-lg-6 mb-lg-4'; @endphp
 
     @section('sidebar-left')
-        <div class="row mb-4 p-3 mb-md-0 color-background-white no-gutters">
+        <div class="row mb-4 p-3 mb-md-0 no-gutters">
             @if($has_about)
             <div class="col-12">
                 <div>
