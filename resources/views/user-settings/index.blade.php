@@ -30,7 +30,7 @@
                         <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
                             <label for="username" class="w-100 form-control-label">Username</label>
 
-                            <input id="username" type="text" class="form-control" name="username" value="{{ old('username', $user->username) }}" required autofocus>
+                            <input id="username" type="text" class="form-control" name="username" value="{{ old('username', $user->username) }}" @if(!empty($user->username)){{ 'readonly' }}@else{{ 'autofocus' }}@endif required>
 
                             @if ($errors->has('username'))
                                 <span class="form-control-feedback">

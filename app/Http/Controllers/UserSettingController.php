@@ -49,7 +49,10 @@ class UserSettingController extends Controller
         ]);
 
         if ($validator->passes()) {
-            $user->username = $data['username'];
+            if (empty($user->username) || Helper::is_admin()) {
+                $user->username = $data['username'];
+            }
+
             $user->birth = $data['birth'];
 
             if ($user->save()) {
