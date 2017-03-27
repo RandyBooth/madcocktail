@@ -11,8 +11,8 @@
             <div class="row">
                 @foreach($recipes as $recipe)
                     @php
-                        if (!isset($random_color[$recipe->username])) {
-                            $random_color[$recipe->username] = Helper::get_cache_random_color($recipe->username);
+                        if (!isset($random_color[$recipe->user_id])) {
+                            $random_color[$recipe->user_id] = Helper::get_cache_random_color($recipe->user_id);
                         }
                     @endphp
                 <div class="col-12 mb-5 col-md-6 mb-md-4 col-lg-4">

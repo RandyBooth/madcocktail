@@ -311,10 +311,10 @@ class Helper
         }
     }
 
-    public static function get_cache_random_color($username)
+    public static function get_cache_random_color($id)
     {
-        if (!empty($username)) {
-            $str = 'color_USER_'.strtolower($username);
+        if (!empty($id)) {
+            $str = 'color_USERID_'.$id;
 
             if (!Cache::has($str)) {
                 Cache::put($str, self::random_color(), 60);

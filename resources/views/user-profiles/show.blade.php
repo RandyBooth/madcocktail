@@ -4,7 +4,12 @@
 
 @section('title', $author. '\'s '. $type)
 
-@php $random_color[$user->username] = Helper::get_cache_random_color($user->username); @endphp
+@php $random_color = []; @endphp
+@php
+    if (!isset($random_color[$user->id])) {
+        $random_color[$user->id] = Helper::get_cache_random_color($user->id);
+    }
+@endphp
 
 @section('content-top')
     <div class="row pb-4">
@@ -13,7 +18,7 @@
                 @if (!empty($user->image))
                     <img class="image-icon d-inline-block" src="{{ route('imagecache', ['template' => 'user-profile', 'filename' => $user->image]) }}" alt="">
                 @else
-                    <span style="background-color: {{ $random_color[$user->username] }};" class="image-icon d-inline-block"></span>
+                    <span style="background-color: {{ $random_color[$user->id] ?: Helper::random_color() }};" class="image-icon d-inline-block"></span>
                 @endif
 
                 <h1 class="ml-2">{{ $author }}</h1>
@@ -111,6 +116,11 @@
             @if(!$recipes->isEmpty())
                 @foreach($recipes as $recipe)
                 <div class="{{ $size }}">
+                    @php
+                        if (!isset($random_color[$recipe->user_id])) {
+                            $random_color[$recipe->user_id] = Helper::get_cache_random_color($recipe->user_id);
+                        }
+                    @endphp
                     @include('layouts.recipe-card', compact('random_color'))
                 </div>
                 @endforeach

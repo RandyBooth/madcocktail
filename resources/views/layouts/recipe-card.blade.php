@@ -41,7 +41,7 @@
                 @if (!empty($recipe->user_image))
                     <img class="image-icon image-icon-small d-inline-block" src="{{ route('imagecache', ['template' => 'user-small', 'filename' => $recipe->user_image]) }}" alt="">
                 @else
-                    <span style="background-color: {{ $random_color[$recipe->username] }};" class="image-icon image-icon-small d-inline-block"></span>
+                    <span style="background-color: {{ $random_color[$recipe->user_id] ?: Helper::random_color() }};" class="image-icon image-icon-small d-inline-block"></span>
                 @endif
                 </a>
 
