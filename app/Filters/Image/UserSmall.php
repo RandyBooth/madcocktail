@@ -9,7 +9,7 @@ class UserSmall implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        $width = 32;
+        $width = 40;
         $height = $width;
 
         return $image->fit($width, $height, function ($constraint) {

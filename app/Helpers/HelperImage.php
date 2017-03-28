@@ -45,15 +45,25 @@ class HelperImage
                         $image_check = User::where('image', 'LIKE BINARY', $filename)->first();
 
                         if (!$image_check) {
-                            $new_image = Image::make($image)->resize(240, null, function ($constraint) {
+                            $new_image = Image::make($image)->resize(400, null, function ($constraint) {
                                 $constraint->aspectRatio();
                                 $constraint->upsize();
                             })->interlace()->save($path.$filename);
 
+                            $old_image = $data->image;
                             $new_image->destroy();
 
                             if (File::exists($path.$filename)) {
                                 $data->update(['image' => $filename]);
+                                if (!empty($old_image)) {
+                                    if (File::exists($path.$old_image)) {
+                                        $moved_image = public_path('storage/trash_images/'.$old_image);
+
+                                        if (File::move($path.$old_image, $moved_image)) {
+                                            touch($moved_image);
+                                        }
+                                    }
+                                }
                             }
 
                             $is_valid = true;

@@ -9,7 +9,7 @@ class UserProfile implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        $width = 60;
+        $width = 100;
         $height = $width;
 
         return $image->fit($width, $height, function ($constraint) {
