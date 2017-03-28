@@ -399,6 +399,18 @@ body {
 }
 
 .header {
+    .nav-item-icon {
+        width: 32px;
+        height: 1px;
+        display: inline-block;
+        margin-left: 5px;
+        position: relative;
+
+        img {
+            position: absolute;
+            top: -22px;
+        }
+    }
 }
 
 .header,

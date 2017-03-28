@@ -23,7 +23,10 @@
                         <ul class="navbar-nav order-last ml-lg-2">
                         @if (Auth::check())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user-profile.show', Auth::user()->username) }}">Profile</a>
+                                <a class="nav-link" href="{{ route('user-profile.show', Auth::user()->username) }}">
+                                    Profile
+                                    @if(!empty(Auth::user()->image))<span class="nav-item-icon"><img class="image-icon image-icon-small" src="{{ route('imagecache', ['template' => 'user-small', 'filename' => Auth::user()->image]) }}" alt=""></span>@endif
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user-settings.index.edit') }}">@if(Auth::user()->role){{ 'Admin' }}@else{{ 'Settings' }}@endif</a>
