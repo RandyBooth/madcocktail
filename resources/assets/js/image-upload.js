@@ -18,7 +18,11 @@ $(document).ready(function() {
 
     $imageEditForm.on('submit', function(e) {
         e.preventDefault();
-        var file = $imageEditFormFile.prop('files');
+
+        var $form = $(this),
+            $formAttr = $form.attr('action'),
+            file = $imageEditFormFile.prop('files'),
+            imageAjaxUrl = (typeof $formAttr !== 'undefined') ? $formAttr : '/ajax/recipe-image';
 
         if (file.length) {
             file = file[0];
@@ -30,7 +34,7 @@ $(document).ready(function() {
                 $imageLoading.removeClass('hidden-xs-up');
 
                 $.ajax({
-                    url: '/ajax/recipe-image',
+                    url: imageAjaxUrl,
                     type: 'POST',
                     dataType: 'json',
                     data: new FormData(this),

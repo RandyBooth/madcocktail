@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HelperImage;
 use Auth;
 use Cache;
 use Helper;
@@ -189,6 +190,46 @@ class UserSettingController extends Controller
         return redirect()->back()->withErrors($validator)->withInput()->with('danger', 'Profile setting update fail.');
     }
 
+    public function image(Request $request)
+    {
+        $response = [];
+        $response['success'] = false;
+
+        if (Auth::check()) {
+            if ($request->ajax()) {
+                if ($request->hasFile('image')) {
+                    $validator = Validator::make($request->all(), [
+                        'image' => 'required|file|image|mimes:gif,jpeg,jpg,png|max:2048',
+                    ]);
+
+                    if ($validator->passes()) {
+                        $user = Auth::user();
+                        $image = $request->file('image');
+
+                        if ($filename = HelperImage::upload_user_image($image, $user)) {
+                            $this->clear($user, false, true);
+                            $response['success'] = true;
+                            $response['message'] = 'Profile image updated!';
+                            $response['image'] = route('imagecache', ['template' => 'user-normal', 'filename' => $filename]);
+                        } else {
+                            $response['message'] = 'Could not upload an image.';
+                        }
+                    } else {
+                        $response['message'] = $validator->errors()->all();
+                    }
+                } else {
+                    $response['message'] = 'Could not upload an image.';
+                }
+            } else {
+                $response['message'] = 'Is not ajax request.';
+            }
+        } else {
+            $response['message'] = 'Please login.';
+        }
+
+        return response()->json($response);
+    }
+
     public function resendVerification()
     {
         $user = Auth::user();
@@ -203,7 +244,7 @@ class UserSettingController extends Controller
         abort(404);
     }
 
-    private function clear($user = null, $settings = false)
+    private function clear($user = null, $settings = false, $recipe = false)
     {
         if ($user) {
             Cache::forget('user_ID_'.$user->id);
@@ -212,6 +253,11 @@ class UserSettingController extends Controller
 
             if ($settings) {
                 Cache::forget('usersettings_ID_'.$user->id);
+            }
+
+            if ($recipe) {
+                Cache::forget('user_recipes_ID_'.$user->id);
+                Cache::forget('user_favorites_ID_'.$user->id);
             }
         }
     }

@@ -94,6 +94,8 @@ Route::group(['middleware' => 'fw-block-bl'], function () {
 
         Route::post('recipe-image', ['before' => 'csrf', 'middleware' => 'throttle:15,5', 'as' => 'ajax_recipe_image', 'uses' => 'RecipeImageController@store']);
 
+        Route::post('profile-image', ['before' => 'csrf', 'middleware' => 'throttle:15,5', 'as' => 'ajax_profile_image', 'uses' => 'UserSettingController@image']);
+
         Route::post('recipe-favorite', ['before' => 'csrf', 'middleware' => 'throttle:50,5', 'as' => 'ajax_recipe_favorite', 'uses' => 'UserFavoriteRecipeController@store']);
     });
 

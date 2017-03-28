@@ -2,6 +2,10 @@
 
 @section('title', 'Profile Settings - Settings')
 
+@section('script-bottom')
+    <script src="{{ Bust::url('/js/image-upload-min.js', true) }}"></script>
+@stop
+
 @section('content-top')
     <h1>Profile Settings</h1>
 
@@ -11,6 +15,36 @@
 @section('content')
     <div class="row">
         <div class="col-12 col-md-8 col-lg-9 col-xl-7">
+            <label class="w-100 form-control-label">Profile Image</label>
+
+            <div style="max-width: 200px;" id="image" class="image mb-4">
+                @php
+                    $image = (!empty($user->image)) ? $user->image : 'blank.gif';
+                @endphp
+                <img id="image-preview" class="image-preview img-fluid" src="{{ route('imagecache', ['template' => 'user-normal', 'filename' => $image]) }}" alt="">
+
+                <div id="image-loading" class="image-loading hidden-xs-up">
+                    <div class="image-loading-parent">
+                        <div class="image-loading-child">
+                            <i class="fa fa-refresh fa-spin fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="image-edit" class="image-edit">
+                    <form action="{{ route('ajax_profile_image') }}" enctype="multipart/form-data" method="POST">
+                        {{ csrf_field() }}
+
+                        <div class="hidden-xs-up">
+                            <input id="image-edit-file" type="file" name="image" class="form-control">
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="">
+                            <button type="submit" id="image-edit-change" class="btn btn-gray"><i class="fa fa-camera" aria-hidden="true"></i> @if(!empty($user->image)){!! '<span>Update' !!}@else{!! '<span class="image-edit__add">Add' !!}@endif</span> Image</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <form method="POST" action="{{ route('user-settings.profile.update') }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
@@ -21,7 +55,7 @@
                         <div class="form-group{{ $errors->has('display_name') ? ' has-danger' : '' }}">
                             <label for="display-name" class="w-100 form-control-label">Display Name</label>
 
-                            <input id="display-name" type="text" class="form-control" name="display_name" value="{{ old('display_name', $user->display_name) }}">
+                            <input id="display-name" type="text" class="form-control" name="display_name" value="{{ old('display_name', $user->display_name) }}" autofocus>
 
                             @if ($errors->has('display_name'))
                                 <span class="form-control-feedback">

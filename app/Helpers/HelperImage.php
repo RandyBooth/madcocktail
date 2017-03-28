@@ -32,6 +32,7 @@ class HelperImage
     {
         if (!empty($image)) {
             if (!empty($data->id)) {
+                $filename = '';
                 $path = public_path('storage/upload_images/');
                 $id = $data->id;
                 $is_valid = false;
@@ -59,6 +60,8 @@ class HelperImage
                         }
                     }
                 } while(!$is_valid);
+
+                return $filename;
             }
         }
 

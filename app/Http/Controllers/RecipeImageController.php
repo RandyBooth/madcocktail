@@ -134,6 +134,7 @@ class RecipeImageController extends Controller
         if ($recipe) {
             Cache::forget('recipe_image_TOKEN_'.$recipe->token);
             Cache::forget('user_recipes_ID_'.$recipe->user_id);
+            Cache::forget('user_favorites_ID_'.$recipe->user_id);
 
             if (Cache::has('recipes_latest')) {
                 $data = Cache::get('recipes_latest');

@@ -58,8 +58,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="image-edit" class="image-edit">
 
+                        <div id="image-edit" class="image-edit">
                             <form action="{{ route('ajax_recipe_image') }}" enctype="multipart/form-data" method="POST">
                                 {{ csrf_field() }}
 
