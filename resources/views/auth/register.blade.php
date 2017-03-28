@@ -110,7 +110,7 @@
                                         $count = 0;
                                         $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
-                                        echo '<select id="month" type="month" class="form-control select2-set" name="month" required>';
+                                        echo '<select style="width: 100%" id="month" type="month" class="form-control select2-set" name="month" required>';
                                         echo '<option value="">Month</option>';
                                         for($count; $count < 12; $count++) {
                                             $selected = (($count+1) == $old_birth_month) ? ' selected' : '';
@@ -128,7 +128,7 @@
                                         $count = 1;
                                         $days = 31;
 
-                                        echo '<select id="day" type="day" class="form-control select2-set" name="day" required>';
+                                        echo '<select style="width: 100%" id="day" type="day" class="form-control select2-set" name="day" required>';
                                         echo '<option value="">Day</option>';
                                         for($count; $count <= $days; $count++) {
                                             $day = str_pad(($count), 2, '0', STR_PAD_LEFT);
@@ -148,7 +148,7 @@
                                         $count_max = 100;
                                         $year = \Carbon\Carbon::create(null, 01, 01, 0)->subYears(13)->year;
 
-                                        echo '<select id="year" type="year" class="form-control select2-set" name="year" required>';
+                                        echo '<select style="width: 100%" id="year" type="year" class="form-control select2-set" name="year" required>';
                                         echo '<option value="">Year</option>';
                                         for($count; $count <= $count_max; $count++) {
                                             $selected = ($year == $old_birth_year) ? ' selected' : '';
