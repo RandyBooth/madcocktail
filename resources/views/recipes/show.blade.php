@@ -35,7 +35,7 @@
                                 $image = $recipe_image->image;
                                 $class_blur = ' image-blur';
                             } else {
-                                $image = 'blank.gif';
+                                $image = 'default-cocktail-glass.jpg';
                             }
                         @endphp
                         <img id="image-preview" class="image-preview card-img-top img-fluid{{$class_blur}} u-photo" data-original="{{ route('imagecache', ['template' => 'single', 'filename' => $image]) }}" src="{{ route('imagecache', ['template' => 'single-tiny', 'filename' => $image]) }}" alt="">

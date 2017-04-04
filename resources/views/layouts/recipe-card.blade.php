@@ -6,7 +6,7 @@
             $image = $recipe->image;
             $class_blur = ' image-blur';
         } else {
-            $image = 'blank.gif';
+            $image = 'default-cocktail-glass.jpg';
         }
 
         $image_color = (!empty($recipe->color)) ? 'style="background-color:'.$recipe->color.';" ' : '';

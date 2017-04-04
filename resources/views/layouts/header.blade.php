@@ -22,10 +22,11 @@
 
                         <ul class="navbar-nav order-last ml-lg-2">
                         @if (Auth::check())
+                            @php $image = (!empty(Auth::user()->image)) ? Auth::user()->image : 'default-user-20170328.jpg'; @endphp
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user-profile.show', Auth::user()->username) }}">
                                     Profile
-                                    @if(!empty(Auth::user()->image))<span class="nav-item-icon"><img class="image-icon image-icon-small" src="{{ route('imagecache', ['template' => 'user-small', 'filename' => Auth::user()->image]) }}" alt=""></span>@endif
+                                    <span class="nav-item-icon"><img class="image-icon image-icon-small" src="{{ route('imagecache', ['template' => 'user-small', 'filename' => $image]) }}" alt=""></span>
                                 </a>
                             </li>
                             <li class="nav-item">
