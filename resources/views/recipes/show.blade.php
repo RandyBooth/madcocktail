@@ -3,18 +3,18 @@
 @php
     $title = (!empty($recipe->title)) ? $recipe->title . ' ': '';
     $title = $title . 'Recipe';
-    $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'mad-cocktail.gif';
+    $image = (!empty($recipe_image->image)) ? $recipe_image->image : 'default-cocktail-glass-social.jpg';
     $social_title = $title;
     $social_description = Helper::nl2empty($recipe->description);
     $social_directions = Helper::nl2empty($recipe->directions);
+    $og_description = (!empty($social_directions)) ? $social_directions : $social_description;
     $social_image = route('imagecache', ['template' => 'share', 'filename' => $image]);
 @endphp
 
 @section('title', $title)
 
-@section('og-description', $social_directions)
+@section('og-description', $og_description)
 @section('og-image', $social_image)
-@section('og-description', $social_directions)
 
 @if(Helper::is_owner($recipe->user_id))
 @section('script-bottom')
