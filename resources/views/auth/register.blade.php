@@ -13,7 +13,8 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
-            <h1>Register</h1>
+            <h1 class="d-block d-sm-inline">Register</h1>
+            <a class="d-block d-sm-inline float-sm-right" href="{{ route('login') }}">Already a member? Signin!</a>
 
             <hr>
 
